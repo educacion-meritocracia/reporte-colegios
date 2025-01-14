@@ -1,0 +1,44 @@
+project:
+  type: book
+  output-dir: docs
+
+book:
+  title: "Estudio panel Educación y Meritocracia"
+  author: "Equipo EDUMER"
+  date: "14-01-2025"
+  reader-mode: true
+  page-footer:
+      left: | 
+        Proyecto Fondecyt No. 1210847 "Educación y Meritocracia".
+
+      right: |
+        Este libro se construyó con <a href="https://quarto.org/">Quarto</a>.
+  page-navigation: true
+  cover-image: edumer.png
+  favicon: edumer.png
+  repo-url: https://github.com/educacion-meritocracia/reporte-colegios
+  repo-branch: main
+  chapters:
+    - index.qmd
+    - intro.qmd
+    - summary.qmd
+    - references.qmd
+  search:
+    location: sidebar
+    type: textbox
+  sidebar:
+    search: true
+    style: docked
+    pinned: false
+
+
+format:
+  html:
+    theme:
+      - cosmo
+      - edumer.scss
+    code-link: true
+
+editor: visual
+lang: es
+bibliography: references.bib
