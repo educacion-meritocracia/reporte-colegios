@@ -1,0 +1,561 @@
+---
+title: "Meritocracia 2"
+---
+
+```{r, data, echo=FALSE}
+
+pacman::p_load(dplyr, sjPlot, stargazer, kableExtra, texreg, haven, sjlabelled, ggplot2, summarytools, ggtext, ggpubr, hrbrthemes, tidyr, stringr, sjmisc)
+
+load("C:/Users/LENOVO/Documents/GitHub/edumer-ola2/input/data/original/db_proc_students_w02.RData")
+load("C:/Users/LENOVO/Documents/GitHub/edumer-ola2/input/data/original/db_proc_students.RData")
+
+merit <- db_students_w02 %>% select(p2_1_o2, p2_2_o2, p2_3_o2, p3_o2, p4_o2, p5_o2, p6_o2, p7_o2, p8_1_o2, p8_2_o2)
+
+merit1 <- db_students %>% select(p2_1, p2_2, p2_3, p3, p4, p5, p6, p7, p8_1, p8_2)
+  
+des <- db_students_w02 %>% select(p9_1_o2, p9_2_o2, p9_3_o2, p9_4_o2, p9_5_o2, p9_6_o2 )
+
+des1 <- db_students %>% select(p9_1, p9_2, p9_3, p9_4, p9_5, p9_6 )
+```
+
+## Meritocracia en la escuela
+
+### Percepción esfuerzo
+
+```{r, echo=FALSE}
+
+pe = round(prop.table(table(categorias=merit$p2_1_o2)),2)
+pe = as.data.frame(pe)
+pe$categorias <- factor(pe$categorias, levels = c(1, 2, 3, 4), labels = c("Muy en desacuerdo", "Desacuerdo", "De acuerdo", "Muy de acuerdo"))
+
+plot_pe <- ggplot(pe,aes(x=2,y=-Freq, fill=categorias))+
+  geom_bar(stat = "identity",
+           color="white")+
+    geom_text(aes(label = scales::percent(Freq)),
+              position=position_stack(vjust=0.5),color="black",size=4.5)+
+  coord_polar(theta = "y")+
+  scale_fill_brewer(palette = "Blues")+
+    theme_void()+
+  theme(legend.title = element_blank(),
+    plot.title = element_text(size=12, face="bold", hjust=0.5))+
+  xlim(0.5,2.5)+
+  labs(title="Ola 2")
+
+```
+
+```{r, echo=FALSE}
+pe1 = round(prop.table(table(categorias=merit1$p2_1)),2)
+pe1 = as.data.frame(pe1)
+pe1$categorias <- factor(pe1$categorias, levels = c(1, 2, 3, 4), labels = c("Muy en desacuerdo", "Desacuerdo", "De acuerdo", "Muy de acuerdo"))
+
+plot_pe1 <- ggplot(pe1,aes(x=2,y=-Freq, fill=categorias))+
+  geom_bar(stat = "identity",
+           color="white")+
+    geom_text(aes(label = scales::percent(Freq)),
+              position=position_stack(vjust=0.5),color="black",size=4.5)+
+  coord_polar(theta = "y")+
+  scale_fill_brewer(palette = "Blues")+
+    theme_void()+
+  theme(legend.title = element_blank(),
+    plot.title = element_text(size=12, face="bold", hjust=0.5))+
+  xlim(0.5,2.5)+
+  labs(title="Ola 1")
+
+```
+
+```{r, echo=FALSE}
+# grafico esfuerzo en la sociedad
+
+# Combinar los gráficos
+final_pe <- ggarrange(
+  plot_pe, 
+  plot_pe1,
+  common.legend = TRUE, 
+  ncol = 2, 
+  legend = "bottom")
+
+# Agregar una etiqueta global centrada
+plot_final_pe <- annotate_figure(
+  final_pe,
+  top = text_grob(
+    "Figura 1: En esta escuela quienes se esfuerzan obtienen buenas notas",
+    size = 12, 
+    face = "italic", 
+    color = "black",
+    hjust = 0.5))
+
+
+plot_final_pe
+```
+
+### Percepción talento
+
+```{r, echo=FALSE}
+pt = round(prop.table(table(categorias=merit$p2_2_o2)),2)
+pt = as.data.frame(pt)
+pt$categorias <- factor(pt$categorias, levels = c(1, 2, 3, 4), labels = c("Muy en desacuerdo", "Desacuerdo", "De acuerdo", "Muy de acuerdo"))
+
+plot_pt <- ggplot(pt,aes(x=2,y=-Freq, fill=categorias))+
+  geom_bar(stat = "identity",
+           color="white")+
+    geom_text(aes(label = scales::percent(Freq)),
+              position=position_stack(vjust=0.5),color="black",size=4.5)+
+  coord_polar(theta = "y")+
+  scale_fill_brewer(palette = "Blues")+
+    theme_void()+
+  theme(legend.title = element_blank(),
+    plot.title = element_text(size=12, face="bold", hjust=0.5))+
+  xlim(0.5,2.5)+
+  labs(title="Ola 2")
+
+```
+
+```{r, echo=FALSE}
+pt1 = round(prop.table(table(categorias=merit1$p2_2)),2)
+pt1 = as.data.frame(pt1)
+pt1$categorias <- factor(pt1$categorias, levels = c(1, 2, 3, 4), labels = c("Muy en desacuerdo", "Desacuerdo", "De acuerdo", "Muy de acuerdo"))
+
+plot_pt1 <- ggplot(pt1,aes(x=2,y=-Freq, fill=categorias))+
+  geom_bar(stat = "identity",
+           color="white")+
+    geom_text(aes(label = scales::percent(Freq)),
+              position=position_stack(vjust=0.5),color="black",size=4.5)+
+  coord_polar(theta = "y")+
+  scale_fill_brewer(palette = "Blues")+
+    theme_void()+
+  theme(legend.title = element_blank(),
+    plot.title = element_text(size=12, face="bold", hjust=0.5))+
+  xlim(0.5,2.5)+
+  labs(title="Ola 1")
+```
+
+```{r, echo=FALSE}
+# grafico esfuerzo en la sociedad
+
+# Combinar los gráficos
+final_pt<- ggarrange(
+  plot_pt, 
+  plot_pt1,
+  common.legend = TRUE, 
+  ncol = 2, 
+  legend = "bottom")
+
+# Agregar una etiqueta global centrada
+plot_final_pt <- annotate_figure(
+  final_pt,
+  top = text_grob(
+    "Figura 1: En esta escuela, quienes son inteligentes obtienen buenas notas",
+    size = 12, 
+    face = "italic", 
+    color = "black",
+    hjust = 0.5))
+
+
+plot_final_pt
+```
+
+### Percepción merecimiento
+
+```{r, echo=FALSE}
+pm = round(prop.table(table(categorias=merit$p2_3_o2)),2)
+pm = as.data.frame(pm)
+pm$categorias <- factor(pm$categorias, levels = c(1, 2, 3, 4), labels = c("Muy en desacuerdo", "Desacuerdo", "De acuerdo", "Muy de acuerdo"))
+
+plot_pm <- ggplot(pm,aes(x=2,y=-Freq, fill=categorias))+
+  geom_bar(stat = "identity",
+           color="white")+
+    geom_text(aes(label = scales::percent(Freq)),
+              position=position_stack(vjust=0.5),color="black",size=4.5)+
+  coord_polar(theta = "y")+
+  scale_fill_brewer(palette = "Blues")+
+    theme_void()+
+  theme(legend.title = element_blank(),
+    plot.title = element_text(size=12, face="bold", hjust=0.5))+
+  xlim(0.5,2.5)+
+  labs(title="Ola 2")
+```
+
+```{r, echo=FALSE}
+pm1 = round(prop.table(table(categorias=merit1$p2_3)),2)
+pm1 = as.data.frame(pm1)
+pm1$categorias <- factor(pm1$categorias, levels = c(1, 2, 3, 4), labels = c("Muy en desacuerdo", "Desacuerdo", "De acuerdo", "Muy de acuerdo"))
+
+plot_pm1 <- ggplot(pm1,aes(x=2,y=-Freq, fill=categorias))+
+  geom_bar(stat = "identity",
+           color="white")+
+    geom_text(aes(label = scales::percent(Freq)),
+              position=position_stack(vjust=0.5),color="black",size=4.5)+
+  coord_polar(theta = "y")+
+  scale_fill_brewer(palette = "Blues")+
+    theme_void()+
+  theme(legend.title = element_blank(),
+    plot.title = element_text(size=12, face="bold", hjust=0.5))+
+  xlim(0.5,2.5)+
+  labs(title="Ola 1")
+```
+
+```{r, echo=FALSE}
+# grafico esfuerzo en la sociedad
+
+# Combinar los gráficos
+final_pm <- ggarrange(
+  plot_pm, 
+  plot_pm1,
+  common.legend = TRUE, 
+  ncol = 2, 
+  legend = "bottom")
+
+# Agregar una etiqueta global centrada
+plot_final_pm <- annotate_figure(
+  final_pm,
+  top = text_grob(
+    "Figura 1: En esta escuela, los/as estudiantes obtienen las notas que merecen",
+    size = 12, 
+    face = "italic", 
+    color = "black",
+    hjust = 0.5))
+
+
+plot_final_pm
+```
+
+### Preferencia
+
+```{r, echo=FALSE, warning=FALSE}
+pref <- merit %>%
+  group_by(p3_o2) %>%
+  summarise(count = n(), .groups = 'drop') %>%
+  mutate(pct = count / sum(count) * 100)
+
+plot_pref <- ggplot(pref, aes(x=p3_o2, y= pct)) + 
+  geom_bar(stat= "identity", fill = "#9ecae1")+ 
+  labs(x = "Preferencia de mérito en la escuela",
+       y = "Frecuencia" )   +
+  scale_x_continuous(breaks = c(0, 5, 10), labels = c("Esfuerzo", "Ambos", "Talento")) +
+  scale_y_continuous(labels = scales::percent_format(scale = 1), limits = c(0, 100)) +
+  theme_classic() +
+  ggtitle("Ola 2") +
+  theme(plot.title = element_text(size = 12,
+    face = "italic", 
+    color = "black", hjust = 0.5),
+        plot.margin = margin(t = 20, r = 20, b = 20, l = 20)) +
+geom_text(aes(label = paste0(round(pct, 1), "%")), 
+            stat = "identity", 
+            vjust = -0.5, 
+            color = "black",
+            position = position_stack(0.5), 
+          size = 4)
+```
+
+```{r, echo=FALSE, warning=FALSE}
+pref1 <- merit1 %>%
+  group_by(p3) %>%
+  summarise(count = n(), .groups = 'drop') %>%
+  mutate(pct = count / sum(count) * 100)
+
+plot_pref1 <- ggplot(pref1, aes(x=p3, y= pct)) + 
+  geom_bar(stat= "identity", fill = "#9ecae1")+ 
+  labs(x = "Preferencia de mérito en la escuela",
+       y = "Frecuencia" )   +
+  scale_x_continuous(breaks = c(0, 5, 10), labels = c("Esfuerzo", "Ambos", "Talento")) +
+  scale_y_continuous(labels = scales::percent_format(scale = 1), limits = c(0, 100)) +
+  theme_classic() +
+  ggtitle("Ola 1") +
+  theme(plot.title = element_text(size = 12,
+    face = "italic", 
+    color = "black", hjust = 0.5),
+        plot.margin = margin(t = 20, r = 20, b = 20, l = 20)) +
+geom_text(aes(label = paste0(round(pct, 1), "%")), 
+            stat = "identity", 
+            vjust = -0.5, 
+            color = "black",
+            position = position_stack(0.5), 
+          size = 4)
+```
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+# grafico esfuerzo en la sociedad
+
+# Combinar los gráficos
+final_pref <- ggarrange(
+  plot_pref, 
+  plot_pref1,
+  common.legend = TRUE, 
+  nrow = 2, 
+  legend = "bottom")
+
+# Agregar una etiqueta global centrada
+plot_final_pref <- annotate_figure(
+  final_pref,
+  top = text_grob(
+    "FFigura: Preferencia respecto al criterio individual de mérito más importante\npara obtener buenas notas",
+    size = 12, 
+    face = "italic", 
+    color = "black",
+    hjust = 0.5))
+
+
+plot_final_pref
+```
+
+Se prefiere más el esfuerzo que el talento. Aunque la mayoría se concentra en ambos.
+
+### Nota obtenida y nota justa
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+menos_nota <-merit %>% filter(p5_o2==1) %>% 
+  ggplot() + 
+  geom_density(aes(x=p4_o2), color = "#9ecae1", alpha = 0.8, linewidth = 0.7)  +
+  geom_density(aes(x=p6_o2), color = "#3182bd", alpha = 0.8, linewidth = 0.7)+
+  labs(x = "Nota", 
+       y = "Frecuencia" )  +
+  scale_y_percent() +
+  scale_y_continuous(labels = scales::percent, limits = c(0, 1)) +
+  scale_x_continuous(breaks = 1:7) +
+  expand_limits(x = c(1, 7))+
+  theme_classic() +
+  ggtitle("Mis promedio fue\n menos de lo que merezco") +
+  theme(plot.title = element_text(size = 9,
+    face = "bold", 
+    color = "black", hjust = 0.5),
+        plot.margin = margin(t = 20, r = 20, b = 20, l = 20))
+```
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+mas_nota <- merit %>% filter(p5_o2==3) %>% 
+  ggplot() + 
+  geom_density(aes(x=p4_o2), color = "#9ecae1", alpha = 0.8, linewidth = 0.7)  +
+  geom_density(aes(x=p6_o2), color = "#3182bd", alpha = 0.8, linewidth = 0.7)+
+  labs(x = "Nota", 
+       y = "Frecuencia" )  +
+  scale_y_percent() +
+  scale_y_continuous(labels = scales::percent, limits = c(0, 1)) +
+  scale_x_continuous(breaks = 1:7) +
+  expand_limits(x = c(1, 7))+
+  theme_classic() +
+  ggtitle("Mi promedio fue\n más de lo que merezco") +
+  theme(plot.title = element_text(size = 9,
+    face = "bold", 
+    color = "black", hjust = 0.5),
+        plot.margin = margin(t = 20, r = 20, b = 20, l = 20))
+```
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+# Leyenda personalizada
+legend_plot <- ggplot(data.frame(x = c("Promedio obtenido", "Promedio que cree merecer"), 
+                                 y = c(1, 1))) +
+  geom_point(aes(x = x, y = y, color = x), size = 5) +
+  scale_color_manual(values = c("#9ecae1", "#3182bd")) +
+  guides(color = guide_legend(title = NULL)) +
+  theme_void() +
+  theme(legend.position = "bottom")
+
+
+legend <- cowplot::get_legend(legend_plot)
+
+# Combinar los gráficos y la leyenda
+combined_plot <- cowplot::plot_grid(menos_nota, mas_nota, nrow = 1, labels = NULL)
+
+# Añadir el título y la leyenda al gráfico combinado
+final_plot <- cowplot::plot_grid(
+  cowplot::plot_grid(NULL, annotate_figure(
+    combined_plot,
+    top = text_grob(
+      "Figura 1.54: Contraste entre la nota obtenida y la nota preferida\npor el estudiante",
+      size = 12, 
+      face = "italic", 
+      color = "black",
+      hjust = 0.5
+    ),
+    bottom = NULL
+  ), NULL, ncol = 1, rel_heights = c(0.1, 1, 0.1)),
+  legend, ncol = 1, rel_heights = c(1, 0.1)
+)
+
+final_plot
+```
+
+### Merecimiento en la nota
+
+```{r, echo=FALSE}
+mn = round(prop.table(table(categorias=merit$p5_o2)),2)
+mn = as.data.frame(mn)
+mn$categorias <- factor(mn$categorias, levels = c(1, 2, 3, 4), labels = c("Muy en desacuerdo", "Desacuerdo", "De acuerdo", "Muy de acuerdo"))
+
+plot_mn <- ggplot(mn,aes(x=2,y=-Freq, fill=categorias))+
+  geom_bar(stat = "identity",
+           color="white")+
+    geom_text(aes(label = scales::percent(Freq)),
+              position=position_stack(vjust=0.5),color="black",size=4.5)+
+  coord_polar(theta = "y")+
+  scale_fill_brewer(palette = "Blues")+
+    theme_void()+
+  theme(legend.title = element_blank(),
+    plot.title = element_text(size=12, face="bold", hjust=0.5))+
+  xlim(0.5,2.5)+
+  labs(title="Estudiantes")
+plot_mn
+```
+
+### Merecimiento nota y esfuerzo
+
+```{r, echo=FALSE}
+mne = round(prop.table(table(categorias=merit$p7_o2)),2)
+mne = as.data.frame(mne)
+mne$categorias <- factor(mne$categorias, levels = c(1, 2, 3, 4), labels = c("Muy en desacuerdo", "Desacuerdo", "De acuerdo", "Muy de acuerdo"))
+
+plot_mne <- ggplot(mne,aes(x=2,y=-Freq, fill=categorias))+
+  geom_bar(stat = "identity",
+           color="white")+
+    geom_text(aes(label = scales::percent(Freq)),
+              position=position_stack(vjust=0.5),color="black",size=4.5)+
+  coord_polar(theta = "y")+
+  scale_fill_brewer(palette = "Blues")+
+    theme_void()+
+  theme(legend.title = element_blank(),
+    plot.title = element_text(size=12, face="bold", hjust=0.5))+
+  xlim(0.5,2.5)+
+  labs(title="Estudiantes")
+plot_mne
+```
+
+### Cambio esfuerzo
+
+```{r, echo=FALSE}
+ce = round(prop.table(table(categorias=merit$p8_1_o2)),2)
+ce = as.data.frame(ce)
+ce$categorias <- factor(ce$categorias, levels = c(1, 2, 3, 4), labels = c("Muy en desacuerdo", "Desacuerdo", "De acuerdo", "Muy de acuerdo"))
+
+plot_ce <- ggplot(ce,aes(x=2,y=-Freq, fill=categorias))+
+  geom_bar(stat = "identity",
+           color="white")+
+    geom_text(aes(label = scales::percent(Freq)),
+              position=position_stack(vjust=0.5),color="black",size=4.5)+
+  coord_polar(theta = "y")+
+  scale_fill_brewer(palette = "Blues")+
+    theme_void()+
+  theme(legend.title = element_blank(),
+    plot.title = element_text(size=12, face="bold", hjust=0.5))+
+  xlim(0.5,2.5)+
+  labs(title="Estudiantes")
+plot_ce
+```
+
+```{r, echo=FALSE}
+ce1 = round(prop.table(table(categorias=db_students$p8_1)),2)
+ce1 = as.data.frame(ce1)
+ce1$categorias <- factor(ce$categorias, levels = c(1, 2, 3, 4), labels = c("Muy en desacuerdo", "Desacuerdo", "De acuerdo", "Muy de acuerdo"))
+
+plot_ce <- ggplot(ce,aes(x=2,y=-Freq, fill=categorias))+
+  geom_bar(stat = "identity",
+           color="white")+
+    geom_text(aes(label = scales::percent(Freq)),
+              position=position_stack(vjust=0.5),color="black",size=4.5)+
+  coord_polar(theta = "y")+
+  scale_fill_brewer(palette = "Blues")+
+    theme_void()+
+  theme(legend.title = element_blank(),
+    plot.title = element_text(size=12, face="bold", hjust=0.5))+
+  xlim(0.5,2.5)+
+  labs(title="Estudiantes")
+plot_ce
+```
+
+### Cambio talento
+
+Esta pregunta presenta un cambio en la ola 1. Aumenta el desacuerdo y el acuerdo, disminuye el muy de acuerdo
+
+```{r, echo=FALSE}
+ct = round(prop.table(table(categorias=merit$p8_2_o2)),2)
+ct = as.data.frame(ct)
+ct$categorias <- factor(ct$categorias, levels = c(1, 2, 3, 4), labels = c("Muy en desacuerdo", "Desacuerdo", "De acuerdo", "Muy de acuerdo"))
+
+plot_ct <- ggplot(pt,aes(x=2,y=-Freq, fill=categorias))+
+  geom_bar(stat = "identity",
+           color="white")+
+    geom_text(aes(label = scales::percent(Freq)),
+              position=position_stack(vjust=0.5),color="black",size=4.5)+
+  coord_polar(theta = "y")+
+  scale_fill_brewer(palette = "Blues")+
+    theme_void()+
+  theme(legend.title = element_blank(),
+    plot.title = element_text(size=12, face="bold", hjust=0.5))+
+  xlim(0.5,2.5)+
+  labs(title="Estudiantes")
+plot_ct
+```
+
+## Desigualdad
+
+```{r, echo=FALSE}
+dm = round(prop.table(table(categorias=des$p9_6_o2)),2)
+dm = as.data.frame(dm)
+dm$categorias <- factor(dm$categorias, levels = c(1, 2, 3, 4), labels = c("Muy en desacuerdo", "Desacuerdo", "De acuerdo", "Muy de acuerdo"))
+
+plot_dm <- ggplot(dm,aes(x=2,y=-Freq, fill=categorias))+
+  geom_bar(stat = "identity",
+           color="white")+
+    geom_text(aes(label = scales::percent(Freq)),
+              position=position_stack(vjust=0.5),color="black",size=4.5)+
+  coord_polar(theta = "y")+
+  scale_fill_brewer(palette = "Blues")+
+    theme_void()+
+  theme(legend.title = element_blank(),
+    plot.title = element_text(size=12, face="bold", hjust=0.5))+
+  xlim(0.5,2.5)+
+  labs(title="Ola 2")
+
+```
+
+```{r, echo=FALSE}
+dm1 = round(prop.table(table(categorias=des1$p9_6)),2)
+dm1 = as.data.frame(dm1)
+dm1$categorias <- factor(dm1$categorias, levels = c(1, 2, 3, 4), labels = c("Muy en desacuerdo", "Desacuerdo", "De acuerdo", "Muy de acuerdo"))
+
+plot_dm1 <- ggplot(dm1,aes(x=2,y=-Freq, fill=categorias))+
+  geom_bar(stat = "identity",
+           color="white")+
+    geom_text(aes(label = scales::percent(Freq)),
+              position=position_stack(vjust=0.5),color="black",size=4.5)+
+  coord_polar(theta = "y")+
+  scale_fill_brewer(palette = "Blues")+
+    theme_void()+
+  theme(legend.title = element_blank(),
+    plot.title = element_text(size=12, face="bold", hjust=0.5))+
+  xlim(0.5,2.5)+
+  labs(title="Ola 1")
+```
+
+```{r, echo=FALSE}
+# grafico esfuerzo en la sociedad
+
+# Combinar los gráficos
+final_dm<- ggarrange(
+  plot_dm, 
+  plot_dm1,
+  common.legend = TRUE, 
+  ncol = 2, 
+  legend = "bottom")
+
+# Agregar una etiqueta global centrada
+plot_final_dm <- annotate_figure(
+  final_dm,
+  top = text_grob(
+    "Figura 1: Está bien que las personas más inteligentes y/o talentosas ganen más dinero, \naun cuando requieran esforzarse menos para ello",
+    size = 12, 
+    face = "italic", 
+    color = "black",
+    hjust = 0.5))
+
+
+plot_final_dm
+```
+
+```{r, echo=FALSE}
+
+print(summarytools::dfSummary(des), method="render")
+```
+
+```{r, echo=FALSE}
+print(summarytools::dfSummary(des1), method="render")
+```
