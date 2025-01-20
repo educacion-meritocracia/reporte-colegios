@@ -18,11 +18,9 @@ des <- db_students_w02 %>% select(p9_1_o2, p9_2_o2, p9_3_o2, p9_4_o2, p9_5_o2, p
 des1 <- db_students %>% select(p9_1, p9_2, p9_3, p9_4, p9_5, p9_6 )
 ```
 
+## Meritocracia en la escuela
 
-## Meritocracia en la escuela 
-
-### Percepción esfuerzo 
-
+### Percepción esfuerzo
 
 ```{r, echo=FALSE}
 
@@ -90,9 +88,7 @@ plot_final_pe <- annotate_figure(
 plot_final_pe
 ```
 
-
-### Percepción talento 
-
+### Percepción talento
 
 ```{r, echo=FALSE}
 pt = round(prop.table(table(categorias=merit$p2_2_o2)),2)
@@ -158,9 +154,7 @@ plot_final_pt <- annotate_figure(
 plot_final_pt
 ```
 
-
 ### Percepción merecimiento
-
 
 ```{r, echo=FALSE}
 pm = round(prop.table(table(categorias=merit$p2_3_o2)),2)
@@ -225,9 +219,7 @@ plot_final_pm <- annotate_figure(
 plot_final_pm
 ```
 
-
-### Preferencia 
-
+### Preferencia
 
 ```{r, echo=FALSE, warning=FALSE}
 pref <- merit %>%
@@ -306,11 +298,9 @@ plot_final_pref <- annotate_figure(
 plot_final_pref
 ```
 
-
 Se prefiere más el esfuerzo que el talento. Aunque la mayoría se concentra en ambos.
 
 ### Nota obtenida y nota justa
-
 
 ```{r, echo=FALSE, message=FALSE}
 menos_nota <-merit %>% filter(p5_o2==1) %>% 
@@ -385,9 +375,7 @@ final_plot <- cowplot::plot_grid(
 final_plot
 ```
 
-
-### Merecimiento en la nota 
-
+### Merecimiento en la nota
 
 ```{r, echo=FALSE}
 mn = round(prop.table(table(categorias=merit$p5_o2)),2)
@@ -409,9 +397,7 @@ plot_mn <- ggplot(mn,aes(x=2,y=-Freq, fill=categorias))+
 plot_mn
 ```
 
-
 ### Merecimiento nota y esfuerzo
-
 
 ```{r, echo=FALSE}
 mne = round(prop.table(table(categorias=merit$p7_o2)),2)
@@ -433,9 +419,7 @@ plot_mne <- ggplot(mne,aes(x=2,y=-Freq, fill=categorias))+
 plot_mne
 ```
 
-
-### Cambio esfuerzo 
-
+### Cambio esfuerzo
 
 ```{r, echo=FALSE}
 ce = round(prop.table(table(categorias=merit$p8_1_o2)),2)
@@ -477,11 +461,9 @@ plot_ce <- ggplot(ce,aes(x=2,y=-Freq, fill=categorias))+
 plot_ce
 ```
 
-
-### Cambio talento 
+### Cambio talento
 
 Esta pregunta presenta un cambio en la ola 1. Aumenta el desacuerdo y el acuerdo, disminuye el muy de acuerdo
-
 
 ```{r, echo=FALSE}
 ct = round(prop.table(table(categorias=merit$p8_2_o2)),2)
@@ -503,9 +485,7 @@ plot_ct <- ggplot(pt,aes(x=2,y=-Freq, fill=categorias))+
 plot_ct
 ```
 
-
-## Desigualdad 
-
+## Desigualdad
 
 ```{r, echo=FALSE}
 
@@ -515,4 +495,3 @@ print(summarytools::dfSummary(des), method="render")
 ```{r, echo=FALSE}
 print(summarytools::dfSummary(des1), method="render")
 ```
-

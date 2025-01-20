@@ -9,13 +9,13 @@ pacman::p_load(dplyr, sjPlot, stargazer, kableExtra, texreg, haven, sjlabelled, 
 load("C:/Users/LENOVO/Documents/GitHub/edumer-ola2/input/data/original/db_proc_students_w02.RData")
 load("C:/Users/LENOVO/Documents/GitHub/edumer-ola2/input/data/original/db_proc_students.RData")
 
-merit <- db_students_w02 %>% select(p2_1_o2, p2_2_o2, p2_3_o2, p3_o2, p4_o2, p5_o2, p6_o2, p7_o2, p8_1_o2, p8_2_o2)
+merit <- db_students_w02 %>% select(p2_1_o2, p2_2_o2, p2_3_o2, p3_o2, p4_o2, p5_o2, p6_o2, p7_o2, p8_1_o2, p8_2_o2) %>% na.omit()
 
-merit1 <- db_students %>% select(p2_1, p2_2, p2_3, p3, p4, p5, p6, p7, p8_1, p8_2)
+merit1 <- db_students %>% select(p2_1, p2_2, p2_3, p3, p4, p5, p6, p7, p8_1, p8_2) %>% na.omit()
   
-des <- db_students_w02 %>% select(p9_1_o2, p9_2_o2, p9_3_o2, p9_4_o2, p9_5_o2, p9_6_o2 )
+des <- db_students_w02 %>% select(p9_1_o2, p9_2_o2, p9_3_o2, p9_4_o2, p9_5_o2, p9_6_o2)%>% na.omit()
 
-des1 <- db_students %>% select(p9_1, p9_2, p9_3, p9_4, p9_5, p9_6 )
+des1 <- db_students %>% select(p9_1, p9_2, p9_3, p9_4, p9_5, p9_6 )%>% na.omit()
 ```
 
 ## Meritocracia en la escuela
@@ -380,7 +380,7 @@ final_plot
 ```{r, echo=FALSE}
 mn = round(prop.table(table(categorias=merit$p5_o2)),2)
 mn = as.data.frame(mn)
-mn$categorias <- factor(mn$categorias, levels = c(1, 2, 3, 4), labels = c("Muy en desacuerdo", "Desacuerdo", "De acuerdo", "Muy de acuerdo"))
+mn$categorias <- factor(mn$categorias, levels = c(1, 2, 3), labels = c("Menos de lo que merzco", "Lo que merzco", "Más de lo que merzco"))
 
 plot_mn <- ggplot(mn,aes(x=2,y=-Freq, fill=categorias))+
   geom_bar(stat = "identity",
@@ -393,7 +393,7 @@ plot_mn <- ggplot(mn,aes(x=2,y=-Freq, fill=categorias))+
   theme(legend.title = element_blank(),
     plot.title = element_text(size=12, face="bold", hjust=0.5))+
   xlim(0.5,2.5)+
-  labs(title="Estudiantes")
+  labs(title="Ola 2")
 plot_mn
 ```
 
@@ -402,7 +402,7 @@ plot_mn
 ```{r, echo=FALSE}
 mne = round(prop.table(table(categorias=merit$p7_o2)),2)
 mne = as.data.frame(mne)
-mne$categorias <- factor(mne$categorias, levels = c(1, 2, 3, 4), labels = c("Muy en desacuerdo", "Desacuerdo", "De acuerdo", "Muy de acuerdo"))
+mne$categorias <- factor(mne$categorias, levels = c(1, 2, 3), labels = c("Menos de lo que merzco", "Lo que merzco", "Más de lo que merzco"))
 
 plot_mne <- ggplot(mne,aes(x=2,y=-Freq, fill=categorias))+
   geom_bar(stat = "identity",
@@ -415,7 +415,7 @@ plot_mne <- ggplot(mne,aes(x=2,y=-Freq, fill=categorias))+
   theme(legend.title = element_blank(),
     plot.title = element_text(size=12, face="bold", hjust=0.5))+
   xlim(0.5,2.5)+
-  labs(title="Estudiantes")
+  labs(title="Ola 2")
 plot_mne
 ```
 
@@ -437,16 +437,16 @@ plot_ce <- ggplot(ce,aes(x=2,y=-Freq, fill=categorias))+
   theme(legend.title = element_blank(),
     plot.title = element_text(size=12, face="bold", hjust=0.5))+
   xlim(0.5,2.5)+
-  labs(title="Estudiantes")
+  labs(title="Ola 2")
 plot_ce
 ```
 
 ```{r, echo=FALSE}
-ce1 = round(prop.table(table(categorias=db_students$p8_1)),2)
+ce1 = round(prop.table(table(categorias=merit1$p8_1)),2)
 ce1 = as.data.frame(ce1)
-ce1$categorias <- factor(ce$categorias, levels = c(1, 2, 3, 4), labels = c("Muy en desacuerdo", "Desacuerdo", "De acuerdo", "Muy de acuerdo"))
+ce1$categorias <- factor(ce1$categorias, levels = c(1, 2, 3, 4), labels = c("Muy en desacuerdo", "Desacuerdo", "De acuerdo", "Muy de acuerdo"))
 
-plot_ce <- ggplot(ce,aes(x=2,y=-Freq, fill=categorias))+
+plot_ce1 <- ggplot(ce1,aes(x=2,y=-Freq, fill=categorias))+
   geom_bar(stat = "identity",
            color="white")+
     geom_text(aes(label = scales::percent(Freq)),
@@ -457,8 +457,8 @@ plot_ce <- ggplot(ce,aes(x=2,y=-Freq, fill=categorias))+
   theme(legend.title = element_blank(),
     plot.title = element_text(size=12, face="bold", hjust=0.5))+
   xlim(0.5,2.5)+
-  labs(title="Estudiantes")
-plot_ce
+  labs(title="Ola 1")
+plot_ce1
 ```
 
 ### Cambio talento
@@ -481,7 +481,7 @@ plot_ct <- ggplot(pt,aes(x=2,y=-Freq, fill=categorias))+
   theme(legend.title = element_blank(),
     plot.title = element_text(size=12, face="bold", hjust=0.5))+
   xlim(0.5,2.5)+
-  labs(title="Estudiantes")
+  labs(title="Ola 2")
 plot_ct
 ```
 
