@@ -1,0 +1,661 @@
+---
+title: "Ciudadanía 2"
+---
+
+```{r, echo=FALSE}
+
+pacman::p_load(dplyr, sjPlot, stargazer, kableExtra, texreg, haven, sjlabelled, ggplot2, summarytools, ggtext, ggpubr, hrbrthemes, tidyr, stringr, sjmisc, ggalluvial)
+
+load("output/data/db_proc_students_w02.RData")
+load("output/data/db_proc_students.RData")
+load("output/data/edumer_students_long.RData")
+
+ciud1 <- db_students %>%
+  select(id_estudiante, p17_1, p17_2, p19) %>%
+  mutate(across(everything(), ~ na_if(.x, 99))) %>% 
+  mutate(across(everything(), ~ na_if(.x, 88))) %>%  
+  na.omit() 
+
+ciud2 <- db_students_w02 %>%
+  select(id_estudiante, p11_1_o2, p11_2_o2, p12_o2, p13_1_o2, p13_2_o2, p13_3_o2, 
+         p13_4_o2, p13_5_o2, p13_6_o2, p13_7_o2, p13_8_o2, p13_9_o2, 
+         p13_10_o2, p13_11_o2, p13_12_o2) %>%
+  mutate(across(everything(), ~ na_if(.x, 99))) %>%  
+  mutate(across(everything(), ~ na_if(.x, 88))) %>%  
+  na.omit()  
+
+db_long <- edumer_students_long %>% set_na(., na = c(99, 88))
+
+```
+
+## Participación y comprensión política
+
+```{r, echo=FALSE}
+
+# Cuando sea adulto(a) podré participar en la política 
+
+polit = round(prop.table(table(categorias=ciud1$p17_1)),2)
+polit = as.data.frame(polit)
+polit$categorias <- factor(polit$categorias, levels = c(1, 2, 3, 4), labels = c("Muy en desacuerdo", "Desacuerdo", "De acuerdo", "Muy de acuerdo"))
+
+plot_polit <- ggplot(polit,aes(x=2,y=-Freq, fill=categorias))+
+  geom_bar(stat = "identity",
+           color="white")+
+    geom_text(aes(label = scales::percent(Freq)),
+              position=position_stack(vjust=0.5),color="black",size=4.5)+
+  coord_polar(theta = "y")+
+  scale_fill_brewer(palette = "Blues")+
+    theme_void()+
+  theme(legend.title = element_blank(),
+    plot.title = element_text(size=12, face="bold", hjust=0.5))+
+  xlim(0.5,2.5)+
+  labs(title="Ola 1")
+
+```
+
+```{r, echo=FALSE}
+
+polit2 = round(prop.table(table(categorias=ciud2$p11_1_o2)),2)
+polit2 = as.data.frame(polit2)
+polit2$categorias <- factor(polit2$categorias, levels = c(1, 2, 3, 4), labels = c("Muy en desacuerdo", "Desacuerdo", "De acuerdo", "Muy de acuerdo"))
+
+plot_polit2 <- ggplot(polit2,aes(x=2,y=-Freq, fill=categorias))+
+  geom_bar(stat = "identity",
+           color="white")+
+    geom_text(aes(label = scales::percent(Freq)),
+              position=position_stack(vjust=0.5),color="black",size=4.5)+
+  coord_polar(theta = "y")+
+  scale_fill_brewer(palette = "Blues")+
+    theme_void()+
+  theme(legend.title = element_blank(),
+    plot.title = element_text(size=12, face="bold", hjust=0.5))+
+  xlim(0.5,2.5)+
+  labs(title="Ola 2")
+
+```
+
+```{r, echo=FALSE}
+
+# Combinar los gráficos
+final_polit <- ggarrange(
+  plot_polit, 
+  plot_polit2,
+  common.legend = TRUE, 
+  ncol = 2, 
+  legend = "bottom")
+
+# Agregar una etiqueta global centrada
+plot_final_polit <- annotate_figure(
+  final_polit,
+  top = text_grob(
+    "Figura 1: Cuando sea adulto(a) podré participar en la política",
+    size = 12, 
+    face = "italic", 
+    color = "black",
+    hjust = 0.5))
+
+
+plot_final_polit
+```
+
+"Muy en desacuerdo" se mantiene constante (15%). Incremento en "Desacuerdo" (+2 puntos porcentuales). Disminución leve en "De acuerdo" (-1 punto porcentual). Incremento leve en "Muy de acuerdo" (+1 punto porcentual).
+
+```{r, echo=FALSE}
+
+# Comprendo bien las problemáticas políticas de nuestro país
+
+probl = round(prop.table(table(categorias=ciud1$p17_2)),2)
+probl = as.data.frame(probl)
+probl$categorias <- factor(probl$categorias, levels = c(1, 2, 3, 4), labels = c("Muy en desacuerdo", "Desacuerdo", "De acuerdo", "Muy de acuerdo"))
+
+plot_probl <- ggplot(probl,aes(x=2,y=-Freq, fill=categorias))+
+  geom_bar(stat = "identity",
+           color="white")+
+    geom_text(aes(label = scales::percent(Freq)),
+              position=position_stack(vjust=0.5),color="black",size=4.5)+
+  coord_polar(theta = "y")+
+  scale_fill_brewer(palette = "Blues")+
+    theme_void()+
+  theme(legend.title = element_blank(),
+    plot.title = element_text(size=12, face="bold", hjust=0.5))+
+  xlim(0.5,2.5)+
+  labs(title="Ola 1")
+
+```
+
+```{r, echo=FALSE}
+
+probl2 = round(prop.table(table(categorias=ciud2$p11_2_o2)),2)
+probl2 = as.data.frame(probl2)
+probl2$categorias <- factor(probl2$categorias, levels = c(1, 2, 3, 4), labels = c("Muy en desacuerdo", "Desacuerdo", "De acuerdo", "Muy de acuerdo"))
+
+plot_probl2 <- ggplot(probl2,aes(x=2,y=-Freq, fill=categorias))+
+  geom_bar(stat = "identity",
+           color="white")+
+    geom_text(aes(label = scales::percent(Freq)),
+              position=position_stack(vjust=0.5),color="black",size=4.5)+
+  coord_polar(theta = "y")+
+  scale_fill_brewer(palette = "Blues")+
+    theme_void()+
+  theme(legend.title = element_blank(),
+    plot.title = element_text(size=12, face="bold", hjust=0.5))+
+  xlim(0.5,2.5)+
+  labs(title="Ola 2")
+
+```
+
+```{r, echo=FALSE}
+
+# Combinar los gráficos
+final_probl <- ggarrange(
+  plot_probl, 
+  plot_probl2,
+  common.legend = TRUE, 
+  ncol = 2, 
+  legend = "bottom")
+
+# Agregar una etiqueta global centrada
+plot_final_probl <- annotate_figure(
+  final_probl,
+  top = text_grob(
+    "Figura 2: Comprendo bien las problemáticas políticas de nuestro país",
+    size = 12, 
+    face = "italic", 
+    color = "black",
+    hjust = 0.5))
+
+
+plot_final_probl
+```
+
+Disminución en "Muy en desacuerdo" (-3 puntos porcentuales). Incremento notable en "Desacuerdo" (+6 puntos porcentuales). Disminución notable en "De acuerdo" (-6 puntos porcentuales). Incremento en "Muy de acuerdo" (+3 puntos porcentuales).
+
+## Percepción sobre la importancia de la Formación Ciudadana en su establecimiento
+
+```{r, echo=FALSE}
+
+# ¿Cuánta importancia dirías tú que se le da a la Formación Ciudadana en este establecimiento?
+
+formciud = round(prop.table(table(categorias=ciud1$p19)),2)
+formciud = as.data.frame(formciud)
+formciud$categorias <- factor(formciud$categorias, levels = c(1, 2, 3, 4), labels = c("Ninguna importancia", "Algo de importancia", "Mediana importancia", "Mucha importancia"))
+
+plot_formciud <- ggplot(formciud,aes(x=2,y=-Freq, fill=categorias))+
+  geom_bar(stat = "identity",
+           color="white")+
+    geom_text(aes(label = scales::percent(Freq)),
+              position=position_stack(vjust=0.5),color="black",size=4.5)+
+  coord_polar(theta = "y")+
+  scale_fill_brewer(palette = "Blues")+
+    theme_void()+
+  theme(legend.title = element_blank(),
+    plot.title = element_text(size=12, face="bold", hjust=0.5))+
+  xlim(0.5,2.5)+
+  labs(title="Ola 1")
+
+```
+
+```{r, echo=FALSE}
+
+formciud2 = round(prop.table(table(categorias=ciud2$p12_o2)),2)
+formciud2 = as.data.frame(formciud2)
+formciud2$categorias <- factor(formciud2$categorias, levels = c(1, 2, 3, 4), labels = c("Ninguna importancia", "Algo de importancia", "Mediana importancia", "Mucha importancia"))
+
+plot_formciud2 <- ggplot(formciud2,aes(x=2,y=-Freq, fill=categorias))+
+  geom_bar(stat = "identity",
+           color="white")+
+    geom_text(aes(label = scales::percent(Freq)),
+              position=position_stack(vjust=0.5),color="black",size=4.5)+
+  coord_polar(theta = "y")+
+  scale_fill_brewer(palette = "Blues")+
+    theme_void()+
+  theme(legend.title = element_blank(),
+    plot.title = element_text(size=12, face="bold", hjust=0.5))+
+  xlim(0.5,2.5)+
+  labs(title="Ola 2")
+```
+
+```{r, echo=FALSE}
+
+# Combinar los gráficos
+final_formciud <- ggarrange(
+  plot_formciud, 
+  plot_formciud2,
+  common.legend = TRUE, 
+  ncol = 2, 
+  legend = "bottom")
+
+# Agregar una etiqueta global centrada
+plot_final_formciud <- annotate_figure(
+  final_formciud,
+  top = text_grob(
+"Figura 3: ¿Cuánta importancia dirías tú que se le da a la Formación Ciudadana en este establecimiento?",
+    size = 10, 
+    face = "italic", 
+    color = "black",
+    hjust = 0.5))
+
+
+plot_final_formciud
+
+```
+
+Disminución en "Ninguna importancia" (-2 puntos porcentuales). Aumento en "Algo de importancia" (+6 puntos porcentuales). Incremento en "Mediana importancia" (+3 puntos porcentuales). Disminución en "Mucha importancia" (-6 puntos porcentuales).
+
+## Grado de capacidad para realizar tareas utilizando Tecnologías de Información y Comunicaciones (TIC)
+
+```{r, echo=FALSE}
+
+# Editar fotografías digitales u otras imágenes gráficas
+
+editar = round(prop.table(table(categorias=ciud2$p13_1_o2)),2)
+editar = as.data.frame(editar)
+editar$categorias <- factor(editar$categorias, levels = c(1, 2, 3), labels = c("Sé cómo realizarlo", "No sé realizarlo, pero me siento capaz de aprenderlo", "No me siento capaz de aprenderlo"))
+
+plot_editar <- ggplot(editar,aes(x=2,y=-Freq, fill=categorias))+
+  geom_bar(stat = "identity",
+           color="white")+
+    geom_text(aes(label = scales::percent(Freq)),
+              position=position_stack(vjust=0.5),color="black",size=4.5)+
+  coord_polar(theta = "y")+
+  scale_fill_brewer(palette = "Blues")+
+    theme_void()+
+  theme(legend.title = element_blank(),
+    plot.title = element_text(size=12, face="bold", hjust=0.5))+
+  xlim(0.5,2.5)+
+  labs(title="Ola 2")
+
+# Agregar una etiqueta global centrada
+plot_editar <- annotate_figure(
+  plot_editar,
+  top = text_grob(
+"Figura 4: Editar fotografías digitales u otras imágenes gráficas",
+    size = 12, 
+    face = "italic", 
+    color = "black",
+    hjust = 0.5))
+
+plot_editar
+```
+
+```{r, echo=FALSE}
+
+# Escribir o editar texto para un trabajo escolar 
+
+escribir = round(prop.table(table(categorias=ciud2$p13_2_o2)),2)
+escribir = as.data.frame(escribir)
+escribir$categorias <- factor(escribir$categorias, levels = c(1, 2, 3), labels = c("Sé cómo realizarlo", "No sé realizarlo, pero me siento capaz de aprenderlo", "No me siento capaz de aprenderlo"))
+
+plot_escribir <- ggplot(escribir,aes(x=2,y=-Freq, fill=categorias))+
+  geom_bar(stat = "identity",
+           color="white")+
+    geom_text(aes(label = scales::percent(Freq)),
+              position=position_stack(vjust=0.5),color="black",size=4.5)+
+  coord_polar(theta = "y")+
+  scale_fill_brewer(palette = "Blues")+
+    theme_void()+
+  theme(legend.title = element_blank(),
+    plot.title = element_text(size=12, face="bold", hjust=0.5))+
+  xlim(0.5,2.5)+
+  labs(title="Ola 2")
+
+# Agregar una etiqueta global centrada
+plot_escribir <- annotate_figure(
+  plot_escribir,
+  top = text_grob(
+"Figura 5: Escribir o editar texto para un trabajo escolar",
+    size = 12, 
+    face = "italic", 
+    color = "black",
+    hjust = 0.5))
+
+plot_escribir
+
+```
+
+```{r, echo=FALSE}
+
+# Buscar y encontrar en Internet información relevante para un proyecto escolar
+
+buscar = round(prop.table(table(categorias=ciud2$p13_3_o2)),2)
+buscar = as.data.frame(buscar)
+buscar$categorias <- factor(buscar$categorias, levels = c(1, 2, 3), labels = c("Sé cómo realizarlo", "No sé realizarlo, pero me siento capaz de aprenderlo", "No me siento capaz de aprenderlo"))
+
+plot_buscar <- ggplot(buscar,aes(x=2,y=-Freq, fill=categorias))+
+  geom_bar(stat = "identity",
+           color="white")+
+    geom_text(aes(label = scales::percent(Freq)),
+              position=position_stack(vjust=0.5),color="black",size=4.5)+
+  coord_polar(theta = "y")+
+  scale_fill_brewer(palette = "Blues")+
+    theme_void()+
+  theme(legend.title = element_blank(),
+    plot.title = element_text(size=12, face="bold", hjust=0.5))+
+  xlim(0.5,2.5)+
+  labs(title="Ola 2")
+
+# Agregar una etiqueta global centrada
+plot_buscar <- annotate_figure(
+  plot_buscar,
+  top = text_grob(
+"Figura 6: Buscar y encontrar en Internet información relevante para un proyecto escolar",
+    size = 12, 
+    face = "italic", 
+    color = "black",
+    hjust = 0.5))
+
+plot_buscar
+
+```
+
+```{r, echo=FALSE}
+
+# Crear una presentación multimedia (con sonido, imágenes o video) 
+
+crear = round(prop.table(table(categorias=ciud2$p13_4_o2)),2)
+crear = as.data.frame(crear)
+crear$categorias <- factor(crear$categorias, levels = c(1, 2, 3), labels = c("Sé cómo realizarlo", "No sé realizarlo, pero me siento capaz de aprenderlo", "No me siento capaz de aprenderlo"))
+
+plot_crear <- ggplot(crear,aes(x=2,y=-Freq, fill=categorias))+
+  geom_bar(stat = "identity",
+           color="white")+
+    geom_text(aes(label = scales::percent(Freq)),
+              position=position_stack(vjust=0.5),color="black",size=4.5)+
+  coord_polar(theta = "y")+
+  scale_fill_brewer(palette = "Blues")+
+    theme_void()+
+  theme(legend.title = element_blank(),
+    plot.title = element_text(size=12, face="bold", hjust=0.5))+
+  xlim(0.5,2.5)+
+  labs(title="Ola 2")
+
+# Agregar una etiqueta global centrada
+plot_crear <- annotate_figure(
+  plot_crear,
+  top = text_grob(
+"Figura 7: Crear una presentación multimedia (con sonido, imágenes o video)",
+    size = 12, 
+    face = "italic", 
+    color = "black",
+    hjust = 0.5))
+
+plot_crear
+```
+
+```{r, echo=FALSE}
+
+# Cargar texto, imágenes o vídeo en un perfil en línea
+
+cargar = round(prop.table(table(categorias=ciud2$p13_5_o2)),2)
+cargar = as.data.frame(cargar)
+cargar$categorias <- factor(cargar$categorias, levels = c(1, 2, 3), labels = c("Sé cómo realizarlo", "No sé realizarlo, pero me siento capaz de aprenderlo", "No me siento capaz de aprenderlo"))
+
+plot_cargar <- ggplot(cargar,aes(x=2,y=-Freq, fill=categorias))+
+  geom_bar(stat = "identity",
+           color="white")+
+    geom_text(aes(label = scales::percent(Freq)),
+              position=position_stack(vjust=0.5),color="black",size=4.5)+
+  coord_polar(theta = "y")+
+  scale_fill_brewer(palette = "Blues")+
+    theme_void()+
+  theme(legend.title = element_blank(),
+    plot.title = element_text(size=12, face="bold", hjust=0.5))+
+  xlim(0.5,2.5)+
+  labs(title="Ola 2")
+
+# Agregar una etiqueta global centrada
+plot_cargar <- annotate_figure(
+  plot_cargar,
+  top = text_grob(
+"Figura 8: Cargar texto, imágenes o vídeo en un perfil en línea",
+    size = 12, 
+    face = "italic", 
+    color = "black",
+    hjust = 0.5))
+
+plot_cargar
+```
+
+```{r, echo=FALSE}
+
+# Insertar una imagen en un documento o mensaje
+
+insertar = round(prop.table(table(categorias=ciud2$p13_6_o2)),2)
+insertar = as.data.frame(insertar)
+insertar$categorias <- factor(insertar$categorias, levels = c(1, 2, 3), labels = c("Sé cómo realizarlo", "No sé realizarlo, pero me siento capaz de aprenderlo", "No me siento capaz de aprenderlo"))
+
+plot_insertar <- ggplot(insertar,aes(x=2,y=-Freq, fill=categorias))+
+  geom_bar(stat = "identity",
+           color="white")+
+    geom_text(aes(label = scales::percent(Freq)),
+              position=position_stack(vjust=0.5),color="black",size=4.5)+
+  coord_polar(theta = "y")+
+  scale_fill_brewer(palette = "Blues")+
+    theme_void()+
+  theme(legend.title = element_blank(),
+    plot.title = element_text(size=12, face="bold", hjust=0.5))+
+  xlim(0.5,2.5)+
+  labs(title="Ola 2")
+
+# Agregar una etiqueta global centrada
+plot_insertar <- annotate_figure(
+  plot_insertar,
+  top = text_grob(
+"Figura 9: Insertar una imagen en un documento o mensaje",
+    size = 12, 
+    face = "italic", 
+    color = "black",
+    hjust = 0.5))
+
+plot_insertar
+
+```
+
+```{r, echo=FALSE}
+
+# Instalar un programa o aplicación
+
+instalar = round(prop.table(table(categorias=ciud2$p13_7_o2)),2)
+instalar = as.data.frame(instalar)
+instalar$categorias <- factor(instalar$categorias, levels = c(1, 2, 3), labels = c("Sé cómo realizarlo", "No sé realizarlo, pero me siento capaz de aprenderlo", "No me siento capaz de aprenderlo"))
+
+plot_instalar <- ggplot(instalar,aes(x=2,y=-Freq, fill=categorias))+
+  geom_bar(stat = "identity",
+           color="white")+
+    geom_text(aes(label = scales::percent(Freq)),
+              position=position_stack(vjust=0.5),color="black",size=4.5)+
+  coord_polar(theta = "y")+
+  scale_fill_brewer(palette = "Blues")+
+    theme_void()+
+  theme(legend.title = element_blank(),
+    plot.title = element_text(size=12, face="bold", hjust=0.5))+
+  xlim(0.5,2.5)+
+  labs(title="Ola 2")
+
+# Agregar una etiqueta global centrada
+plot_instalar <- annotate_figure(
+  plot_instalar,
+  top = text_grob(
+"Figura 10: Instalar un programa o aplicación",
+    size = 12, 
+    face = "italic", 
+    color = "black",
+    hjust = 0.5))
+
+plot_instalar
+
+```
+
+```{r, echo=FALSE}
+
+# Juzgar si puede confiar en la información que encuentra en Internet
+
+juzgar = round(prop.table(table(categorias=ciud2$p13_8_o2)),2)
+juzgar = as.data.frame(juzgar)
+juzgar$categorias <- factor(juzgar$categorias, levels = c(1, 2, 3), labels = c("Sé cómo realizarlo", "No sé realizarlo, pero me siento capaz de aprenderlo", "No me siento capaz de aprenderlo"))
+
+plot_juzgar <- ggplot(juzgar,aes(x=2,y=-Freq, fill=categorias))+
+  geom_bar(stat = "identity",
+           color="white")+
+    geom_text(aes(label = scales::percent(Freq)),
+              position=position_stack(vjust=0.5),color="black",size=4.5)+
+  coord_polar(theta = "y")+
+  scale_fill_brewer(palette = "Blues")+
+    theme_void()+
+  theme(legend.title = element_blank(),
+    plot.title = element_text(size=12, face="bold", hjust=0.5))+
+  xlim(0.5,2.5)+
+  labs(title="Ola 2")
+
+# Agregar una etiqueta global centrada
+plot_juzgar <- annotate_figure(
+  plot_juzgar,
+  top = text_grob(
+"Figura 10: Juzgar si puede confiar en la información que encuentra en Internet",
+    size = 12, 
+    face = "italic", 
+    color = "black",
+    hjust = 0.5))
+
+plot_juzgar
+
+
+```
+
+```{r, echo=FALSE}
+
+# Crear una base de datos (por ejemplo, utilizando [Microsoft access®])
+
+crearbase = round(prop.table(table(categorias=ciud2$p13_9_o2)),2)
+crearbase = as.data.frame(crearbase)
+crearbase$categorias <- factor(crearbase$categorias, levels = c(1, 2, 3), labels = c("Sé cómo realizarlo", "No sé realizarlo, pero me siento capaz de aprenderlo", "No me siento capaz de aprenderlo"))
+
+plot_crearbase <- ggplot(crearbase,aes(x=2,y=-Freq, fill=categorias))+
+  geom_bar(stat = "identity",
+           color="white")+
+    geom_text(aes(label = scales::percent(Freq)),
+              position=position_stack(vjust=0.5),color="black",size=4.5)+
+  coord_polar(theta = "y")+
+  scale_fill_brewer(palette = "Blues")+
+    theme_void()+
+  theme(legend.title = element_blank(),
+    plot.title = element_text(size=12, face="bold", hjust=0.5))+
+  xlim(0.5,2.5)+
+  labs(title="Ola 2")
+
+# Agregar una etiqueta global centrada
+plot_crearbase <- annotate_figure(
+  plot_crearbase,
+  top = text_grob(
+"Figura 11: Crear una base de datos (por ejemplo, utilizando [Microsoft access®])",
+    size = 12, 
+    face = "italic", 
+    color = "black",
+    hjust = 0.5))
+
+plot_crearbase
+
+```
+
+```{r, echo=FALSE}
+
+# Construir o editar una página web
+
+pagweb = round(prop.table(table(categorias=ciud2$p13_10_o2)),2)
+pagweb = as.data.frame(pagweb)
+pagweb$categorias <- factor(pagweb$categorias, levels = c(1, 2, 3), labels = c("Sé cómo realizarlo", "No sé realizarlo, pero me siento capaz de aprenderlo", "No me siento capaz de aprenderlo"))
+
+plot_pagweb <- ggplot(pagweb,aes(x=2,y=-Freq, fill=categorias))+
+  geom_bar(stat = "identity",
+           color="white")+
+    geom_text(aes(label = scales::percent(Freq)),
+              position=position_stack(vjust=0.5),color="black",size=4.5)+
+  coord_polar(theta = "y")+
+  scale_fill_brewer(palette = "Blues")+
+    theme_void()+
+  theme(legend.title = element_blank(),
+    plot.title = element_text(size=12, face="bold", hjust=0.5))+
+  xlim(0.5,2.5)+
+  labs(title="Ola 2")
+
+# Agregar una etiqueta global centrada
+plot_pagweb <- annotate_figure(
+  plot_pagweb,
+  top = text_grob(
+"Figura 12: Construir o editar una página web",
+    size = 12, 
+    face = "italic", 
+    color = "black",
+    hjust = 0.5))
+
+plot_pagweb
+```
+
+```{r, echo=FALSE}
+
+# Crear un programa informático, macro o aplicación (por ejemplo, en Basic, Visual Basic, etc.)
+
+programa = round(prop.table(table(categorias=ciud2$p13_11_o2)),2)
+programa = as.data.frame(programa)
+programa$categorias <- factor(programa$categorias, levels = c(1, 2, 3), labels = c("Sé cómo realizarlo", "No sé realizarlo, pero me siento capaz de aprenderlo", "No me siento capaz de aprenderlo"))
+
+plot_programa <- ggplot(programa,aes(x=2,y=-Freq, fill=categorias))+
+  geom_bar(stat = "identity",
+           color="white")+
+    geom_text(aes(label = scales::percent(Freq)),
+              position=position_stack(vjust=0.5),color="black",size=4.5)+
+  coord_polar(theta = "y")+
+  scale_fill_brewer(palette = "Blues")+
+    theme_void()+
+  theme(legend.title = element_blank(),
+    plot.title = element_text(size=12, face="bold", hjust=0.5))+
+  xlim(0.5,2.5)+
+  labs(title="Ola 2")
+
+# Agregar una etiqueta global centrada
+plot_programa <- annotate_figure(
+  plot_programa,
+  top = text_grob(
+"Figura 13: Crear un programa informático, macro o aplicación (por ejemplo, en Basic, Visual Basic, etc.)",
+    size = 10, 
+    face = "italic", 
+    color = "black",
+    hjust = 0.5))
+
+plot_programa
+
+```
+
+```{r, echo=FALSE}
+
+# Configurar una red de área local de computadores u otras tecnologías de información y comunicaciones
+
+redlocal = round(prop.table(table(categorias=ciud2$p13_12_o2)),2)
+redlocal = as.data.frame(redlocal)
+redlocal$categorias <- factor(redlocal$categorias, levels = c(1, 2, 3), labels = c("Sé cómo realizarlo", "No sé realizarlo, pero me siento capaz de aprenderlo", "No me siento capaz de aprenderlo"))
+
+plot_redlocal <- ggplot(redlocal,aes(x=2,y=-Freq, fill=categorias))+
+  geom_bar(stat = "identity",
+           color="white")+
+    geom_text(aes(label = scales::percent(Freq)),
+              position=position_stack(vjust=0.5),color="black",size=4.5)+
+  coord_polar(theta = "y")+
+  scale_fill_brewer(palette = "Blues")+
+    theme_void()+
+  theme(legend.title = element_blank(),
+    plot.title = element_text(size=12, face="bold", hjust=0.5))+
+  xlim(0.5,2.5)+
+  labs(title="Ola 2")
+
+# Agregar una etiqueta global centrada
+plot_redlocal <- annotate_figure(
+  plot_redlocal,
+  top = text_grob(
+"Figura 14: Configurar una red de área local de computadores u otras Tecnologías de Información y Comunicaciones",
+    size = 9, 
+    face = "italic", 
+    color = "black",
+    hjust = 0.5))
+
+plot_redlocal
+```
