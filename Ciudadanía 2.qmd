@@ -4,27 +4,99 @@ title: "Ciudadanía 2"
 
 ```{r, echo=FALSE}
 
-pacman::p_load(dplyr, sjPlot, stargazer, kableExtra, texreg, haven, sjlabelled, ggplot2, summarytools, ggtext, ggpubr, hrbrthemes, tidyr, stringr, sjmisc, ggalluvial)
+pacman::p_load(dplyr, sjPlot, stargazer, kableExtra, texreg, haven, sjlabelled, ggplot2, summarytools, ggtext, ggpubr, hrbrthemes, tidyr, stringr, sjmisc, ggalluvial, shadowtext)
 
 load("output/data/db_proc_students_w02.RData")
 load("output/data/db_proc_students.RData")
-load("output/data/edumer_students_long.RData")
 
 ciud1 <- db_students %>%
-  select(id_estudiante, p17_1, p17_2, p19) %>%
+  select(id_estudiante, nivel_estudiante, p17_1, p17_2, p19, p20, p26, p27, p30) %>%
   mutate(across(everything(), ~ na_if(.x, 99))) %>% 
   mutate(across(everything(), ~ na_if(.x, 88))) %>%  
   na.omit() 
 
+# Educación padres
+ciud1 <- ciud1 %>%
+  mutate(educ_max = case_when(
+    !is.na(p26) & is.na(p27) ~ p26,
+    is.na(p26) & !is.na(p27) ~ p27,
+    !is.na(p26) & !is.na(p27) ~ pmax(p26, p27, na.rm = TRUE),
+    TRUE ~ NA_real_
+  ))
+
+ciud1$educ_max <- car::recode(ciud1$educ_max, "1=1; 2=1; 3=1; 4=2; 5=2; 6=2")
+ciud1$educ_max <- factor(ciud1$educ_max,
+                         levels = c(1,2),
+                         labels = c("Enseñanza media o menos","Estudios superiores"))
+
+# Curso estudiante
+
+ciud1$nivel_estudiante <- car::recode(ciud1$nivel_estudiante, "1=1; 2=1; 3=2; 4=2")
+ciud1$nivel_estudiante <- factor(ciud1$nivel_estudiante,
+                                 levels = c(1,2),
+                                 labels = c("Básica","Media"))
+
+# Libros en el hogar
+
+ciud1$p30 <- car::recode(ciud1$p30, "1=1; 2=1; 3=1; 4=2; 5=2; 6=2")
+ciud1$p30 <- factor(ciud1$p30,
+                    levels = c(1,2),
+                    labels = c("Menos de 25 libros","Más de 25 libros"))
+
+# Género
+
+ciud1$p20 <- car::recode(ciud1$p20, "3=NA")
+ciud1$p20 <- factor(ciud1$p20,
+                    levels = c(1,2),
+                    labels = c("Hombre","Mujer"))
+ciud1 <- ciud1 %>% rename(libros_hogar = p30,
+                          genero = p20)
+
+# Ola 2
 ciud2 <- db_students_w02 %>%
-  select(id_estudiante, p11_1_o2, p11_2_o2, p12_o2, p13_1_o2, p13_2_o2, p13_3_o2, 
-         p13_4_o2, p13_5_o2, p13_6_o2, p13_7_o2, p13_8_o2, p13_9_o2, 
-         p13_10_o2, p13_11_o2, p13_12_o2) %>%
+  select(id_estudiante, nivel_estudiante_o2, p11_1_o2, p11_2_o2, p12_o2, p13_1_o2, p13_2_o2, p13_3_o2, p13_4_o2, p13_5_o2, p13_6_o2, p13_7_o2, p13_8_o2, p13_9_o2, p13_10_o2, p13_11_o2, p13_12_o2, p14_o2, p17_o2, p18_o2, p19_o2) %>%
   mutate(across(everything(), ~ na_if(.x, 99))) %>%  
   mutate(across(everything(), ~ na_if(.x, 88))) %>%  
   na.omit()  
 
-db_long <- edumer_students_long %>% set_na(., na = c(99, 88))
+
+# Educación padres
+ciud2 <- ciud2 %>%
+  mutate(educ_max = case_when(
+    !is.na(p17_o2) & is.na(p18_o2) ~ p17_o2,
+    is.na(p17_o2) & !is.na(p18_o2) ~ p18_o2,
+    !is.na(p17_o2) & !is.na(p18_o2) ~ pmax(p17_o2, p18_o2, na.rm = TRUE),
+    TRUE ~ NA_real_
+  ))
+
+ciud2$educ_max <- car::recode(ciud2$educ_max, "1=1; 2=1; 3=1; 4=2; 5=2; 6=2")
+ciud2$educ_max <- factor(ciud2$educ_max,
+                         levels = c(1,2),
+                         labels = c("Enseñanza media o menos","Estudios superiores"))
+
+# Curso estudiante
+
+ciud2$nivel_estudiante_o2 <- car::recode(ciud2$nivel_estudiante_o2, "1=1; 2=1; 3=2; 4=2")
+ciud2$nivel_estudiante <- factor(ciud2$nivel_estudiante_o2,
+                                 levels = c(1,2),
+                                 labels = c("Básica","Media"))
+
+# Libros en el hogar
+
+ciud2$p19_o2 <- car::recode(ciud2$p19_o2, "1=1; 2=1; 3=1; 4=2; 5=2; 6=2")
+ciud2$p19_o2 <- factor(ciud2$p19_o2,
+                    levels = c(1,2),
+                    labels = c("Menos de 25 libros","Más de 25 libros"))
+
+# Género
+
+ciud2$p14_o2 <- car::recode(ciud2$p14_o2, "3=NA")
+ciud2$p14_o2 <- factor(ciud2$p14_o2,
+                    levels = c(1,2),
+                    labels = c("Hombre","Mujer"))
+ciud2 <- ciud2 %>% rename(libros_hogar = p19_o2,
+                          genero = p14_o2)
+
 
 ```
 
@@ -100,6 +172,72 @@ plot_final_polit
 
 "Muy en desacuerdo" se mantiene constante (15%). Incremento en "Desacuerdo" (+2 puntos porcentuales). Disminución leve en "De acuerdo" (-1 punto porcentual). Incremento leve en "Muy de acuerdo" (+1 punto porcentual).
 
+*Cruces con características sociodemográficas de los estudiantes en la **ola 2** del estudio*
+
+```{r, sociodemo-participacion, echo=FALSE}
+
+# Calcular las frecuencias originales
+frecuencias_originales <- ciud2 %>%
+  pivot_longer(cols = c(genero, educ_max, libros_hogar),
+               names_to = "variable",
+               values_to = "categoria") %>%
+  group_by(variable, categoria) %>%
+  summarise(Freq_Original = n(), .groups = 'drop')
+
+# Combinar las frecuencias originales con la base transformada
+proc_datos_w2 <- ciud2 %>%
+  pivot_longer(cols = c(genero, educ_max, libros_hogar),
+               names_to = "variable",
+               values_to = "categoria")
+
+frecuencias <- proc_datos_w2 %>%
+  group_by(variable, categoria, p11_1_o2) %>%
+  summarise(Freq = n(), .groups = 'drop') %>%
+  left_join(frecuencias_originales, by = c("variable", "categoria")) %>%
+  mutate(Porcentaje = Freq / Freq_Original) %>%
+  ungroup() %>%
+  na.omit()
+  
+# Ajustar los nombres
+variable_names <- list("educ_max" = "Nivel educacional de los padres",
+                       "genero_ES" = "Género",
+                       "libros_hogar" = "Cantidad de libros en el hogar")
+variable_labeller <- function(variable, value){return(variable_names[value])}
+
+# Ajustar las etiquetas largas 
+frecuencias$categoria <- str_wrap(frecuencias$categoria, width = 10)
+
+# Graficar las barras
+ggplot(frecuencias, aes(x = categoria, y = Porcentaje, fill = factor(p11_1_o2))) + 
+  geom_bar(stat = "identity", position = "fill", color = "white") +
+  facet_wrap(~ variable, scales = "free_x", labeller = as_labeller(variable_labeller)) +
+  geom_shadowtext(aes(label = scales::percent(Porcentaje, accuracy = 1)),
+                  position = position_stack(vjust = 0.5),
+                  color = "white",
+                  bg.color = "grey30",
+                  bg.r = 0.1,
+                  size = 4) +
+  labs(
+    x = NULL,
+    y = NULL, 
+    fill = "Grado de acuerdo",
+    title = "Figura: Cuando sea adulto(a) podré participar en la política") +
+  theme_blank() +
+  theme(
+    axis.text.y = element_blank(),
+    axis.ticks.y = element_blank(),
+    axis.title.x = element_blank(),
+    axis.title.y = element_blank(),
+    strip.text = element_text(size = 9, face = "bold"),
+    axis.text.x = element_text(size = 9),
+    legend.position = "bottom",
+    plot.title = element_text(size = 12, face = "italic", color = "black")
+  ) + 
+  scale_fill_brewer(palette = "Blues",
+                    labels = c("1" = "Muy en desacuerdo", "2" = "En desacuerdo", "3" = "De acuerdo", "4" = "Muy de acuerdo"),
+                    name = NULL)
+```
+
 ```{r, echo=FALSE}
 
 # Comprendo bien las problemáticas políticas de nuestro país
@@ -169,6 +307,57 @@ plot_final_probl
 ```
 
 Disminución en "Muy en desacuerdo" (-3 puntos porcentuales). Incremento notable en "Desacuerdo" (+6 puntos porcentuales). Disminución notable en "De acuerdo" (-6 puntos porcentuales). Incremento en "Muy de acuerdo" (+3 puntos porcentuales).
+
+*Cruces con variables sociodemográficas de los estudiantes en la **ola 2** del estudio*
+
+```{r sociodemo-comprender, echo=FALSE}
+frecuencias <- proc_datos_w2 %>%
+  group_by(variable, categoria, p11_2_o2) %>%
+  summarise(Freq = n(), .groups = 'drop') %>%
+  left_join(frecuencias_originales, by = c("variable", "categoria")) %>%
+  mutate(Porcentaje = Freq / Freq_Original) %>%
+  ungroup() %>%
+  na.omit()
+  
+# Ajustar los nombres
+variable_names <- list("educ_max" = "Nivel educacional de los padres",
+                       "genero_ES" = "Género",
+                       "libros_hogar" = "Cantidad de libros en el hogar")
+variable_labeller <- function(variable, value){return(variable_names[value])}
+
+# Ajustar las etiquetas largas 
+frecuencias$categoria <- str_wrap(frecuencias$categoria, width = 10)
+
+# Graficar las barras
+ggplot(frecuencias, aes(x = categoria, y = Porcentaje, fill = factor(p11_2_o2))) + 
+  geom_bar(stat = "identity", position = "fill", color = "white") +
+  facet_wrap(~ variable, scales = "free_x", labeller = as_labeller(variable_labeller)) +
+  geom_shadowtext(aes(label = scales::percent(Porcentaje, accuracy = 1)),
+                  position = position_stack(vjust = 0.5),
+                  color = "white",
+                  bg.color = "grey30",
+                  bg.r = 0.1,
+                  size = 4) +
+  labs(
+    x = NULL,
+    y = NULL, 
+    fill = "Grado de acuerdo",
+    title = "Figura: Comprendo bien las problemáticas políticas de nuestro país") +
+  theme_blank() +
+  theme(
+    axis.text.y = element_blank(),
+    axis.ticks.y = element_blank(),
+    axis.title.x = element_blank(),
+    axis.title.y = element_blank(),
+    strip.text = element_text(size = 9, face = "bold"),
+    axis.text.x = element_text(size = 9),
+    legend.position = "bottom",
+    plot.title = element_text(size = 12, face = "italic", color = "black")
+  ) + 
+  scale_fill_brewer(palette = "Blues",
+                    labels = c("1" = "Muy en desacuerdo", "2" = "En desacuerdo", "3" = "De acuerdo", "4" = "Muy de acuerdo"),
+                    name = NULL)
+```
 
 ## Percepción sobre la importancia de la Formación Ciudadana en su establecimiento
 
@@ -242,6 +431,59 @@ plot_final_formciud
 
 Disminución en "Ninguna importancia" (-2 puntos porcentuales). Aumento en "Algo de importancia" (+6 puntos porcentuales). Incremento en "Mediana importancia" (+3 puntos porcentuales). Disminución en "Mucha importancia" (-6 puntos porcentuales).
 
+*Cruces con características sociodemográficas de los estudiantes en la **ola 2** del estudio*
+
+```{r sociodemo-importancia, echo=FALSE}
+
+frecuencias <- proc_datos_w2 %>%
+  group_by(variable, categoria, p12_o2) %>%
+  summarise(Freq = n(), .groups = 'drop') %>%
+  left_join(frecuencias_originales, by = c("variable", "categoria")) %>%
+  mutate(Porcentaje = Freq / Freq_Original) %>%
+  ungroup() %>%
+  na.omit()
+  
+# Ajustar los nombres
+variable_names <- list("educ_max" = "Nivel educacional de los padres",
+                       "genero_ES" = "Género",
+                       "libros_hogar" = "Cantidad de libros en el hogar")
+variable_labeller <- function(variable, value){return(variable_names[value])}
+
+# Ajustar las etiquetas largas 
+frecuencias$categoria <- str_wrap(frecuencias$categoria, width = 10)
+
+# Graficar las barras
+ggplot(frecuencias, aes(x = categoria, y = Porcentaje, fill = factor(p12_o2))) + 
+  geom_bar(stat = "identity", position = "fill", color = "white") +
+  facet_wrap(~ variable, scales = "free_x", labeller = as_labeller(variable_labeller)) +
+  geom_shadowtext(aes(label = scales::percent(Porcentaje, accuracy = 1)),
+                  position = position_stack(vjust = 0.5),
+                  color = "white",
+                  bg.color = "grey30",
+                  bg.r = 0.1,
+                  size = 4) +
+  labs(
+    x = NULL,
+    y = NULL, 
+    fill = "Grado de acuerdo",
+    title = "Figura: ¿Cuánta importancia dirías tú que se le da a la Formación Ciudadana en este establecimiento?") +
+  theme_blank() +
+  theme(
+    axis.text.y = element_blank(),
+    axis.ticks.y = element_blank(),
+    axis.title.x = element_blank(),
+    axis.title.y = element_blank(),
+    strip.text = element_text(size = 9, face = "bold"),
+    axis.text.x = element_text(size = 9),
+    legend.position = "bottom",
+    plot.title = element_text(size = 10, face = "italic", color = "black")
+  ) + 
+  scale_fill_brewer(palette = "Blues",
+                    labels = c("1" = "Ninguna importancia", "2" = "Algo de importancia", "3" = "Mediana importancia", "4" = "Mucha importancia"),
+                    name = NULL)
+
+```
+
 ## Grado de capacidad para realizar tareas utilizando Tecnologías de Información y Comunicaciones (TIC)
 
 ```{r, echo=FALSE}
@@ -278,6 +520,59 @@ plot_editar <- annotate_figure(
 plot_editar
 ```
 
+*Cruces con características sociodemográficas*
+
+```{r sociodemo-editar, echo=FALSE}
+
+frecuencias <- proc_datos_w2 %>%
+  group_by(variable, categoria, p13_1_o2) %>%
+  summarise(Freq = n(), .groups = 'drop') %>%
+  left_join(frecuencias_originales, by = c("variable", "categoria")) %>%
+  mutate(Porcentaje = Freq / Freq_Original) %>%
+  ungroup() %>%
+  na.omit()
+  
+# Ajustar los nombres
+variable_names <- list("educ_max" = "Nivel educacional de los padres",
+                       "genero_ES" = "Género",
+                       "libros_hogar" = "Cantidad de libros en el hogar")
+variable_labeller <- function(variable, value){return(variable_names[value])}
+
+# Ajustar las etiquetas largas 
+frecuencias$categoria <- str_wrap(frecuencias$categoria, width = 10)
+
+# Graficar las barras
+ggplot(frecuencias, aes(x = categoria, y = Porcentaje, fill = factor(p13_1_o2))) + 
+  geom_bar(stat = "identity", position = "fill", color = "white") +
+  facet_wrap(~ variable, scales = "free_x", labeller = as_labeller(variable_labeller)) +
+  geom_shadowtext(aes(label = scales::percent(Porcentaje, accuracy = 1)),
+                  position = position_stack(vjust = 0.5),
+                  color = "white",
+                  bg.color = "grey30",
+                  bg.r = 0.1,
+                  size = 4) +
+  labs(
+    x = NULL,
+    y = NULL, 
+    fill = "Grado de acuerdo",
+    title = "Figura: Editar fotografías digitales u otras imágenes gráficas") +
+  theme_blank() +
+  theme(
+    axis.text.y = element_blank(),
+    axis.ticks.y = element_blank(),
+    axis.title.x = element_blank(),
+    axis.title.y = element_blank(),
+    strip.text = element_text(size = 9, face = "bold"),
+    axis.text.x = element_text(size = 9),
+    legend.position = "bottom",
+    plot.title = element_text(size = 12, face = "italic", color = "black")
+  ) + 
+  scale_fill_brewer(palette = "Blues",
+                    labels = c("1" = "Sé cómo realizarlo", "2" = "No sé realizarlo, pero me siento capaz de aprenderlo", "3" = "No me siento capaz de aprenderlo"),
+                    name = NULL)
+
+```
+
 ```{r, echo=FALSE}
 
 # Escribir o editar texto para un trabajo escolar 
@@ -310,6 +605,58 @@ plot_escribir <- annotate_figure(
     hjust = 0.5))
 
 plot_escribir
+
+```
+
+*Cruces con variables sociodemográficas*
+
+```{r sociodemo-escribir, echo=FALSE}
+frecuencias <- proc_datos_w2 %>%
+  group_by(variable, categoria, p13_2_o2) %>%
+  summarise(Freq = n(), .groups = 'drop') %>%
+  left_join(frecuencias_originales, by = c("variable", "categoria")) %>%
+  mutate(Porcentaje = Freq / Freq_Original) %>%
+  ungroup() %>%
+  na.omit()
+  
+# Ajustar los nombres
+variable_names <- list("educ_max" = "Nivel educacional de los padres",
+                       "genero_ES" = "Género",
+                       "libros_hogar" = "Cantidad de libros en el hogar")
+variable_labeller <- function(variable, value){return(variable_names[value])}
+
+# Ajustar las etiquetas largas 
+frecuencias$categoria <- str_wrap(frecuencias$categoria, width = 10)
+
+# Graficar las barras
+ggplot(frecuencias, aes(x = categoria, y = Porcentaje, fill = factor(p13_2_o2))) + 
+  geom_bar(stat = "identity", position = "fill", color = "white") +
+  facet_wrap(~ variable, scales = "free_x", labeller = as_labeller(variable_labeller)) +
+  geom_shadowtext(aes(label = scales::percent(Porcentaje, accuracy = 1)),
+                  position = position_stack(vjust = 0.5),
+                  color = "white",
+                  bg.color = "grey30",
+                  bg.r = 0.1,
+                  size = 4) +
+  labs(
+    x = NULL,
+    y = NULL, 
+    fill = "Grado de acuerdo",
+    title = "Figura: Escribir o editar texto para un trabajo escolar") +
+  theme_blank() +
+  theme(
+    axis.text.y = element_blank(),
+    axis.ticks.y = element_blank(),
+    axis.title.x = element_blank(),
+    axis.title.y = element_blank(),
+    strip.text = element_text(size = 9, face = "bold"),
+    axis.text.x = element_text(size = 9),
+    legend.position = "bottom",
+    plot.title = element_text(size = 12, face = "italic", color = "black")
+  ) + 
+  scale_fill_brewer(palette = "Blues",
+                    labels = c("1" = "Sé cómo realizarlo", "2" = "No sé realizarlo, pero me siento capaz de aprenderlo", "3" = "No me siento capaz de aprenderlo"),
+                    name = NULL)
 
 ```
 
@@ -348,6 +695,58 @@ plot_buscar
 
 ```
 
+*Cruces con variables sociodemográficas*
+
+```{r sociodemo-buscar, echo=FALSE}
+
+frecuencias <- proc_datos_w2 %>%
+  group_by(variable, categoria, p13_3_o2) %>%
+  summarise(Freq = n(), .groups = 'drop') %>%
+  left_join(frecuencias_originales, by = c("variable", "categoria")) %>%
+  mutate(Porcentaje = Freq / Freq_Original) %>%
+  ungroup() %>%
+  na.omit()
+  
+# Ajustar los nombres
+variable_names <- list("educ_max" = "Nivel educacional de los padres",
+                       "genero_ES" = "Género",
+                       "libros_hogar" = "Cantidad de libros en el hogar")
+variable_labeller <- function(variable, value){return(variable_names[value])}
+
+# Ajustar las etiquetas largas 
+frecuencias$categoria <- str_wrap(frecuencias$categoria, width = 10)
+
+# Graficar las barras
+ggplot(frecuencias, aes(x = categoria, y = Porcentaje, fill = factor(p13_3_o2))) + 
+  geom_bar(stat = "identity", position = "fill", color = "white") +
+  facet_wrap(~ variable, scales = "free_x", labeller = as_labeller(variable_labeller)) +
+  geom_shadowtext(aes(label = scales::percent(Porcentaje, accuracy = 1)),
+                  position = position_stack(vjust = 0.5),
+                  color = "white",
+                  bg.color = "grey30",
+                  bg.r = 0.1,
+                  size = 4) +
+  labs(
+    x = NULL,
+    y = NULL, 
+    fill = "Grado de acuerdo",
+    title = "Figura: Buscar y encontrar en Internet información relevante para un proyecto escolar") +
+  theme_blank() +
+  theme(
+    axis.text.y = element_blank(),
+    axis.ticks.y = element_blank(),
+    axis.title.x = element_blank(),
+    axis.title.y = element_blank(),
+    strip.text = element_text(size = 9, face = "bold"),
+    axis.text.x = element_text(size = 9),
+    legend.position = "bottom",
+    plot.title = element_text(size = 12, face = "italic", color = "black")
+  ) + 
+  scale_fill_brewer(palette = "Blues",
+                    labels = c("1" = "Sé cómo realizarlo", "2" = "No sé realizarlo, pero me siento capaz de aprenderlo", "3" = "No me siento capaz de aprenderlo"),
+                    name = NULL)
+```
+
 ```{r, echo=FALSE}
 
 # Crear una presentación multimedia (con sonido, imágenes o video) 
@@ -382,6 +781,58 @@ plot_crear <- annotate_figure(
 plot_crear
 ```
 
+*Cruces con características sociodemográficas*
+
+```{r sociodemo-crear, echo=FALSE}
+
+frecuencias <- proc_datos_w2 %>%
+  group_by(variable, categoria, p13_4_o2) %>%
+  summarise(Freq = n(), .groups = 'drop') %>%
+  left_join(frecuencias_originales, by = c("variable", "categoria")) %>%
+  mutate(Porcentaje = Freq / Freq_Original) %>%
+  ungroup() %>%
+  na.omit()
+  
+# Ajustar los nombres
+variable_names <- list("educ_max" = "Nivel educacional de los padres",
+                       "genero_ES" = "Género",
+                       "libros_hogar" = "Cantidad de libros en el hogar")
+variable_labeller <- function(variable, value){return(variable_names[value])}
+
+# Ajustar las etiquetas largas 
+frecuencias$categoria <- str_wrap(frecuencias$categoria, width = 10)
+
+# Graficar las barras
+ggplot(frecuencias, aes(x = categoria, y = Porcentaje, fill = factor(p13_4_o2))) + 
+  geom_bar(stat = "identity", position = "fill", color = "white") +
+  facet_wrap(~ variable, scales = "free_x", labeller = as_labeller(variable_labeller)) +
+  geom_shadowtext(aes(label = scales::percent(Porcentaje, accuracy = 1)),
+                  position = position_stack(vjust = 0.5),
+                  color = "white",
+                  bg.color = "grey30",
+                  bg.r = 0.1,
+                  size = 4) +
+  labs(
+    x = NULL,
+    y = NULL, 
+    fill = "Grado de acuerdo",
+    title = "Figura: Crear una presentación multimedia (con sonido, imágenes o video)") +
+  theme_blank() +
+  theme(
+    axis.text.y = element_blank(),
+    axis.ticks.y = element_blank(),
+    axis.title.x = element_blank(),
+    axis.title.y = element_blank(),
+    strip.text = element_text(size = 9, face = "bold"),
+    axis.text.x = element_text(size = 9),
+    legend.position = "bottom",
+    plot.title = element_text(size = 12, face = "italic", color = "black")
+  ) + 
+  scale_fill_brewer(palette = "Blues",
+                    labels = c("1" = "Sé cómo realizarlo", "2" = "No sé realizarlo, pero me siento capaz de aprenderlo", "3" = "No me siento capaz de aprenderlo"),
+                    name = NULL)
+```
+
 ```{r, echo=FALSE}
 
 # Cargar texto, imágenes o vídeo en un perfil en línea
@@ -414,6 +865,58 @@ plot_cargar <- annotate_figure(
     hjust = 0.5))
 
 plot_cargar
+```
+
+*Cruces con características sociodemográficas*
+
+```{r sociodemo-cargar, echo=FALSE}
+
+frecuencias <- proc_datos_w2 %>%
+  group_by(variable, categoria, p13_5_o2) %>%
+  summarise(Freq = n(), .groups = 'drop') %>%
+  left_join(frecuencias_originales, by = c("variable", "categoria")) %>%
+  mutate(Porcentaje = Freq / Freq_Original) %>%
+  ungroup() %>%
+  na.omit()
+  
+# Ajustar los nombres
+variable_names <- list("educ_max" = "Nivel educacional de los padres",
+                       "genero_ES" = "Género",
+                       "libros_hogar" = "Cantidad de libros en el hogar")
+variable_labeller <- function(variable, value){return(variable_names[value])}
+
+# Ajustar las etiquetas largas 
+frecuencias$categoria <- str_wrap(frecuencias$categoria, width = 10)
+
+# Graficar las barras
+ggplot(frecuencias, aes(x = categoria, y = Porcentaje, fill = factor(p13_5_o2))) + 
+  geom_bar(stat = "identity", position = "fill", color = "white") +
+  facet_wrap(~ variable, scales = "free_x", labeller = as_labeller(variable_labeller)) +
+  geom_shadowtext(aes(label = scales::percent(Porcentaje, accuracy = 1)),
+                  position = position_stack(vjust = 0.5),
+                  color = "white",
+                  bg.color = "grey30",
+                  bg.r = 0.1,
+                  size = 4) +
+  labs(
+    x = NULL,
+    y = NULL, 
+    fill = "Grado de acuerdo",
+    title = "Figura: Cargar texto, imágenes o vídeo en un perfil en línea") +
+  theme_blank() +
+  theme(
+    axis.text.y = element_blank(),
+    axis.ticks.y = element_blank(),
+    axis.title.x = element_blank(),
+    axis.title.y = element_blank(),
+    strip.text = element_text(size = 9, face = "bold"),
+    axis.text.x = element_text(size = 9),
+    legend.position = "bottom",
+    plot.title = element_text(size = 12, face = "italic", color = "black")
+  ) + 
+  scale_fill_brewer(palette = "Blues",
+                    labels = c("1" = "Sé cómo realizarlo", "2" = "No sé realizarlo, pero me siento capaz de aprenderlo", "3" = "No me siento capaz de aprenderlo"),
+                    name = NULL)
 ```
 
 ```{r, echo=FALSE}
@@ -451,6 +954,58 @@ plot_insertar
 
 ```
 
+*Cruces con características sociodemográficas*
+
+```{r sociodemo-insertar, echo=FALSE}
+
+frecuencias <- proc_datos_w2 %>%
+  group_by(variable, categoria, p13_6_o2) %>%
+  summarise(Freq = n(), .groups = 'drop') %>%
+  left_join(frecuencias_originales, by = c("variable", "categoria")) %>%
+  mutate(Porcentaje = Freq / Freq_Original) %>%
+  ungroup() %>%
+  na.omit()
+  
+# Ajustar los nombres
+variable_names <- list("educ_max" = "Nivel educacional de los padres",
+                       "genero_ES" = "Género",
+                       "libros_hogar" = "Cantidad de libros en el hogar")
+variable_labeller <- function(variable, value){return(variable_names[value])}
+
+# Ajustar las etiquetas largas 
+frecuencias$categoria <- str_wrap(frecuencias$categoria, width = 10)
+
+# Graficar las barras
+ggplot(frecuencias, aes(x = categoria, y = Porcentaje, fill = factor(p13_6_o2))) + 
+  geom_bar(stat = "identity", position = "fill", color = "white") +
+  facet_wrap(~ variable, scales = "free_x", labeller = as_labeller(variable_labeller)) +
+  geom_shadowtext(aes(label = scales::percent(Porcentaje, accuracy = 1)),
+                  position = position_stack(vjust = 0.5),
+                  color = "white",
+                  bg.color = "grey30",
+                  bg.r = 0.1,
+                  size = 4) +
+  labs(
+    x = NULL,
+    y = NULL, 
+    fill = "Grado de acuerdo",
+    title = "Figura: Insertar una imagen en un documento o mensaje") +
+  theme_blank() +
+  theme(
+    axis.text.y = element_blank(),
+    axis.ticks.y = element_blank(),
+    axis.title.x = element_blank(),
+    axis.title.y = element_blank(),
+    strip.text = element_text(size = 9, face = "bold"),
+    axis.text.x = element_text(size = 9),
+    legend.position = "bottom",
+    plot.title = element_text(size = 12, face = "italic", color = "black")
+  ) + 
+  scale_fill_brewer(palette = "Blues",
+                    labels = c("1" = "Sé cómo realizarlo", "2" = "No sé realizarlo, pero me siento capaz de aprenderlo", "3" = "No me siento capaz de aprenderlo"),
+                    name = NULL)
+```
+
 ```{r, echo=FALSE}
 
 # Instalar un programa o aplicación
@@ -483,6 +1038,60 @@ plot_instalar <- annotate_figure(
     hjust = 0.5))
 
 plot_instalar
+
+
+```
+
+*Cruces con características sociodemográficas*
+
+```{r sociodemo-instalar, echo=FALSE}
+
+frecuencias <- proc_datos_w2 %>%
+  group_by(variable, categoria, p13_7_o2) %>%
+  summarise(Freq = n(), .groups = 'drop') %>%
+  left_join(frecuencias_originales, by = c("variable", "categoria")) %>%
+  mutate(Porcentaje = Freq / Freq_Original) %>%
+  ungroup() %>%
+  na.omit()
+  
+# Ajustar los nombres
+variable_names <- list("educ_max" = "Nivel educacional de los padres",
+                       "genero_ES" = "Género",
+                       "libros_hogar" = "Cantidad de libros en el hogar")
+variable_labeller <- function(variable, value){return(variable_names[value])}
+
+# Ajustar las etiquetas largas 
+frecuencias$categoria <- str_wrap(frecuencias$categoria, width = 10)
+
+# Graficar las barras
+ggplot(frecuencias, aes(x = categoria, y = Porcentaje, fill = factor(p13_7_o2))) + 
+  geom_bar(stat = "identity", position = "fill", color = "white") +
+  facet_wrap(~ variable, scales = "free_x", labeller = as_labeller(variable_labeller)) +
+  geom_shadowtext(aes(label = scales::percent(Porcentaje, accuracy = 1)),
+                  position = position_stack(vjust = 0.5),
+                  color = "white",
+                  bg.color = "grey30",
+                  bg.r = 0.1,
+                  size = 4) +
+  labs(
+    x = NULL,
+    y = NULL, 
+    fill = "Grado de acuerdo",
+    title = "Figura: Instalar un programa o aplicación") +
+  theme_blank() +
+  theme(
+    axis.text.y = element_blank(),
+    axis.ticks.y = element_blank(),
+    axis.title.x = element_blank(),
+    axis.title.y = element_blank(),
+    strip.text = element_text(size = 9, face = "bold"),
+    axis.text.x = element_text(size = 9),
+    legend.position = "bottom",
+    plot.title = element_text(size = 12, face = "italic", color = "black")
+  ) + 
+  scale_fill_brewer(palette = "Blues",
+                    labels = c("1" = "Sé cómo realizarlo", "2" = "No sé realizarlo, pero me siento capaz de aprenderlo", "3" = "No me siento capaz de aprenderlo"),
+                    name = NULL)
 
 ```
 
@@ -522,6 +1131,58 @@ plot_juzgar
 
 ```
 
+*Cruces con características sociodemográficas*
+
+```{r sociodemo-juzgar, echo=FALSE}
+
+frecuencias <- proc_datos_w2 %>%
+  group_by(variable, categoria, p13_8_o2) %>%
+  summarise(Freq = n(), .groups = 'drop') %>%
+  left_join(frecuencias_originales, by = c("variable", "categoria")) %>%
+  mutate(Porcentaje = Freq / Freq_Original) %>%
+  ungroup() %>%
+  na.omit()
+  
+# Ajustar los nombres
+variable_names <- list("educ_max" = "Nivel educacional de los padres",
+                       "genero_ES" = "Género",
+                       "libros_hogar" = "Cantidad de libros en el hogar")
+variable_labeller <- function(variable, value){return(variable_names[value])}
+
+# Ajustar las etiquetas largas 
+frecuencias$categoria <- str_wrap(frecuencias$categoria, width = 10)
+
+# Graficar las barras
+ggplot(frecuencias, aes(x = categoria, y = Porcentaje, fill = factor(p13_8_o2))) + 
+  geom_bar(stat = "identity", position = "fill", color = "white") +
+  facet_wrap(~ variable, scales = "free_x", labeller = as_labeller(variable_labeller)) +
+  geom_shadowtext(aes(label = scales::percent(Porcentaje, accuracy = 1)),
+                  position = position_stack(vjust = 0.5),
+                  color = "white",
+                  bg.color = "grey30",
+                  bg.r = 0.1,
+                  size = 4) +
+  labs(
+    x = NULL,
+    y = NULL, 
+    fill = "Grado de acuerdo",
+    title = "Figura: Juzgar si puede confiar en la información que encuentra en Internet") +
+  theme_blank() +
+  theme(
+    axis.text.y = element_blank(),
+    axis.ticks.y = element_blank(),
+    axis.title.x = element_blank(),
+    axis.title.y = element_blank(),
+    strip.text = element_text(size = 9, face = "bold"),
+    axis.text.x = element_text(size = 9),
+    legend.position = "bottom",
+    plot.title = element_text(size = 12, face = "italic", color = "black")
+  ) + 
+  scale_fill_brewer(palette = "Blues",
+                    labels = c("1" = "Sé cómo realizarlo", "2" = "No sé realizarlo, pero me siento capaz de aprenderlo", "3" = "No me siento capaz de aprenderlo"),
+                    name = NULL)
+```
+
 ```{r, echo=FALSE}
 
 # Crear una base de datos (por ejemplo, utilizando [Microsoft access®])
@@ -557,6 +1218,58 @@ plot_crearbase
 
 ```
 
+*Cruces con características sociodemográficas*
+
+```{r sociodemo-crearbase, echo=FALSE}
+
+frecuencias <- proc_datos_w2 %>%
+  group_by(variable, categoria, p13_9_o2) %>%
+  summarise(Freq = n(), .groups = 'drop') %>%
+  left_join(frecuencias_originales, by = c("variable", "categoria")) %>%
+  mutate(Porcentaje = Freq / Freq_Original) %>%
+  ungroup() %>%
+  na.omit()
+  
+# Ajustar los nombres
+variable_names <- list("educ_max" = "Nivel educacional de los padres",
+                       "genero_ES" = "Género",
+                       "libros_hogar" = "Cantidad de libros en el hogar")
+variable_labeller <- function(variable, value){return(variable_names[value])}
+
+# Ajustar las etiquetas largas 
+frecuencias$categoria <- str_wrap(frecuencias$categoria, width = 10)
+
+# Graficar las barras
+ggplot(frecuencias, aes(x = categoria, y = Porcentaje, fill = factor(p13_9_o2))) + 
+  geom_bar(stat = "identity", position = "fill", color = "white") +
+  facet_wrap(~ variable, scales = "free_x", labeller = as_labeller(variable_labeller)) +
+  geom_shadowtext(aes(label = scales::percent(Porcentaje, accuracy = 1)),
+                  position = position_stack(vjust = 0.5),
+                  color = "white",
+                  bg.color = "grey30",
+                  bg.r = 0.1,
+                  size = 4) +
+  labs(
+    x = NULL,
+    y = NULL, 
+    fill = "Grado de acuerdo",
+    title = "Figura: Crear una base de datos (por ejemplo, utilizando [Microsoft access®])") +
+  theme_blank() +
+  theme(
+    axis.text.y = element_blank(),
+    axis.ticks.y = element_blank(),
+    axis.title.x = element_blank(),
+    axis.title.y = element_blank(),
+    strip.text = element_text(size = 9, face = "bold"),
+    axis.text.x = element_text(size = 9),
+    legend.position = "bottom",
+    plot.title = element_text(size = 12, face = "italic", color = "black")
+  ) + 
+  scale_fill_brewer(palette = "Blues",
+                    labels = c("1" = "Sé cómo realizarlo", "2" = "No sé realizarlo, pero me siento capaz de aprenderlo", "3" = "No me siento capaz de aprenderlo"),
+                    name = NULL)
+```
+
 ```{r, echo=FALSE}
 
 # Construir o editar una página web
@@ -589,6 +1302,59 @@ plot_pagweb <- annotate_figure(
     hjust = 0.5))
 
 plot_pagweb
+
+```
+
+*Cruces con características sociodemográficas*
+
+```{r sociodemo-pagweb, echo=FALSE}
+
+frecuencias <- proc_datos_w2 %>%
+  group_by(variable, categoria, p13_10_o2) %>%
+  summarise(Freq = n(), .groups = 'drop') %>%
+  left_join(frecuencias_originales, by = c("variable", "categoria")) %>%
+  mutate(Porcentaje = Freq / Freq_Original) %>%
+  ungroup() %>%
+  na.omit()
+  
+# Ajustar los nombres
+variable_names <- list("educ_max" = "Nivel educacional de los padres",
+                       "genero_ES" = "Género",
+                       "libros_hogar" = "Cantidad de libros en el hogar")
+variable_labeller <- function(variable, value){return(variable_names[value])}
+
+# Ajustar las etiquetas largas 
+frecuencias$categoria <- str_wrap(frecuencias$categoria, width = 10)
+
+# Graficar las barras
+ggplot(frecuencias, aes(x = categoria, y = Porcentaje, fill = factor(p13_10_o2))) + 
+  geom_bar(stat = "identity", position = "fill", color = "white") +
+  facet_wrap(~ variable, scales = "free_x", labeller = as_labeller(variable_labeller)) +
+  geom_shadowtext(aes(label = scales::percent(Porcentaje, accuracy = 1)),
+                  position = position_stack(vjust = 0.5),
+                  color = "white",
+                  bg.color = "grey30",
+                  bg.r = 0.1,
+                  size = 4) +
+  labs(
+    x = NULL,
+    y = NULL, 
+    fill = "Grado de acuerdo",
+    title = "Figura: Construir o editar una página web") +
+  theme_blank() +
+  theme(
+    axis.text.y = element_blank(),
+    axis.ticks.y = element_blank(),
+    axis.title.x = element_blank(),
+    axis.title.y = element_blank(),
+    strip.text = element_text(size = 9, face = "bold"),
+    axis.text.x = element_text(size = 9),
+    legend.position = "bottom",
+    plot.title = element_text(size = 12, face = "italic", color = "black")
+  ) + 
+  scale_fill_brewer(palette = "Blues",
+                    labels = c("1" = "Sé cómo realizarlo", "2" = "No sé realizarlo, pero me siento capaz de aprenderlo", "3" = "No me siento capaz de aprenderlo"),
+                    name = NULL)
 ```
 
 ```{r, echo=FALSE}
@@ -626,6 +1392,58 @@ plot_programa
 
 ```
 
+*Cruces con características sociodemográficas*
+
+```{r sociodemo-programar, echo=FALSE}
+
+frecuencias <- proc_datos_w2 %>%
+  group_by(variable, categoria, p13_11_o2) %>%
+  summarise(Freq = n(), .groups = 'drop') %>%
+  left_join(frecuencias_originales, by = c("variable", "categoria")) %>%
+  mutate(Porcentaje = Freq / Freq_Original) %>%
+  ungroup() %>%
+  na.omit()
+  
+# Ajustar los nombres
+variable_names <- list("educ_max" = "Nivel educacional de los padres",
+                       "genero_ES" = "Género",
+                       "libros_hogar" = "Cantidad de libros en el hogar")
+variable_labeller <- function(variable, value){return(variable_names[value])}
+
+# Ajustar las etiquetas largas 
+frecuencias$categoria <- str_wrap(frecuencias$categoria, width = 10)
+
+# Graficar las barras
+ggplot(frecuencias, aes(x = categoria, y = Porcentaje, fill = factor(p13_11_o2))) + 
+  geom_bar(stat = "identity", position = "fill", color = "white") +
+  facet_wrap(~ variable, scales = "free_x", labeller = as_labeller(variable_labeller)) +
+  geom_shadowtext(aes(label = scales::percent(Porcentaje, accuracy = 1)),
+                  position = position_stack(vjust = 0.5),
+                  color = "white",
+                  bg.color = "grey30",
+                  bg.r = 0.1,
+                  size = 4) +
+  labs(
+    x = NULL,
+    y = NULL, 
+    fill = "Grado de acuerdo",
+    title = "Figura: Crear un programa informático, macro o aplicación (por ejemplo, en Basic, Visual Basic, etc.)") +
+  theme_blank() +
+  theme(
+    axis.text.y = element_blank(),
+    axis.ticks.y = element_blank(),
+    axis.title.x = element_blank(),
+    axis.title.y = element_blank(),
+    strip.text = element_text(size = 9, face = "bold"),
+    axis.text.x = element_text(size = 9),
+    legend.position = "bottom",
+    plot.title = element_text(size = 10, face = "italic", color = "black")
+  ) + 
+  scale_fill_brewer(palette = "Blues",
+                    labels = c("1" = "Sé cómo realizarlo", "2" = "No sé realizarlo, pero me siento capaz de aprenderlo", "3" = "No me siento capaz de aprenderlo"),
+                    name = NULL)
+```
+
 ```{r, echo=FALSE}
 
 # Configurar una red de área local de computadores u otras tecnologías de información y comunicaciones
@@ -658,4 +1476,56 @@ plot_redlocal <- annotate_figure(
     hjust = 0.5))
 
 plot_redlocal
+```
+
+*Cruces con características sociodemográficas*
+
+```{r sociodemo-redlocal, echo=FALSE}
+
+frecuencias <- proc_datos_w2 %>%
+  group_by(variable, categoria, p13_12_o2) %>%
+  summarise(Freq = n(), .groups = 'drop') %>%
+  left_join(frecuencias_originales, by = c("variable", "categoria")) %>%
+  mutate(Porcentaje = Freq / Freq_Original) %>%
+  ungroup() %>%
+  na.omit()
+  
+# Ajustar los nombres
+variable_names <- list("educ_max" = "Nivel educacional de los padres",
+                       "genero_ES" = "Género",
+                       "libros_hogar" = "Cantidad de libros en el hogar")
+variable_labeller <- function(variable, value){return(variable_names[value])}
+
+# Ajustar las etiquetas largas 
+frecuencias$categoria <- str_wrap(frecuencias$categoria, width = 10)
+
+# Graficar las barras
+ggplot(frecuencias, aes(x = categoria, y = Porcentaje, fill = factor(p13_12_o2))) + 
+  geom_bar(stat = "identity", position = "fill", color = "white") +
+  facet_wrap(~ variable, scales = "free_x", labeller = as_labeller(variable_labeller)) +
+  geom_shadowtext(aes(label = scales::percent(Porcentaje, accuracy = 1)),
+                  position = position_stack(vjust = 0.5),
+                  color = "white",
+                  bg.color = "grey30",
+                  bg.r = 0.1,
+                  size = 4) +
+  labs(
+    x = NULL,
+    y = NULL, 
+    fill = "Grado de acuerdo",
+    title = "Figura: Configurar una red de área local de computadores u otras Tecnologías de Información y Comunicaciones") +
+  theme_blank() +
+  theme(
+    axis.text.y = element_blank(),
+    axis.ticks.y = element_blank(),
+    axis.title.x = element_blank(),
+    axis.title.y = element_blank(),
+    strip.text = element_text(size = 9, face = "bold"),
+    axis.text.x = element_text(size = 9),
+    legend.position = "bottom",
+    plot.title = element_text(size = 10, face = "italic", color = "black")
+  ) + 
+  scale_fill_brewer(palette = "Blues",
+                    labels = c("1" = "Sé cómo realizarlo", "2" = "No sé realizarlo, pero me siento capaz de aprenderlo", "3" = "No me siento capaz de aprenderlo"),
+                    name = NULL)
 ```
