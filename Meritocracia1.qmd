@@ -70,7 +70,7 @@ plot_pe <- pe %>%
        x = c("Olas"),
        fill = "Grado de acuerdo",
        caption = "Fuente: EDUMER",
-       title = "Figura: En esta escuela quienes se esfuerzan\nobtienen buenas notas") +
+       title = "Figura 1: En esta escuela quienes se esfuerzan\nobtienen buenas notas") +
   theme(legend.position = "bottom") + 
   theme_blank()
 
@@ -129,7 +129,7 @@ plot_pe <- pe %>%
        x = c("Olas"),
        fill = "Grado de acuerdo",
        caption = "Fuente: EDUMER",
-       title = "Figura 2: En Chile, las personas son recompensadas por su inteligencia y habilidad") +
+       title = "Figura 2: En Chile, las personas son recompensadas por su \n inteligencia y habilidad") +
   theme(legend.position = "bottom") + 
   theme_blank()
 
@@ -137,6 +137,7 @@ plot_pe
 ```
 
 ### Percepción Padres Ricos
+
 ```{r, gráfico 3, echo=FALSE}
 # Paso 1: Preparar datos--------------------------------------------------------
 db_long <- db_long %>% filter(!is.na(p1_3) & !is.na(ola))
@@ -187,7 +188,7 @@ plot_pe <- pe %>%
        x = c("Olas"),
        fill = "Grado de acuerdo",
        caption = "Fuente: EDUMER",
-       title = "Figura 3: En Chile, a quienes tienen padres ricos les va mucho mejor en la vida.") +
+       title = "Figura 3: En Chile, a quienes tienen padres ricos les va mucho \n mejor en la vida.") +
   theme(legend.position = "bottom") + 
   theme_blank()
 
@@ -246,7 +247,7 @@ plot_pe <- pe %>%
        x = c("Olas"),
        fill = "Grado de acuerdo",
        caption = "Fuente: EDUMER",
-       title = "Figura 4:En Chile, quienes tienen buenos contactos les va mejor en la vida.") +
+       title = "Figura 4:En Chile, quienes tienen buenos contactos les va mejor \n en la vida.") +
   theme(legend.position = "bottom") + 
   theme_blank()
 
@@ -305,7 +306,7 @@ plot_pe <- pe %>%
        x = c("Olas"),
        fill = "Grado de acuerdo",
        caption = "Fuente: EDUMER",
-       title = "Figura 5: Quienes más se esfuerzan deberían obtener mayores recompensas que quienes se esfuerzan menos.") +
+       title = "Figura 5: Quienes más se esfuerzan deberían obtener mayores \n recompensas que quienes se esfuerzan menos.") +
   theme(legend.position = "bottom") + 
   theme_blank()
 
@@ -363,7 +364,7 @@ plot_pe <- pe %>%
        x = c("Olas"),
        fill = "Grado de acuerdo",
        caption = "Fuente: EDUMER",
-       title = "Figura 6: Quienes poseen más talento deberían obtener mayores recompensas que quienes poseen menos talento.") +
+       title = "Figura 6: Quienes poseen más talento deberían obtener mayores \n recompensas que quienes poseen menos talento.") +
   theme(legend.position = "bottom") + 
   theme_blank()
 
@@ -422,7 +423,7 @@ plot_pe <- pe %>%
        x = c("Olas"),
        fill = "Grado de acuerdo",
        caption = "Fuente: EDUMER",
-       title = "Figura 7:  Está bien que quienes tienen padres ricos les vaya bien en la vida.") +
+       title = "Figura 7:  Está bien que quienes tienen padres ricos les vaya \n bien en la vida.") +
   theme(legend.position = "bottom") + 
   theme_blank()
 
@@ -481,7 +482,7 @@ plot_pe <- pe %>%
        x = c("Olas"),
        fill = "Grado de acuerdo",
        caption = "Fuente: EDUMER",
-       title = "Figura 8: Está bien que quienes tienen buenos contactos les vaya bien en la vida.") +
+       title = "Figura 8: Está bien que quienes tienen buenos contactos les \n vaya bien en la vida.") +
   theme(legend.position = "bottom") + 
   theme_blank()
 
@@ -540,7 +541,7 @@ plot_pe <- pe %>%
        x = c("Olas"),
        fill = "Grado de acuerdo",
        caption = "Fuente: EDUMER",
-       title = "Figura 9:  En Chile, todas las personas tienen las mismas oportunidades para salir adelante..") +
+       title = "Figura 9:  En Chile, todas las personas tienen las mismas \n oportunidades para salir adelante..") +
   theme(legend.position = "bottom") + 
   theme_blank()
 
@@ -605,6 +606,3 @@ plot_pe <- pe %>%
 
 plot_pe
 ```
-
-
-
