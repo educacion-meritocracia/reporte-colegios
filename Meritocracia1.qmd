@@ -384,6 +384,8 @@ plot_pe <- pe %>%
 plot_pe
 ```
 
+Cruces con características sociodemográficas de estudiantes en la *ola 2* del estudio
+
 ```{r, dona-curso-2, echo=FALSE }
 # gráfico: esfuerzo y curso
 
@@ -457,6 +459,76 @@ plot_es_percep_curso <- annotate_figure(
 plot_es_percep_curso
 ```
 
+```{r, sociodemo-2, echo=FALSE}
+
+# Paso 1: Filtramos la bbdd por la ola 2
+db_w02 <- db_long %>% filter(ola==2)
+
+# Paso 2: Calcular las frecuencias originales
+frecuencias_originales <- db_w02 %>%
+  pivot_longer(cols = c(genero, educ_max, libros_hogar),
+               names_to = "variable",
+               values_to = "categoria") %>%
+  group_by(variable, categoria) %>%
+  summarise(Freq_Original = n(), .groups = 'drop')
+
+# Paso 3: Combinar las frecuencias originales con la base transformada
+proc_datos_largo <- db_w02 %>%
+  pivot_longer(cols = c(genero, educ_max, libros_hogar),
+               names_to = "variable",
+               values_to = "categoria")
+
+frecuencias <- proc_datos_largo %>%
+  group_by(variable, categoria, p1_2) %>%
+  summarise(Freq = n(), .groups = 'drop') %>%
+  left_join(frecuencias_originales, by = c("variable", "categoria")) %>%
+  mutate(Porcentaje = Freq / Freq_Original) %>%
+  ungroup() %>% 
+  na.omit()
+
+# Paso 4: Ajustar los nombres
+variable_names <- list("educ_max" = "Nivel educacional de los padres",
+                       "genero_ES" = "Género",
+                       "libros_hogar" = "Cantidad de libros en el hogar")
+variable_labeller <- function(variable, value){return(variable_names[value])}
+
+# Paso 5: Ajustar las etiquetas largas
+frecuencias$categoria <- str_wrap(frecuencias$categoria, width = 10)
+
+# Paso 6: Graficar las barras 
+ggplot(frecuencias, aes(x = categoria, y = Porcentaje, fill = factor(p1_2))) +
+  geom_bar(stat = "identity", position = "fill", color = "white") +
+  facet_wrap(~ variable, scales = "free_x", labeller = as_labeller(variable_labeller)) +
+  geom_shadowtext(aes(label = scales::percent(Porcentaje, accuracy = 1)), 
+                  position = position_stack(vjust = 0.5), 
+                  color = "white",   # Color del texto interno
+                  bg.color = "grey30",  # Color del borde (sombra)
+                  bg.r = 0.1,  # Radio de la sombra (ajústalo según necesites)
+                  size = 4
+                  ) +
+  labs(
+    x = NULL,
+    y = NULL,
+    fill = "Grado de acuerdo",
+    title = "Figura 2: En Chile, las personas son recompensadas por su \n inteligencia y habilidad") +
+  theme_blank() +
+  theme(
+    axis.text.y = element_blank(),
+    axis.ticks.y = element_blank(),
+    axis.title.x = element_blank(),
+    axis.title.y = element_blank(),
+    strip.text = element_text(size = 9, face = "bold"),
+    axis.text.x = element_text(size = 9),
+    legend.position = "bottom",
+    plot.title = element_text(size = 12, face = "italic", color = "black")
+  ) +
+  scale_fill_brewer(palette = "Blues", 
+                    labels = c("1" = "Muy en desacuerdo", "2" = "En desacuerdo", 
+                               "3" = "De acuerdo", "4" = "Muy de acuerdo"),
+                    name = NULL)
+
+```
+
 ### Percepción Padres Ricos
 
 ```{r, gráfico 3, echo=FALSE}
@@ -515,6 +587,8 @@ plot_pe <- pe %>%
 
 plot_pe
 ```
+
+Cruces con características sociodemográficas de estudiantes en la *ola 2* del estudio
 
 ```{r, dona-curso-3, echo=FALSE }
 # gráfico: esfuerzo y curso
@@ -580,13 +654,83 @@ esfuerzo_curso <- ggarrange(
 plot_es_percep_curso <- annotate_figure(
   esfuerzo_curso,
   top = text_grob(
-    "Figura 2: En Chile, las personas son recompensadas por su \n inteligencia y habilidad",
+    "Figura 3: En Chile, a quienes tienen padres ricos les va mucho \n mejor en la vida.",
     size = 12, 
     face = "italic", 
     color = "black",
     hjust = 0.5))
 
 plot_es_percep_curso
+```
+
+```{r, sociodemo-3, echo=FALSE}
+
+# Paso 1: Filtramos la bbdd por la ola 2
+db_w02 <- db_long %>% filter(ola==2)
+
+# Paso 2: Calcular las frecuencias originales
+frecuencias_originales <- db_w02 %>%
+  pivot_longer(cols = c(genero, educ_max, libros_hogar),
+               names_to = "variable",
+               values_to = "categoria") %>%
+  group_by(variable, categoria) %>%
+  summarise(Freq_Original = n(), .groups = 'drop')
+
+# Paso 3: Combinar las frecuencias originales con la base transformada
+proc_datos_largo <- db_w02 %>%
+  pivot_longer(cols = c(genero, educ_max, libros_hogar),
+               names_to = "variable",
+               values_to = "categoria")
+
+frecuencias <- proc_datos_largo %>%
+  group_by(variable, categoria, p1_3) %>%
+  summarise(Freq = n(), .groups = 'drop') %>%
+  left_join(frecuencias_originales, by = c("variable", "categoria")) %>%
+  mutate(Porcentaje = Freq / Freq_Original) %>%
+  ungroup() %>% 
+  na.omit()
+
+# Paso 4: Ajustar los nombres
+variable_names <- list("educ_max" = "Nivel educacional de los padres",
+                       "genero_ES" = "Género",
+                       "libros_hogar" = "Cantidad de libros en el hogar")
+variable_labeller <- function(variable, value){return(variable_names[value])}
+
+# Paso 5: Ajustar las etiquetas largas
+frecuencias$categoria <- str_wrap(frecuencias$categoria, width = 10)
+
+# Paso 6: Graficar las barras 
+ggplot(frecuencias, aes(x = categoria, y = Porcentaje, fill = factor(p1_3))) +
+  geom_bar(stat = "identity", position = "fill", color = "white") +
+  facet_wrap(~ variable, scales = "free_x", labeller = as_labeller(variable_labeller)) +
+  geom_shadowtext(aes(label = scales::percent(Porcentaje, accuracy = 1)), 
+                  position = position_stack(vjust = 0.5), 
+                  color = "white",   # Color del texto interno
+                  bg.color = "grey30",  # Color del borde (sombra)
+                  bg.r = 0.1,  # Radio de la sombra (ajústalo según necesites)
+                  size = 4
+                  ) +
+  labs(
+    x = NULL,
+    y = NULL,
+    fill = "Grado de acuerdo",
+    title ="Figura 3: En Chile, a quienes tienen padres ricos les va mucho \n mejor en la vida.") +
+  theme_blank() +
+  theme(
+    axis.text.y = element_blank(),
+    axis.ticks.y = element_blank(),
+    axis.title.x = element_blank(),
+    axis.title.y = element_blank(),
+    strip.text = element_text(size = 9, face = "bold"),
+    axis.text.x = element_text(size = 9),
+    legend.position = "bottom",
+    plot.title = element_text(size = 12, face = "italic", color = "black")
+  ) +
+  scale_fill_brewer(palette = "Blues", 
+                    labels = c("1" = "Muy en desacuerdo", "2" = "En desacuerdo", 
+                               "3" = "De acuerdo", "4" = "Muy de acuerdo"),
+                    name = NULL)
+
 ```
 
 ### Percepción Buenos Contactos
@@ -641,12 +785,14 @@ plot_pe <- pe %>%
        x = c("Olas"),
        fill = "Grado de acuerdo",
        caption = "Fuente: EDUMER",
-       title = "Figura 4:En Chile, quienes tienen buenos contactos les va mejor \n en la vida.") +
+       title = "Figura 4: En Chile, quienes tienen buenos contactos les va mejor \n en la vida.") +
   theme(legend.position = "bottom") + 
   theme_blank()
 
 plot_pe
 ```
+
+Cruces con características sociodemográficas de estudiantes en la *ola 2* del estudio
 
 ```{r, dona-curso-4, echo=FALSE }
 # gráfico: esfuerzo y curso
@@ -712,13 +858,83 @@ esfuerzo_curso <- ggarrange(
 plot_es_percep_curso <- annotate_figure(
   esfuerzo_curso,
   top = text_grob(
-    "Figura 2: En Chile, las personas son recompensadas por su \n inteligencia y habilidad",
+    "Figura 4: En Chile, quienes tienen buenos contactos les va mejor \n en la vida.",
     size = 12, 
     face = "italic", 
     color = "black",
     hjust = 0.5))
 
 plot_es_percep_curso
+```
+
+```{r, sociodemo-4, echo=FALSE}
+
+# Paso 1: Filtramos la bbdd por la ola 2
+db_w02 <- db_long %>% filter(ola==2)
+
+# Paso 2: Calcular las frecuencias originales
+frecuencias_originales <- db_w02 %>%
+  pivot_longer(cols = c(genero, educ_max, libros_hogar),
+               names_to = "variable",
+               values_to = "categoria") %>%
+  group_by(variable, categoria) %>%
+  summarise(Freq_Original = n(), .groups = 'drop')
+
+# Paso 3: Combinar las frecuencias originales con la base transformada
+proc_datos_largo <- db_w02 %>%
+  pivot_longer(cols = c(genero, educ_max, libros_hogar),
+               names_to = "variable",
+               values_to = "categoria")
+
+frecuencias <- proc_datos_largo %>%
+  group_by(variable, categoria, p1_4) %>%
+  summarise(Freq = n(), .groups = 'drop') %>%
+  left_join(frecuencias_originales, by = c("variable", "categoria")) %>%
+  mutate(Porcentaje = Freq / Freq_Original) %>%
+  ungroup() %>% 
+  na.omit()
+
+# Paso 4: Ajustar los nombres
+variable_names <- list("educ_max" = "Nivel educacional de los padres",
+                       "genero_ES" = "Género",
+                       "libros_hogar" = "Cantidad de libros en el hogar")
+variable_labeller <- function(variable, value){return(variable_names[value])}
+
+# Paso 5: Ajustar las etiquetas largas
+frecuencias$categoria <- str_wrap(frecuencias$categoria, width = 10)
+
+# Paso 6: Graficar las barras 
+ggplot(frecuencias, aes(x = categoria, y = Porcentaje, fill = factor(p1_4))) +
+  geom_bar(stat = "identity", position = "fill", color = "white") +
+  facet_wrap(~ variable, scales = "free_x", labeller = as_labeller(variable_labeller)) +
+  geom_shadowtext(aes(label = scales::percent(Porcentaje, accuracy = 1)), 
+                  position = position_stack(vjust = 0.5), 
+                  color = "white",   # Color del texto interno
+                  bg.color = "grey30",  # Color del borde (sombra)
+                  bg.r = 0.1,  # Radio de la sombra (ajústalo según necesites)
+                  size = 4
+                  ) +
+  labs(
+    x = NULL,
+    y = NULL,
+    fill = "Grado de acuerdo",
+    title = "Figura 4: En Chile, quienes tienen buenos contactos les va mejor \n en la vida.") +
+  theme_blank() +
+  theme(
+    axis.text.y = element_blank(),
+    axis.ticks.y = element_blank(),
+    axis.title.x = element_blank(),
+    axis.title.y = element_blank(),
+    strip.text = element_text(size = 9, face = "bold"),
+    axis.text.x = element_text(size = 9),
+    legend.position = "bottom",
+    plot.title = element_text(size = 12, face = "italic", color = "black")
+  ) +
+  scale_fill_brewer(palette = "Blues", 
+                    labels = c("1" = "Muy en desacuerdo", "2" = "En desacuerdo", 
+                               "3" = "De acuerdo", "4" = "Muy de acuerdo"),
+                    name = NULL)
+
 ```
 
 ### Preferencia Esfuerzo
@@ -779,6 +995,8 @@ plot_pe <- pe %>%
 
 plot_pe
 ```
+
+Cruces con características sociodemográficas de estudiantes en la *ola 2* del estudio
 
 ```{r, dona-curso-5, echo=FALSE }
 # gráfico: esfuerzo y curso
@@ -844,13 +1062,83 @@ esfuerzo_curso <- ggarrange(
 plot_es_percep_curso <- annotate_figure(
   esfuerzo_curso,
   top = text_grob(
-    "Figura 2: En Chile, las personas son recompensadas por su \n inteligencia y habilidad",
+   "Figura 5: Quienes más se esfuerzan deberían obtener mayores \n recompensas que quienes se esfuerzan menos.",
     size = 12, 
     face = "italic", 
     color = "black",
     hjust = 0.5))
 
 plot_es_percep_curso
+```
+
+```{r, sociodemo-5, echo=FALSE}
+
+# Paso 1: Filtramos la bbdd por la ola 2
+db_w02 <- db_long %>% filter(ola==2)
+
+# Paso 2: Calcular las frecuencias originales
+frecuencias_originales <- db_w02 %>%
+  pivot_longer(cols = c(genero, educ_max, libros_hogar),
+               names_to = "variable",
+               values_to = "categoria") %>%
+  group_by(variable, categoria) %>%
+  summarise(Freq_Original = n(), .groups = 'drop')
+
+# Paso 3: Combinar las frecuencias originales con la base transformada
+proc_datos_largo <- db_w02 %>%
+  pivot_longer(cols = c(genero, educ_max, libros_hogar),
+               names_to = "variable",
+               values_to = "categoria")
+
+frecuencias <- proc_datos_largo %>%
+  group_by(variable, categoria, p1_5) %>%
+  summarise(Freq = n(), .groups = 'drop') %>%
+  left_join(frecuencias_originales, by = c("variable", "categoria")) %>%
+  mutate(Porcentaje = Freq / Freq_Original) %>%
+  ungroup() %>% 
+  na.omit()
+
+# Paso 4: Ajustar los nombres
+variable_names <- list("educ_max" = "Nivel educacional de los padres",
+                       "genero_ES" = "Género",
+                       "libros_hogar" = "Cantidad de libros en el hogar")
+variable_labeller <- function(variable, value){return(variable_names[value])}
+
+# Paso 5: Ajustar las etiquetas largas
+frecuencias$categoria <- str_wrap(frecuencias$categoria, width = 10)
+
+# Paso 6: Graficar las barras 
+ggplot(frecuencias, aes(x = categoria, y = Porcentaje, fill = factor(p1_5))) +
+  geom_bar(stat = "identity", position = "fill", color = "white") +
+  facet_wrap(~ variable, scales = "free_x", labeller = as_labeller(variable_labeller)) +
+  geom_shadowtext(aes(label = scales::percent(Porcentaje, accuracy = 1)), 
+                  position = position_stack(vjust = 0.5), 
+                  color = "white",   # Color del texto interno
+                  bg.color = "grey30",  # Color del borde (sombra)
+                  bg.r = 0.1,  # Radio de la sombra (ajústalo según necesites)
+                  size = 4
+                  ) +
+  labs(
+    x = NULL,
+    y = NULL,
+    fill = "Grado de acuerdo",
+    title = "Figura 1: En esta escuela quienes se esfuerzan\nobtienen buenas notas") +
+  theme_blank() +
+  theme(
+    axis.text.y = element_blank(),
+    axis.ticks.y = element_blank(),
+    axis.title.x = element_blank(),
+    axis.title.y = element_blank(),
+    strip.text = element_text(size = 9, face = "bold"),
+    axis.text.x = element_text(size = 9),
+    legend.position = "bottom",
+    plot.title = element_text(size = 12, face = "italic", color = "black")
+  ) +
+  scale_fill_brewer(palette = "Blues", 
+                    labels = c("1" = "Muy en desacuerdo", "2" = "En desacuerdo", 
+                               "3" = "De acuerdo", "4" = "Muy de acuerdo"),
+                    name = NULL)
+
 ```
 
 ### Preferencia Talento
@@ -910,6 +1198,8 @@ plot_pe <- pe %>%
 
 plot_pe
 ```
+
+Cruces con características sociodemográficas de estudiantes en la *ola 2* del estudio
 
 ```{r, dona-curso-6, echo=FALSE }
 # gráfico: esfuerzo y curso
@@ -975,13 +1265,83 @@ esfuerzo_curso <- ggarrange(
 plot_es_percep_curso <- annotate_figure(
   esfuerzo_curso,
   top = text_grob(
-    "Figura 2: En Chile, las personas son recompensadas por su \n inteligencia y habilidad",
+    "Figura 6: Quienes poseen más talento deberían obtener mayores \n recompensas que quienes poseen menos talento.",
     size = 12, 
     face = "italic", 
     color = "black",
     hjust = 0.5))
 
 plot_es_percep_curso
+```
+
+```{r, sociodemo-6, echo=FALSE}
+
+# Paso 1: Filtramos la bbdd por la ola 2
+db_w02 <- db_long %>% filter(ola==2)
+
+# Paso 2: Calcular las frecuencias originales
+frecuencias_originales <- db_w02 %>%
+  pivot_longer(cols = c(genero, educ_max, libros_hogar),
+               names_to = "variable",
+               values_to = "categoria") %>%
+  group_by(variable, categoria) %>%
+  summarise(Freq_Original = n(), .groups = 'drop')
+
+# Paso 3: Combinar las frecuencias originales con la base transformada
+proc_datos_largo <- db_w02 %>%
+  pivot_longer(cols = c(genero, educ_max, libros_hogar),
+               names_to = "variable",
+               values_to = "categoria")
+
+frecuencias <- proc_datos_largo %>%
+  group_by(variable, categoria, p1_6) %>%
+  summarise(Freq = n(), .groups = 'drop') %>%
+  left_join(frecuencias_originales, by = c("variable", "categoria")) %>%
+  mutate(Porcentaje = Freq / Freq_Original) %>%
+  ungroup() %>% 
+  na.omit()
+
+# Paso 4: Ajustar los nombres
+variable_names <- list("educ_max" = "Nivel educacional de los padres",
+                       "genero_ES" = "Género",
+                       "libros_hogar" = "Cantidad de libros en el hogar")
+variable_labeller <- function(variable, value){return(variable_names[value])}
+
+# Paso 5: Ajustar las etiquetas largas
+frecuencias$categoria <- str_wrap(frecuencias$categoria, width = 10)
+
+# Paso 6: Graficar las barras 
+ggplot(frecuencias, aes(x = categoria, y = Porcentaje, fill = factor(p1_6))) +
+  geom_bar(stat = "identity", position = "fill", color = "white") +
+  facet_wrap(~ variable, scales = "free_x", labeller = as_labeller(variable_labeller)) +
+  geom_shadowtext(aes(label = scales::percent(Porcentaje, accuracy = 1)), 
+                  position = position_stack(vjust = 0.5), 
+                  color = "white",   # Color del texto interno
+                  bg.color = "grey30",  # Color del borde (sombra)
+                  bg.r = 0.1,  # Radio de la sombra (ajústalo según necesites)
+                  size = 4
+                  ) +
+  labs(
+    x = NULL,
+    y = NULL,
+    fill = "Grado de acuerdo",
+    title = "Figura 6: Quienes poseen más talento deberían obtener mayores \n recompensas que quienes poseen menos talento.") +
+  theme_blank() +
+  theme(
+    axis.text.y = element_blank(),
+    axis.ticks.y = element_blank(),
+    axis.title.x = element_blank(),
+    axis.title.y = element_blank(),
+    strip.text = element_text(size = 9, face = "bold"),
+    axis.text.x = element_text(size = 9),
+    legend.position = "bottom",
+    plot.title = element_text(size = 12, face = "italic", color = "black")
+  ) +
+  scale_fill_brewer(palette = "Blues", 
+                    labels = c("1" = "Muy en desacuerdo", "2" = "En desacuerdo", 
+                               "3" = "De acuerdo", "4" = "Muy de acuerdo"),
+                    name = NULL)
+
 ```
 
 ### Preferencia Padres ricos
@@ -1042,6 +1402,8 @@ plot_pe <- pe %>%
 
 plot_pe
 ```
+
+Cruces con características sociodemográficas de estudiantes en la *ola 2* del estudio
 
 ```{r, dona-curso-7, echo=FALSE }
 # gráfico: esfuerzo y curso
@@ -1107,13 +1469,83 @@ esfuerzo_curso <- ggarrange(
 plot_es_percep_curso <- annotate_figure(
   esfuerzo_curso,
   top = text_grob(
-    "Figura 2: En Chile, las personas son recompensadas por su \n inteligencia y habilidad",
+   "Figura 7:  Está bien que quienes tienen padres ricos les vaya \n bien en la vida.",
     size = 12, 
     face = "italic", 
     color = "black",
     hjust = 0.5))
 
 plot_es_percep_curso
+```
+
+```{r, sociodemo-7, echo=FALSE}
+
+# Paso 1: Filtramos la bbdd por la ola 2
+db_w02 <- db_long %>% filter(ola==2)
+
+# Paso 2: Calcular las frecuencias originales
+frecuencias_originales <- db_w02 %>%
+  pivot_longer(cols = c(genero, educ_max, libros_hogar),
+               names_to = "variable",
+               values_to = "categoria") %>%
+  group_by(variable, categoria) %>%
+  summarise(Freq_Original = n(), .groups = 'drop')
+
+# Paso 3: Combinar las frecuencias originales con la base transformada
+proc_datos_largo <- db_w02 %>%
+  pivot_longer(cols = c(genero, educ_max, libros_hogar),
+               names_to = "variable",
+               values_to = "categoria")
+
+frecuencias <- proc_datos_largo %>%
+  group_by(variable, categoria, p1_7) %>%
+  summarise(Freq = n(), .groups = 'drop') %>%
+  left_join(frecuencias_originales, by = c("variable", "categoria")) %>%
+  mutate(Porcentaje = Freq / Freq_Original) %>%
+  ungroup() %>% 
+  na.omit()
+
+# Paso 4: Ajustar los nombres
+variable_names <- list("educ_max" = "Nivel educacional de los padres",
+                       "genero_ES" = "Género",
+                       "libros_hogar" = "Cantidad de libros en el hogar")
+variable_labeller <- function(variable, value){return(variable_names[value])}
+
+# Paso 5: Ajustar las etiquetas largas
+frecuencias$categoria <- str_wrap(frecuencias$categoria, width = 10)
+
+# Paso 6: Graficar las barras 
+ggplot(frecuencias, aes(x = categoria, y = Porcentaje, fill = factor(p1_7))) +
+  geom_bar(stat = "identity", position = "fill", color = "white") +
+  facet_wrap(~ variable, scales = "free_x", labeller = as_labeller(variable_labeller)) +
+  geom_shadowtext(aes(label = scales::percent(Porcentaje, accuracy = 1)), 
+                  position = position_stack(vjust = 0.5), 
+                  color = "white",   # Color del texto interno
+                  bg.color = "grey30",  # Color del borde (sombra)
+                  bg.r = 0.1,  # Radio de la sombra (ajústalo según necesites)
+                  size = 4
+                  ) +
+  labs(
+    x = NULL,
+    y = NULL,
+    fill = "Grado de acuerdo",
+    title = "Figura 7:  Está bien que quienes tienen padres ricos les vaya \n bien en la vida.") +
+  theme_blank() +
+  theme(
+    axis.text.y = element_blank(),
+    axis.ticks.y = element_blank(),
+    axis.title.x = element_blank(),
+    axis.title.y = element_blank(),
+    strip.text = element_text(size = 9, face = "bold"),
+    axis.text.x = element_text(size = 9),
+    legend.position = "bottom",
+    plot.title = element_text(size = 12, face = "italic", color = "black")
+  ) +
+  scale_fill_brewer(palette = "Blues", 
+                    labels = c("1" = "Muy en desacuerdo", "2" = "En desacuerdo", 
+                               "3" = "De acuerdo", "4" = "Muy de acuerdo"),
+                    name = NULL)
+
 ```
 
 ### Preferencia Buenos contactos
@@ -1174,6 +1606,8 @@ plot_pe <- pe %>%
 
 plot_pe
 ```
+
+Cruces con características sociodemográficas de estudiantes en la *ola 2* del estudio
 
 ```{r, dona-curso-8, echo=FALSE }
 # gráfico: esfuerzo y curso
@@ -1239,13 +1673,83 @@ esfuerzo_curso <- ggarrange(
 plot_es_percep_curso <- annotate_figure(
   esfuerzo_curso,
   top = text_grob(
-    "Figura 2: En Chile, las personas son recompensadas por su \n inteligencia y habilidad",
+    "Figura 8: Está bien que quienes tienen buenos contactos les \n vaya bien en la vida.",
     size = 12, 
     face = "italic", 
     color = "black",
     hjust = 0.5))
 
 plot_es_percep_curso
+```
+
+```{r, sociodemo-8, echo=FALSE}
+
+# Paso 1: Filtramos la bbdd por la ola 2
+db_w02 <- db_long %>% filter(ola==2)
+
+# Paso 2: Calcular las frecuencias originales
+frecuencias_originales <- db_w02 %>%
+  pivot_longer(cols = c(genero, educ_max, libros_hogar),
+               names_to = "variable",
+               values_to = "categoria") %>%
+  group_by(variable, categoria) %>%
+  summarise(Freq_Original = n(), .groups = 'drop')
+
+# Paso 3: Combinar las frecuencias originales con la base transformada
+proc_datos_largo <- db_w02 %>%
+  pivot_longer(cols = c(genero, educ_max, libros_hogar),
+               names_to = "variable",
+               values_to = "categoria")
+
+frecuencias <- proc_datos_largo %>%
+  group_by(variable, categoria, p1_8) %>%
+  summarise(Freq = n(), .groups = 'drop') %>%
+  left_join(frecuencias_originales, by = c("variable", "categoria")) %>%
+  mutate(Porcentaje = Freq / Freq_Original) %>%
+  ungroup() %>% 
+  na.omit()
+
+# Paso 4: Ajustar los nombres
+variable_names <- list("educ_max" = "Nivel educacional de los padres",
+                       "genero_ES" = "Género",
+                       "libros_hogar" = "Cantidad de libros en el hogar")
+variable_labeller <- function(variable, value){return(variable_names[value])}
+
+# Paso 5: Ajustar las etiquetas largas
+frecuencias$categoria <- str_wrap(frecuencias$categoria, width = 10)
+
+# Paso 6: Graficar las barras 
+ggplot(frecuencias, aes(x = categoria, y = Porcentaje, fill = factor(p1_8))) +
+  geom_bar(stat = "identity", position = "fill", color = "white") +
+  facet_wrap(~ variable, scales = "free_x", labeller = as_labeller(variable_labeller)) +
+  geom_shadowtext(aes(label = scales::percent(Porcentaje, accuracy = 1)), 
+                  position = position_stack(vjust = 0.5), 
+                  color = "white",   # Color del texto interno
+                  bg.color = "grey30",  # Color del borde (sombra)
+                  bg.r = 0.1,  # Radio de la sombra (ajústalo según necesites)
+                  size = 4
+                  ) +
+  labs(
+    x = NULL,
+    y = NULL,
+    fill = "Grado de acuerdo",
+    title = "Figura 8: Está bien que quienes tienen buenos contactos les \n vaya bien en la vida.") +
+  theme_blank() +
+  theme(
+    axis.text.y = element_blank(),
+    axis.ticks.y = element_blank(),
+    axis.title.x = element_blank(),
+    axis.title.y = element_blank(),
+    strip.text = element_text(size = 9, face = "bold"),
+    axis.text.x = element_text(size = 9),
+    legend.position = "bottom",
+    plot.title = element_text(size = 12, face = "italic", color = "black")
+  ) +
+  scale_fill_brewer(palette = "Blues", 
+                    labels = c("1" = "Muy en desacuerdo", "2" = "En desacuerdo", 
+                               "3" = "De acuerdo", "4" = "Muy de acuerdo"),
+                    name = NULL)
+
 ```
 
 ### Percepción Oportunidades
@@ -1300,12 +1804,14 @@ plot_pe <- pe %>%
        x = c("Olas"),
        fill = "Grado de acuerdo",
        caption = "Fuente: EDUMER",
-       title = "Figura 9:  En Chile, todas las personas tienen las mismas \n oportunidades para salir adelante..") +
+       title = "Figura 9:  En Chile, todas las personas tienen las mismas \n oportunidades para salir adelante.") +
   theme(legend.position = "bottom") + 
   theme_blank()
 
 plot_pe
 ```
+
+Cruces con características sociodemográficas de estudiantes en la *ola 2* del estudio
 
 ```{r, dona-curso-9, echo=FALSE }
 # gráfico: esfuerzo y curso
@@ -1371,13 +1877,83 @@ esfuerzo_curso <- ggarrange(
 plot_es_percep_curso <- annotate_figure(
   esfuerzo_curso,
   top = text_grob(
-    "Figura 2: En Chile, las personas son recompensadas por su \n inteligencia y habilidad",
+    "Figura 9:  En Chile, todas las personas tienen las mismas \n oportunidades para salir adelante.",
     size = 12, 
     face = "italic", 
     color = "black",
     hjust = 0.5))
 
 plot_es_percep_curso
+```
+
+```{r, sociodemo-9, echo=FALSE}
+
+# Paso 1: Filtramos la bbdd por la ola 2
+db_w02 <- db_long %>% filter(ola==2)
+
+# Paso 2: Calcular las frecuencias originales
+frecuencias_originales <- db_w02 %>%
+  pivot_longer(cols = c(genero, educ_max, libros_hogar),
+               names_to = "variable",
+               values_to = "categoria") %>%
+  group_by(variable, categoria) %>%
+  summarise(Freq_Original = n(), .groups = 'drop')
+
+# Paso 3: Combinar las frecuencias originales con la base transformada
+proc_datos_largo <- db_w02 %>%
+  pivot_longer(cols = c(genero, educ_max, libros_hogar),
+               names_to = "variable",
+               values_to = "categoria")
+
+frecuencias <- proc_datos_largo %>%
+  group_by(variable, categoria, p1_9) %>%
+  summarise(Freq = n(), .groups = 'drop') %>%
+  left_join(frecuencias_originales, by = c("variable", "categoria")) %>%
+  mutate(Porcentaje = Freq / Freq_Original) %>%
+  ungroup() %>% 
+  na.omit()
+
+# Paso 4: Ajustar los nombres
+variable_names <- list("educ_max" = "Nivel educacional de los padres",
+                       "genero_ES" = "Género",
+                       "libros_hogar" = "Cantidad de libros en el hogar")
+variable_labeller <- function(variable, value){return(variable_names[value])}
+
+# Paso 5: Ajustar las etiquetas largas
+frecuencias$categoria <- str_wrap(frecuencias$categoria, width = 10)
+
+# Paso 6: Graficar las barras 
+ggplot(frecuencias, aes(x = categoria, y = Porcentaje, fill = factor(p1_9))) +
+  geom_bar(stat = "identity", position = "fill", color = "white") +
+  facet_wrap(~ variable, scales = "free_x", labeller = as_labeller(variable_labeller)) +
+  geom_shadowtext(aes(label = scales::percent(Porcentaje, accuracy = 1)), 
+                  position = position_stack(vjust = 0.5), 
+                  color = "white",   # Color del texto interno
+                  bg.color = "grey30",  # Color del borde (sombra)
+                  bg.r = 0.1,  # Radio de la sombra (ajústalo según necesites)
+                  size = 4
+                  ) +
+  labs(
+    x = NULL,
+    y = NULL,
+    fill = "Grado de acuerdo",
+    title = "Figura 9:  En Chile, todas las personas tienen las mismas \n oportunidades para salir adelante.") +
+  theme_blank() +
+  theme(
+    axis.text.y = element_blank(),
+    axis.ticks.y = element_blank(),
+    axis.title.x = element_blank(),
+    axis.title.y = element_blank(),
+    strip.text = element_text(size = 9, face = "bold"),
+    axis.text.x = element_text(size = 9),
+    legend.position = "bottom",
+    plot.title = element_text(size = 12, face = "italic", color = "black")
+  ) +
+  scale_fill_brewer(palette = "Blues", 
+                    labels = c("1" = "Muy en desacuerdo", "2" = "En desacuerdo", 
+                               "3" = "De acuerdo", "4" = "Muy de acuerdo"),
+                    name = NULL)
+
 ```
 
 ### Percepción Meritocracia
@@ -1438,6 +2014,8 @@ plot_pe <- pe %>%
 
 plot_pe
 ```
+
+Cruces con características sociodemográficas de estudiantes en la *ola 2* del estudio
 
 ```{r, dona-curso-10, echo=FALSE }
 # gráfico: esfuerzo y curso
@@ -1503,11 +2081,81 @@ esfuerzo_curso <- ggarrange(
 plot_es_percep_curso <- annotate_figure(
   esfuerzo_curso,
   top = text_grob(
-    "Figura 2: En Chile, las personas son recompensadas por su \n inteligencia y habilidad",
+    "Figura 10: En Chile, todas las personas obtienen lo que merecen.",
     size = 12, 
     face = "italic", 
     color = "black",
     hjust = 0.5))
 
 plot_es_percep_curso
+```
+
+```{r, sociodemo-10, echo=FALSE}
+
+# Paso 1: Filtramos la bbdd por la ola 2
+db_w02 <- db_long %>% filter(ola==2)
+
+# Paso 2: Calcular las frecuencias originales
+frecuencias_originales <- db_w02 %>%
+  pivot_longer(cols = c(genero, educ_max, libros_hogar),
+               names_to = "variable",
+               values_to = "categoria") %>%
+  group_by(variable, categoria) %>%
+  summarise(Freq_Original = n(), .groups = 'drop')
+
+# Paso 3: Combinar las frecuencias originales con la base transformada
+proc_datos_largo <- db_w02 %>%
+  pivot_longer(cols = c(genero, educ_max, libros_hogar),
+               names_to = "variable",
+               values_to = "categoria")
+
+frecuencias <- proc_datos_largo %>%
+  group_by(variable, categoria, p1_10) %>%
+  summarise(Freq = n(), .groups = 'drop') %>%
+  left_join(frecuencias_originales, by = c("variable", "categoria")) %>%
+  mutate(Porcentaje = Freq / Freq_Original) %>%
+  ungroup() %>% 
+  na.omit()
+
+# Paso 4: Ajustar los nombres
+variable_names <- list("educ_max" = "Nivel educacional de los padres",
+                       "genero_ES" = "Género",
+                       "libros_hogar" = "Cantidad de libros en el hogar")
+variable_labeller <- function(variable, value){return(variable_names[value])}
+
+# Paso 5: Ajustar las etiquetas largas
+frecuencias$categoria <- str_wrap(frecuencias$categoria, width = 10)
+
+# Paso 6: Graficar las barras 
+ggplot(frecuencias, aes(x = categoria, y = Porcentaje, fill = factor(p1_10))) +
+  geom_bar(stat = "identity", position = "fill", color = "white") +
+  facet_wrap(~ variable, scales = "free_x", labeller = as_labeller(variable_labeller)) +
+  geom_shadowtext(aes(label = scales::percent(Porcentaje, accuracy = 1)), 
+                  position = position_stack(vjust = 0.5), 
+                  color = "white",   # Color del texto interno
+                  bg.color = "grey30",  # Color del borde (sombra)
+                  bg.r = 0.1,  # Radio de la sombra (ajústalo según necesites)
+                  size = 4
+                  ) +
+  labs(
+    x = NULL,
+    y = NULL,
+    fill = "Grado de acuerdo",
+    title = "Figura 10: En Chile, todas las personas obtienen lo que merecen.") +
+  theme_blank() +
+  theme(
+    axis.text.y = element_blank(),
+    axis.ticks.y = element_blank(),
+    axis.title.x = element_blank(),
+    axis.title.y = element_blank(),
+    strip.text = element_text(size = 9, face = "bold"),
+    axis.text.x = element_text(size = 9),
+    legend.position = "bottom",
+    plot.title = element_text(size = 12, face = "italic", color = "black")
+  ) +
+  scale_fill_brewer(palette = "Blues", 
+                    labels = c("1" = "Muy en desacuerdo", "2" = "En desacuerdo", 
+                               "3" = "De acuerdo", "4" = "Muy de acuerdo"),
+                    name = NULL)
+
 ```
