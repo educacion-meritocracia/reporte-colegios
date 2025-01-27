@@ -76,8 +76,7 @@ ciud2$educ_max <- factor(ciud2$educ_max,
 
 # Curso estudiante
 
-ciud2$nivel_estudiante_o2 <- car::recode(ciud2$nivel_estudiante_o2, "1=1; 2=1; 3=2; 4=2")
-ciud2$nivel_estudiante <- factor(ciud2$nivel_estudiante_o2,
+ciud2$nivel_estudiante_o2 <- factor(ciud2$nivel_estudiante_o2,
                                  levels = c(1,2),
                                  labels = c("Básica","Media"))
 
@@ -234,6 +233,90 @@ plot_participar
 ```
 
 *Cruces con características sociodemográficas de los estudiantes en la **ola 2** del estudio*
+
+```{r, dona-curso1, echo=FALSE}
+# gráfico: esfuerzo y curso
+
+# dona curso: Básica
+
+basica_esfuerzo <- ciud2 %>% dplyr::filter(nivel_estudiante_o2=="Básica") %>% 
+  dplyr::select(p11_1_o2) #se filtran valores para esa categoría del curso
+  
+basica_esfuerzo = round(prop.table(table(categorias=basica_esfuerzo$p11_1_o2)),2) #se crean variables 'categoria' y 'Freq' del objeto
+
+basica_esfuerzo = as.data.frame(basica_esfuerzo) #convertimos el objeto en data.frame
+
+basica_esfuerzo <- ciud2 %>%
+  dplyr::filter(nivel_estudiante_o2 == "Básica") %>%
+  dplyr::select(p11_1_o2)
+
+# Crear tabla de frecuencias relativas
+basica_esfuerzo <- prop.table(table(basica_esfuerzo$p11_1_o2)) %>%
+  round(2) %>%
+  as.data.frame()
+
+# Renombrar columnas para asegurar compatibilidad con ggplot
+colnames(basica_esfuerzo) <- c("categorias", "Freq")
+
+basica_esfuerzo$categorias <- factor(basica_esfuerzo$categorias, levels = c(1, 2, 3, 4), labels = c("Muy en desacuerdo", "Desacuerdo", "De acuerdo", "Muy de acuerdo")) 
+
+plot_basica_esfuerzo<-ggplot(basica_esfuerzo,aes(x=2,y=-Freq, fill=categorias))+
+  geom_bar(stat = "identity", 
+           color="white")+
+    geom_text(aes(label = scales::percent(Freq)),
+              position=position_stack(vjust=0.5),color="black",size=4.5)+
+  coord_polar(theta = "y")+
+  scale_fill_brewer(palette = "Blues")+
+    theme_void()+
+  theme(legend.title = element_blank(),
+    plot.title = element_text(size=12, face="bold", hjust=0.5))+
+  xlim(0.5,2.5) +
+  labs(title="Estudiantes de básica") #graficamos
+
+# dona curso: Media
+
+# categoría media
+media_esfuerzo <- ciud2 %>% filter(nivel_estudiante_o2=="Media") %>% 
+  dplyr::select(p11_1_o2) 
+
+media_esfuerzo = round(prop.table(table(categorias=media_esfuerzo$p11_1_o2)),2)  
+
+media_esfuerzo = as.data.frame(media_esfuerzo)
+
+media_esfuerzo$categorias <- factor(media_esfuerzo$categorias, levels = c(1, 2, 3, 4), labels = c("Muy en desacuerdo", "Desacuerdo", "De acuerdo", "Muy de acuerdo")) 
+
+plot_media_esfuerzo<-ggplot(media_esfuerzo,aes(x=2,y=-Freq, fill=categorias))+
+  geom_bar(stat = "identity", 
+           color="white")+
+    geom_text(aes(label = scales::percent(Freq)),
+              position=position_stack(vjust=0.5),color="black",size=4.5)+
+  coord_polar(theta = "y")+
+  scale_fill_brewer(palette = "Blues")+
+    theme_void()+
+  theme(legend.title = element_blank(),
+    plot.title = element_text(size=12, face="bold", hjust=0.5))+
+  xlim(0.5,2.5) +
+  labs(title="Estudiantes de media") 
+
+esfuerzo_curso <- ggarrange(
+   plot_basica_esfuerzo, 
+   plot_media_esfuerzo,
+  common.legend = TRUE, 
+ ncol = 2, 
+  legend = "bottom")
+
+# Agregar una etiqueta global centrada
+plot_es_percep_curso <- annotate_figure(
+  esfuerzo_curso,
+  top = text_grob(
+    "Figura: Cuando sea adulto(a) podré participar en la política",
+    size = 12, 
+    face = "italic", 
+    color = "black",
+    hjust = 0.5))
+
+plot_es_percep_curso
+```
 
 ```{r, sociodemo-participacion, echo=FALSE}
 
@@ -429,6 +512,89 @@ plot_comprender
 ```
 
 *Cruces con variables sociodemográficas de los estudiantes en la **ola 2** del estudio*
+
+```{r dona-curso2, echo=FALSE}
+
+# dona curso: Básica
+
+basica_esfuerzo2 <- ciud2 %>% dplyr::filter(nivel_estudiante_o2=="Básica") %>% 
+  dplyr::select(p11_2_o2) #se filtran valores para esa categoría del curso
+  
+basica_esfuerzo2 = round(prop.table(table(categorias=basica_esfuerzo2$p11_2_o2)),2) #se crean variables 'categoria' y 'Freq' del objeto
+
+basica_esfuerzo = as.data.frame(basica_esfuerzo) #convertimos el objeto en data.frame
+
+basica_esfuerzo <- ciud2 %>%
+  dplyr::filter(nivel_estudiante_o2 == "Básica") %>%
+  dplyr::select(p11_1_o2)
+
+# Crear tabla de frecuencias relativas
+basica_esfuerzo <- prop.table(table(basica_esfuerzo$p11_1_o2)) %>%
+  round(2) %>%
+  as.data.frame()
+
+# Renombrar columnas para asegurar compatibilidad con ggplot
+colnames(basica_esfuerzo) <- c("categorias", "Freq")
+
+basica_esfuerzo$categorias <- factor(basica_esfuerzo$categorias, levels = c(1, 2, 3, 4), labels = c("Muy en desacuerdo", "Desacuerdo", "De acuerdo", "Muy de acuerdo")) 
+
+plot_basica_esfuerzo<-ggplot(basica_esfuerzo,aes(x=2,y=-Freq, fill=categorias))+
+  geom_bar(stat = "identity", 
+           color="white")+
+    geom_text(aes(label = scales::percent(Freq)),
+              position=position_stack(vjust=0.5),color="black",size=4.5)+
+  coord_polar(theta = "y")+
+  scale_fill_brewer(palette = "Blues")+
+    theme_void()+
+  theme(legend.title = element_blank(),
+    plot.title = element_text(size=12, face="bold", hjust=0.5))+
+  xlim(0.5,2.5) +
+  labs(title="Estudiantes de básica") #graficamos
+
+# dona curso: Media
+
+# categoría media
+media_esfuerzo <- ciud2 %>% filter(nivel_estudiante_o2=="Media") %>% 
+  dplyr::select(p11_1_o2) 
+
+media_esfuerzo = round(prop.table(table(categorias=media_esfuerzo$p11_1_o2)),2)  
+
+media_esfuerzo = as.data.frame(media_esfuerzo)
+
+media_esfuerzo$categorias <- factor(media_esfuerzo$categorias, levels = c(1, 2, 3, 4), labels = c("Muy en desacuerdo", "Desacuerdo", "De acuerdo", "Muy de acuerdo")) 
+
+plot_media_esfuerzo<-ggplot(media_esfuerzo,aes(x=2,y=-Freq, fill=categorias))+
+  geom_bar(stat = "identity", 
+           color="white")+
+    geom_text(aes(label = scales::percent(Freq)),
+              position=position_stack(vjust=0.5),color="black",size=4.5)+
+  coord_polar(theta = "y")+
+  scale_fill_brewer(palette = "Blues")+
+    theme_void()+
+  theme(legend.title = element_blank(),
+    plot.title = element_text(size=12, face="bold", hjust=0.5))+
+  xlim(0.5,2.5) +
+  labs(title="Estudiantes de media") 
+
+esfuerzo_curso <- ggarrange(
+   plot_basica_esfuerzo, 
+   plot_media_esfuerzo,
+  common.legend = TRUE, 
+ ncol = 2, 
+  legend = "bottom")
+
+# Agregar una etiqueta global centrada
+plot_es_percep_curso <- annotate_figure(
+  esfuerzo_curso,
+  top = text_grob(
+    "Figura: Comprendo bien las problemáticas políticas de nuestro país",
+    size = 12, 
+    face = "italic", 
+    color = "black",
+    hjust = 0.5))
+
+plot_es_percep_curso
+```
 
 ```{r sociodemo-comprender, echo=FALSE}
 frecuencias <- proc_datos_w2 %>%
