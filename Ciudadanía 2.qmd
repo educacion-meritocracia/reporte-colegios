@@ -172,6 +172,67 @@ plot_final_polit
 
 "Muy en desacuerdo" se mantiene constante (15%). Incremento en "Desacuerdo" (+2 puntos porcentuales). Disminución leve en "De acuerdo" (-1 punto porcentual). Incremento leve en "Muy de acuerdo" (+1 punto porcentual).
 
+```{r intentoalluvial, echo=FALSE}
+
+load("output/data/edumer_students_long.RData")
+
+
+# Gráfico cuando sea adulto
+db_long <- edumer_students_long %>% filter(!is.na(p17_1) & !is.na(ola))
+db_long$p17_1 <- factor(db_long$p17_1, levels = c(1, 2, 3, 4), labels = c("Muy en desacuerdo", "En desacuerdo", "De acuerdo", "Muy de acuerdo"))
+
+# Calcular frecuencias
+participar <- db_long %>%
+  group_by(id_estudiante, ola) %>%
+  count(p17_1) %>%
+  group_by(ola) %>%
+  mutate(porcentaje=n/sum(n)) %>%
+  ungroup() %>%
+  na.omit()
+
+# Agregar etiquetas
+etiquetas.participar <- db_long %>%
+  group_by(ola, p17_1) %>%
+  summarise(count = n(), .groups = "drop") %>%
+  group_by(ola) %>%
+  mutate(porcentaje = count / sum(count)) %>%
+  na.omit() %>%
+  mutate(id_estudiante = 1)
+  
+# Ordenar factores
+participar$p17_1 <- factor(participar$p17_1)
+etiquetas.participar$p17_1 <- factor(etiquetas.participar$p17_1)
+
+# Colores
+colors <- c("#f1eef6ff", "#bdc9e1ff", "#74a9cfff", "#0570b0ff")
+
+# Graficar
+plot_participar <- participar %>%
+  ggplot(aes(x = ola, fill = p17_1, stratum = p17_1,
+             alluvium = id_estudiante, y = porcentaje)) +
+  ggalluvial::geom_flow(alpha = .66) +
+  ggalluvial::geom_stratum(linetype = 0) +
+  scale_y_continuous(labels = scales::percent) +
+  scale_fill_manual(values = colors) +
+  geom_shadowtext(data = etiquetas.participar,
+                  aes(label = ifelse(porcentaje > 0, scales::percent(porcentaje, accuracy = .1), "")),
+                      position = position_stack(vjust = .5),
+                      show.legend = FALSE,
+                      size = 4,
+                      color = "white",
+                      bg.colour = "grey30") +
+  labs(y = "Porcentaje",
+       x = "Ola",
+       fill = "Grado de acuerdo",
+       caption = "Fuente: EDUMER",
+       title = "Figura: Cuando sea adulto(a) podré participar en la política") +
+  theme(legend.position = "bottom") +
+  theme_blank()
+
+plot_participar
+
+```
+
 *Cruces con características sociodemográficas de los estudiantes en la **ola 2** del estudio*
 
 ```{r, sociodemo-participacion, echo=FALSE}
@@ -308,6 +369,65 @@ plot_final_probl
 
 Disminución en "Muy en desacuerdo" (-3 puntos porcentuales). Incremento notable en "Desacuerdo" (+6 puntos porcentuales). Disminución notable en "De acuerdo" (-6 puntos porcentuales). Incremento en "Muy de acuerdo" (+3 puntos porcentuales).
 
+```{r intentoalluvial2, echo=FALSE}
+
+
+# Gráfico cuando sea adulto
+db_long <- edumer_students_long %>% filter(!is.na(p17_2) & !is.na(ola))
+db_long$p17_2 <- factor(db_long$p17_2, levels = c(1, 2, 3, 4), labels = c("Muy en desacuerdo", "En desacuerdo", "De acuerdo", "Muy de acuerdo"))
+
+# Calcular frecuencias
+comprender <- db_long %>%
+  group_by(id_estudiante, ola) %>%
+  count(p17_2) %>%
+  group_by(ola) %>%
+  mutate(porcentaje=n/sum(n)) %>%
+  ungroup() %>%
+  na.omit()
+
+# Agregar etiquetas
+etiquetas.comprender <- db_long %>%
+  group_by(ola, p17_2) %>%
+  summarise(count = n(), .groups = "drop") %>%
+  group_by(ola) %>%
+  mutate(porcentaje = count / sum(count)) %>%
+  na.omit() %>%
+  mutate(id_estudiante = 1)
+  
+# Ordenar factores
+comprender$p17_2 <- factor(comprender$p17_2)
+etiquetas.comprender$p17_2 <- factor(etiquetas.comprender$p17_2)
+
+# Colores
+colors <- c("#f1eef6ff", "#bdc9e1ff", "#74a9cfff", "#0570b0ff")
+
+# Graficar
+plot_comprender <- comprender %>%
+  ggplot(aes(x = ola, fill = p17_2, stratum = p17_2,
+             alluvium = id_estudiante, y = porcentaje)) +
+  ggalluvial::geom_flow(alpha = .66) +
+  ggalluvial::geom_stratum(linetype = 0) +
+  scale_y_continuous(labels = scales::percent) +
+  scale_fill_manual(values = colors) +
+  geom_shadowtext(data = etiquetas.comprender,
+                  aes(label = ifelse(porcentaje > 0, scales::percent(porcentaje, accuracy = .1), "")),
+                      position = position_stack(vjust = .5),
+                      show.legend = FALSE,
+                      size = 4,
+                      color = "white",
+                      bg.colour = "grey30") +
+  labs(y = "Porcentaje",
+       x = "Ola",
+       fill = "Grado de acuerdo",
+       caption = "Fuente: EDUMER",
+       title = "Figura: Comprendo bien las problemáticas políticas de nuestro país") +
+  theme(legend.position = "bottom") +
+  theme_blank()
+
+plot_comprender
+
+```
+
 *Cruces con variables sociodemográficas de los estudiantes en la **ola 2** del estudio*
 
 ```{r sociodemo-comprender, echo=FALSE}
@@ -430,6 +550,65 @@ plot_final_formciud
 ```
 
 Disminución en "Ninguna importancia" (-2 puntos porcentuales). Aumento en "Algo de importancia" (+6 puntos porcentuales). Incremento en "Mediana importancia" (+3 puntos porcentuales). Disminución en "Mucha importancia" (-6 puntos porcentuales).
+
+```{r intentoalluvial3, echo=FALSE}
+
+# Gráfico cuando sea adulto
+db_long <- edumer_students_long %>% filter(!is.na(p19) & !is.na(ola))
+db_long$p19 <- factor(db_long$p19, levels = c(1, 2, 3, 4), labels = c("Ninguna importancia", "Algo de importancia", "Mediana importancia", "Mucha importancia"))
+
+
+# Calcular frecuencias
+formciud <- db_long %>%
+  group_by(id_estudiante, ola) %>%
+  count(p19) %>%
+  group_by(ola) %>%
+  mutate(porcentaje=n/sum(n)) %>%
+  ungroup() %>%
+  na.omit()
+
+# Agregar etiquetas
+etiquetas.formciud <- db_long %>%
+  group_by(ola, p19) %>%
+  summarise(count = n(), .groups = "drop") %>%
+  group_by(ola) %>%
+  mutate(porcentaje = count / sum(count)) %>%
+  na.omit() %>%
+  mutate(id_estudiante = 1)
+  
+# Ordenar factores
+formciud$p19 <- factor(formciud$p19)
+etiquetas.formciud$p19 <- factor(etiquetas.formciud$p19)
+
+# Colores
+colors <- c("#f1eef6ff", "#bdc9e1ff", "#74a9cfff", "#0570b0ff")
+
+# Graficar
+plot_formciud <- formciud %>%
+  ggplot(aes(x = ola, fill = p19, stratum = p19,
+             alluvium = id_estudiante, y = porcentaje)) +
+  ggalluvial::geom_flow(alpha = .66) +
+  ggalluvial::geom_stratum(linetype = 0) +
+  scale_y_continuous(labels = scales::percent) +
+  scale_fill_manual(values = colors) +
+  geom_shadowtext(data = etiquetas.formciud,
+                  aes(label = ifelse(porcentaje > 0, scales::percent(porcentaje, accuracy = .1), "")),
+                      position = position_stack(vjust = .5),
+                      show.legend = FALSE,
+                      size = 4,
+                      color = "white",
+                      bg.colour = "grey30") +
+  labs(y = "Porcentaje",
+       x = "Ola",
+       fill = "Grado de acuerdo",
+       caption = "Fuente: EDUMER",
+       title = "Figura: ¿Cuánta importancia dirías tú que se le da a la Formación Ciudadana en este establecimiento?") +
+  theme(legend.position = "bottom") +
+  theme_blank()
+
+plot_formciud
+
+```
 
 *Cruces con características sociodemográficas de los estudiantes en la **ola 2** del estudio*
 
