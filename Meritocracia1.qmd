@@ -11,16 +11,66 @@ pacman::p_load(dplyr, sjPlot, stargazer, kableExtra, texreg, haven, sjlabelled,
 
 load("input/data/original/edumer_students_long.RData")
 
-# codificamos los valores 99-88 como missing para todas las variables-----------
-db_long <- edumer_students_long %>% set_na(., na = c(99, 88))
-
+load("input/data/original/db_proc_students_w02.RData")
 ```
 
+```{r, preparacion, echo=FALSE, message=FALSE}
+# Codificamos los valores 99-88 como missing para todas las variables
+db_long <- edumer_students_long %>% set_na(., na = c(99, 88))
+
+# Iteramos la recodificación de etiquetas para cada variable y fraseo
+
+for (i in names(dplyr::select(db_long, tidyselect::starts_with("p1_"), starts_with("p2_"), starts_with("p8_"), starts_with("p9_"), starts_with("p17_")))) {
+  db_long[[i]] <- sjlabelled::set_labels(
+    x = db_long[[i]],
+    labels = c("Muy en desacuerdo", "En desacuerdo", "De acuerdo", "Muy de acuerdo")
+  )
+}
+
+
+for (i in names(dplyr::select(db_long, tidyselect::starts_with("p10_")))) {
+  db_long[[i]] <- sjlabelled::set_labels(
+    x = db_long[[i]],
+    labels = c("Nada importante", "Algo importante", "Importante", "Muy importante")
+  )
+}
+
+
+for (i in names(dplyr::select(db_long, tidyselect::starts_with("p11_")))) {
+  db_long[[i]] <- sjlabelled::set_labels(
+    x = db_long[[i]],
+    labels = c("Seguro no haré esto", "Tal vez haré esto", "Probablemente haré esto", "Seguro haré esto")
+  )
+}
+
+for (i in names(dplyr::select(db_long, tidyselect::starts_with("p12_")))) {
+  db_long[[i]] <- sjlabelled::set_labels(
+    x = db_long[[i]],
+    labels = c("Si", "No")
+  )
+}
+
+for (i in names(dplyr::select(db_long, tidyselect::starts_with("p13_")))) {
+  db_long[[i]] <- sjlabelled::set_labels(
+    x = db_long[[i]],
+    labels = c("Nunca", "Una vez al año", "Una vez al mes", "Semanalmente", "Todos los días")
+  )
+}
+
+
+
+for (i in names(dplyr::select(db_long, tidyselect::starts_with("p18_")))) {
+  db_long[[i]] <- sjlabelled::set_labels(
+    x = db_long[[i]],
+    labels = c("Nunca", "Casi nunca", "Casi siempre", "Siempre")
+  )
+}
+```
 ## Meritocracia
 
 ### Percepción Esfuerzo
 
-```{r, gráfico 1, echo=FALSE}
+```{r, gráfico alluvial 1, echo=FALSE}
 # Paso 1: Preparar datos--------------------------------------------------------
 db_long <- db_long %>% filter(!is.na(p1_1) & !is.na(ola))
 db_long$p1_1 <- factor(db_long$p1_1, labels= c("Muy en desacuerdo", "En desacuerdo",
@@ -75,6 +125,79 @@ plot_pe <- pe %>%
   theme_blank()
 
 plot_pe
+```
+
+```{r, dona-curso, echo=FALSE }
+# gráfico: esfuerzo y curso
+
+# dona curso: Básica
+
+basica_esfuerzo <- db_students_w02 %>% dplyr::filter(nivel_estudiante_o2=="Básica") %>% 
+  dplyr::select(p2_1_o2) #se filtran valores para esa categoría del curso
+
+basica_esfuerzo = round(prop.table(table(categorias=basica_esfuerzo$p2_1_o2)),2) #se crean variables 'categoria' y 'Freq' del objeto
+
+basica_esfuerzo = as.data.frame(basica_esfuerzo) #convertimos el objeto en data.frame
+
+basica_esfuerzo$categorias <- factor(basica_esfuerzo$categorias, levels = c(1, 2, 3, 4), labels = c("Muy en desacuerdo", "Desacuerdo", "De acuerdo", "Muy de acuerdo")) 
+
+plot_basica_esfuerzo<-ggplot(basica_esfuerzo,aes(x=2,y=-Freq, fill=categorias))+
+  geom_bar(stat = "identity", 
+           color="white")+
+  geom_text(aes(label = scales::percent(Freq)),
+            position=position_stack(vjust=0.5),color="black",size=4.5)+
+  coord_polar(theta = "y")+
+  scale_fill_brewer(palette = "Blues")+
+  theme_void()+
+  theme(legend.title = element_blank(),
+        plot.title = element_text(size=12, face="bold", hjust=0.5))+
+  xlim(0.5,2.5) +
+  labs(title="Estudiantes de básica") #graficamos
+
+
+# dona curso: Media
+
+# categoría media
+media_esfuerzo <- db_students_w02 %>% filter(nivel_estudiante_o2=="Media") %>% 
+  dplyr::select(p2_1_o2) 
+
+media_esfuerzo = round(prop.table(table(categorias=media_esfuerzo$p2_1_o2)),2)  
+
+media_esfuerzo = as.data.frame(media_esfuerzo)
+
+media_esfuerzo$categorias <- factor(media_esfuerzo$categorias, levels = c(1, 2, 3, 4), labels = c("Muy en desacuerdo", "Desacuerdo", "De acuerdo", "Muy de acuerdo")) 
+
+plot_media_esfuerzo<-ggplot(media_esfuerzo,aes(x=2,y=-Freq, fill=categorias))+
+  geom_bar(stat = "identity", 
+           color="white")+
+  geom_text(aes(label = scales::percent(Freq)),
+            position=position_stack(vjust=0.5),color="black",size=4.5)+
+  coord_polar(theta = "y")+
+  scale_fill_brewer(palette = "Blues")+
+  theme_void()+
+  theme(legend.title = element_blank(),
+        plot.title = element_text(size=12, face="bold", hjust=0.5))+
+  xlim(0.5,2.5) +
+  labs(title="Estudiantes de media") 
+
+esfuerzo_curso <- ggarrange(
+  plot_basica_esfuerzo, 
+  plot_media_esfuerzo,
+  common.legend = TRUE, 
+  ncol = 2, 
+  legend = "bottom")
+
+# Agregar una etiqueta global centrada
+plot_es_percep_curso <- annotate_figure(
+  esfuerzo_curso,
+  top = text_grob(
+    "Figura : En esta escuela, quienes se esfuerzan obtienen buenas notas",
+    size = 12, 
+    face = "italic", 
+    color = "black",
+    hjust = 0.5))
+
+plot_es_percep_curso
 ```
 
 ### Percepción Talento
