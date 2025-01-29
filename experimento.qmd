@@ -1,0 +1,142 @@
+---
+title: "Experimento Distribucional de Encuesta (DSE)"
+---
+```{r, data, echo=FALSE}
+
+# Cargar paquetes
+pacman::p_load(dplyr, sjPlot, stargazer, kableExtra, texreg, haven, sjlabelled, ggplot2, summarytools, ggtext, ggpubr, hrbrthemes, tidyr, stringr, sjmisc, ggalluvial, shadowtext)
+
+
+# Cargar base longitudinal
+load("../edumer-ola2/input/data/proc/edumer_students_long.RData")
+
+db_long <- edumer_students_long %>% set_na(., na = c(99, 88)) 
+
+db_long <- db_long %>% filter(ola==2)
+
+```
+
+El experimento distribucional de encuesta (DSE) busca que los/as estudiantes distribuyan notas en el contexto escolar. Se presentan cuatro casos ficticios que corresponden a distintas combinaciones de esfuerzo y oportunidades. Así, los/as estudiantes cuentan con 10 décimas que deben distribuir entre esos cuatro perfiles de estudiantes. En esta sección se presentará la distribución de décimas realizadas para cada caso ficiticio.  
+
+## Caso 1: Estudiante se esfuerza y tiene casa pequeña
+
+En este primer caso, se presenta al **Estudiante A** (nota = 3.7), quien se esfuerza más que la mayoría y su casa es pequeña, por ende no tiene un espacio cómodo para estudiar.
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+
+db_long$exp_t4_a <- set_label(x = db_long$exp_t4_a,label = "Estudiante A (nota = 3.7) Se esfuerza más que la mayoría - Su casa es pequeña, no tiene un espacio cómodo para estudiar")
+
+colores <- c("#EFFAFC", "#E3F5FA", "#D7F0F7", "#C6E4E9",
+                               "#A8DADC", "#72A9D8", "#508ACF", "#3F6AB4",
+                               "#2C4A7E", "#1D3557")
+
+plot_ea <- db_long %>% select(exp_t4_a) %>% 
+  plot_stackfrq(wrap.labels = 75, coord.flip = T, vjust=rep(c("bottom", "top"),5)) +
+  scale_fill_manual(values = colores) + 
+  labs(
+    x = NULL, # Elimina el título del eje x
+    y = NULL, # Elimina el título del eje y
+    fill = "Décimas",
+    title = "Figura 1.1: Décimas asignadas al estudiante A"
+  ) +
+  theme_void() +
+theme(legend.position= "bottom")
+
+plot_ea
+
+ 
+
+plot_ea + 
+  geom_shadowtext(data = etiquetas.justeduc, 
+              aes(label = ifelse(porcentaje > 3 , scales::percent(porcentaje, accuracy = .1),"")),
+              position = position_stack(vjust = .5),
+              show.legend = FALSE,
+              size = 4,
+              color = rep('white'),
+              bg.colour='grey30')
+
+```
+
+
+
+## Caso 2: Estudiante no se esfuerza y tiene casa grande 
+
+En este segundo caso, se presenta al **Estudiante B** (nota = 3.7), quien se esfuerza menos que la mayoría y su casa es grande, por lo que tiene un espacio cómodo para estudiar.
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+
+db_long$exp_t4_b <- set_label(x = db_long$exp_t4_b,label = "Estudiante B (nota = 3.7) Se esfuerza menos que la mayoría - Su casa es grande, tiene un espacio cómodo para estudiar")
+
+colores <- c("#EFFAFC", "#E3F5FA", "#D7F0F7", "#C6E4E9",
+                               "#A8DADC", "#72A9D8", "#508ACF", "#3F6AB4",
+                               "#2C4A7E", "#1D3557")
+
+plot_eb <- db_long %>% select(exp_t4_b) %>% 
+  plot_stackfrq(wrap.labels = 15) +
+  scale_fill_manual(values = colores) +
+  labs(
+    x = NULL, # Elimina el título del eje x
+    y = NULL, # Elimina el título del eje y
+    fill = "Décimas",
+    title = "Figura 1.2: Décimas asignadas al estudiante B"
+  ) +
+theme(legend.position= "bottom")+
+  theme_void()
+
+plot_eb
+```
+
+## Caso 3: Estudiante se esfuerza y tiene casa grande
+
+En este tercer caso, se presenta al **Estudiante C** (nota = 3.7), quien se esfuerza más que la mayoría y su casa es grande, por lo que tiene un espacio cómodo para estudiar.
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+
+db_long$exp_t4_c <- set_label(x = db_long$exp_t4_c,label = "Estudiante C (nota = 3.7) Se esfuerza más que la mayoría - Su casa es grande, tiene un espacio cómodo para estudiar. Décimas a regalar:")
+
+colores <- c("#EFFAFC", "#E3F5FA", "#D7F0F7", "#C6E4E9",
+                               "#A8DADC", "#72A9D8", "#508ACF", "#3F6AB4",
+                               "#2C4A7E", "#1D3557")
+
+plot_ec <- db_long %>% select(exp_t4_c) %>% 
+  plot_stackfrq(wrap.labels = 15) +
+  scale_fill_manual(values = colores) +
+  labs(
+    x = NULL, # Elimina el título del eje x
+    y = NULL, # Elimina el título del eje y
+    fill = "Décimas",
+    title = "Figura : Décimas asignadas al estudiante C"
+  ) +
+theme(legend.position= "bottom")+
+  theme_void()
+
+plot_ec
+```
+
+
+## Caso 4: Estudiante no se esfuerza y tiene casa pequeña 
+
+En este cuarto caso, se presenta al **Estudiante D** (nota = 3.7), quien se esfuerza menos que la mayoría y su casa es pequeña, por ende no tiene un espacio cómodo para estudiar.
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+
+db_long$exp_t4_d <- set_label(x = db_long$exp_t4_d,label = "Estudiante D (nota = 3.7) Se esfuerza menos que la mayoría - Su casa es pequeña, no tiene un espacio cómodo para estudiar. Décimas a regalar:")
+
+colores <- c("#EFFAFC", "#E3F5FA", "#D7F0F7", "#C6E4E9",
+                               "#A8DADC", "#72A9D8", "#508ACF", "#3F6AB4",
+                               "#2C4A7E", "#1D3557")
+
+plot_ed <- db_long %>% select(exp_t4_d) %>% 
+  plot_stackfrq(wrap.labels = 15) +
+  scale_fill_manual(values = colores) +
+  labs(
+    x = NULL, # Elimina el título del eje x
+    y = NULL, # Elimina el título del eje y
+    fill = "Décimas",
+    title = "Figura : Décimas asignadas al estudiante D"
+  ) +
+theme(legend.position= "bottom")+
+  theme_void()
+
+plot_ed
+```
+
