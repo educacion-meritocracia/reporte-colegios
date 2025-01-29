@@ -23,6 +23,7 @@ book:
     - intro.qmd
     - summary.qmd
     - Meritocracia (2da parte).qmd
+    - Ciudadanía.qmd
     - references.qmd
   search:
     location: sidebar
