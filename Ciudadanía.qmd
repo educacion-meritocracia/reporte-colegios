@@ -1,5 +1,5 @@
 ---
-title: "Ciudadanía 2"
+title: "Ciudadanía"
 ---
 
 Los aprendizajes atribuidos a la educación ciudadana en las escuelas responden a la necesidad de preparar a las nuevas generaciones para la vida en democracia, así como para sus exigencias morales y cognitivas (Cox & García, 2015). En esta línea, la Ley de Formación Ciudadana (Ley N° 20.911) establece que todos los establecimientos educacionales deben diseñar un Plan de Formación Ciudadana que brinde a los estudiantes las herramientas necesarias para asumir una vida responsable en una sociedad libre, promoviendo el desarrollo integral de la persona humana como base del sistema democrático, la justicia social y el progreso. Entre sus principales objetivos, la ley busca fomentar la comprensión y el análisis del concepto de ciudadanía y sus derechos y deberes asociados, además de incentivar la valoración de la diversidad social y cultural del país, la tolerancia y el pluralismo.
@@ -8,7 +8,7 @@ Por otra parte, la autoeficacia digital se refiere a las capacidades percibidas 
 
 Según Hatlevik et al. (2018), el desarrollo de la autoeficacia digital está influenciado por factores como el nivel socioeconómico y el género de los estudiantes. Se ha observado que los hombres tienden a sobreestimar sus habilidades TIC, mientras que las mujeres, a pesar de obtener mejores resultados en alfabetización digital, suelen subestimarse en esta área. En el ámbito socioeconómico, los padres con menos recursos suelen tener un acceso limitado a la tecnología y una menor alfabetización digital, lo que dificulta su capacidad para apoyar el aprendizaje tecnológico de sus hijos. En este sentido, la exposición temprana y el uso frecuente de tecnología en el hogar se asocian con una mayor confianza en el uso de las TIC, destacando así la importancia del entorno familiar en el desarrollo de la autoeficacia digital.
 
-Este módulo se compone de tres grandes apartados: Autoeficacia política, Socialización política en la escuela y Autoeficacia digital. Cada uno incluye preguntas sobre actitudes, participación, comprensión y habilidades, con el propósito de medir la ciudadanía desde la percepción de los estudiantes tanto en el ámbito escolar como en el digital.
+Este módulo se compone de tres grandes apartados: **Autoeficacia política**, **Socialización política en la escuela** y **Autoeficacia digital**. Cada uno incluye preguntas sobre actitudes, participación, comprensión y habilidades, con el propósito de medir la ciudadanía desde la percepción de los estudiantes tanto en el ámbito escolar como en el digital.
 
 ```{r, echo=FALSE}
 
@@ -107,7 +107,11 @@ ciud2 <- ciud2 %>% rename(libros_hogar = p19_o2,
 
 ```
 
-## Autoeficacia política 
+## Autoeficacia política
+
+Este apartado se compone de dos preguntas centrales que miden la percpeción de autoeficacia política de los/as estudiantes. En tanto que tan eficaz creen que es su incidencia en la política tanto en el futuro próximo (participar en la adultez) como en el presente (percepción del escenario político actual).
+
+-   Autoeficacia enfocada en la **participación política**
 
 ```{r alluvial1, echo=FALSE}
 
@@ -162,7 +166,7 @@ plot_participar <- participar %>%
        x = "Ola",
        fill = "Grado de acuerdo",
     caption = "Fuente: EDUMER",
-    title = "Figura 1.1: Cuando sea adulto(a) podré participar en la política") +
+    title = "Figura 2.1: Cuando sea adulto(a) podré participar en la política") +
    theme_blank() +
   theme(legend.position = "right",
          plot.title = element_text(size = 12, face = "italic", color = "black"))
@@ -249,7 +253,7 @@ participar_curso <- ggarrange(
 plot_es_participar_curso <- annotate_figure(
   participar_curso,
   top = text_grob(
-    "Figura: Cuando sea adulto(a) podré participar en la política",
+    "Figura 2.2: Cuando sea adulto(a) podré participar en la política",
     size = 12, 
     face = "italic", 
     color = "black",
@@ -307,7 +311,7 @@ ggplot(frecuencias, aes(x = categoria, y = Porcentaje, fill = factor(p11_1_o2)))
     x = NULL,
     y = NULL, 
     fill = "Grado de acuerdo",
-    title = "Figura: Cuando sea adulto(a) podré participar en la política") +
+    title = "Figura 2.3: Cuando sea adulto(a) podré participar en la política") +
   theme_blank() +
   theme(
     axis.text.y = element_blank(),
@@ -325,6 +329,8 @@ ggplot(frecuencias, aes(x = categoria, y = Porcentaje, fill = factor(p11_1_o2)))
 ```
 
 Estudiantes que tienen padres con estudios superiores están más de acuerdo con que participarán en política en la adultez (60%). Al diferenciar por género, tanto mujeres como hombres están de acuerdo con la afirmación en un 55%, pero estudiantes hombres contestan en mayor medida estar muy de acuerdo con que participarán más adelante (17%). Por último, estudiantes que poseen más de 25 libros en su hogar están mas de acuerdo con la afirmación en un 59%.
+
+-   Autoeficacia enfocada en la **percepción política**
 
 ```{r alluvial2, echo=FALSE}
 
@@ -377,7 +383,7 @@ labs(y = "Porcentaje",
        x = "Ola",
        fill = "Grado de acuerdo",
     caption = "Fuente: EDUMER",
-    title = "Figura 1.1: Comprendo bien las problemáticas políticas de nuestro país") +
+    title = "Figura 2.4: Comprendo bien las problemáticas políticas de nuestro país") +
    theme_blank() +
   theme(legend.position = "right",
          plot.title = element_text(size = 12, face = "italic", color = "black"))
@@ -463,7 +469,7 @@ comprender_curso <- ggarrange(
 plot_es_comprender_curso <- annotate_figure(
   comprender_curso,
   top = text_grob(
-    "Figura: Comprendo bien las problemáticas políticas de nuestro país",
+    "Figura 2.5: Comprendo bien las problemáticas políticas de nuestro país",
     size = 12, 
     face = "italic", 
     color = "black",
@@ -506,7 +512,7 @@ ggplot(frecuencias, aes(x = categoria, y = Porcentaje, fill = factor(p11_2_o2)))
     x = NULL,
     y = NULL, 
     fill = "Grado de acuerdo",
-    title = "Figura: Comprendo bien las problemáticas políticas de nuestro país") +
+    title = "Figura 2.6: Comprendo bien las problemáticas políticas de nuestro país") +
   theme_blank() +
   theme(
     axis.text.y = element_blank(),
@@ -525,7 +531,9 @@ ggplot(frecuencias, aes(x = categoria, y = Porcentaje, fill = factor(p11_2_o2)))
 
 Estudiantes con padres que tienen estudios superiores considerna en mayor medida que comprenden bien las problemáticas políticas del país (62%). Al diferenciar por género, estudiantes varones están más de acuerdo con la afirmación (60%). Por último, estudiantes que cuentan con más de 25 libros en su hogar cosnideran estar más de acuerdo con la afirmación en un 68%.
 
-## Socialización política en la escuela 
+## Socialización política en la escuela
+
+Esta sección hace referencia a la escuela como un agente de socialización político, es decir, que esta tiene un papael en el proceso de transmisión de aprendizaje polítioc de los/as estudiantes. En específico, alude a un factor propio del ámbito escolar: el **currículo de Formación Ciudadana**. Así, la pregunta que dispuesta en esta sección alude a la percepción que tienen los/as estudiantes de la presencia e importancia de dicho currículo en sus establecimientos.
 
 ```{r alluvial3, echo=FALSE}
 
@@ -578,7 +586,7 @@ plot_formciud <- formciud %>%
        x = "Ola",
        fill = "Grado de acuerdo",
     caption = "Fuente: EDUMER",
-    title = "Figura 1.1: ¿Cuánta importancia dirías tú que se le da la  \nFormación Ciudadana en este establecimiento?") +
+    title = "Figura 2.7: ¿Cuánta importancia dirías tú que se le da la  \nFormación Ciudadana en este establecimiento?") +
    theme_blank() +
   theme(legend.position = "right",
          plot.title = element_text(size = 12, face = "italic", color = "black"))
@@ -666,7 +674,7 @@ formciud_curso <- ggarrange(
 plot_es_formciud_curso <- annotate_figure(
   formciud_curso,
   top = text_grob(
-    "Figura: ¿Cuánta importancia dirías tú que se le da a la  \n Formación Ciudadana en este establecimiento?",
+    "Figura 2.8: ¿Cuánta importancia dirías tú que se le da a la  \n Formación Ciudadana en este establecimiento?",
     size = 12, 
     face = "italic", 
     color = "black",
@@ -711,7 +719,7 @@ ggplot(frecuencias, aes(x = categoria, y = Porcentaje, fill = factor(p12_o2))) +
     x = NULL,
     y = NULL, 
     fill = "Grado de acuerdo",
-    title = "Figura: ¿Cuánta importancia dirías tú que se le da a la  \n Formación Ciudadana en este establecimiento?") +
+    title = "Figura 2.9: ¿Cuánta importancia dirías tú que se le da a la  \n Formación Ciudadana en este establecimiento?") +
   theme_blank() +
   theme(
     axis.text.y = element_blank(),
@@ -731,7 +739,11 @@ ggplot(frecuencias, aes(x = categoria, y = Porcentaje, fill = factor(p12_o2))) +
 
 Estudiantes con padres con un nivel eduacional mpaximo alcanzado de enseñanza media o menos consideran que se le entrega mayor importancia a la Formación Ciudadana en su escula (67%). Al diferenciar por género, no se presentan diferencias. Por último, estudiantes que cuentan con mens de 25 libros en su hogar creen que su escuela le entrega mayor importancia a la Formación Ciudadana (64%).
 
-## Autoeficacia digital 
+## Autoeficacia digital
+
+Esta sección alude a la percepción que tienen los/as estudiantes de su propia eficacia en el uso de TIC en el contexto escolar. Las preguntas presentadas a continuación son *exclusivas* de la **ola 2** del estudio, es por ello que no se presenta una comparación con los resultados de la medición anterior.
+
+-   Edición de **fotografías digitales/imágenes gráficas**
 
 ```{r, echo=FALSE}
 
@@ -758,7 +770,7 @@ plot_editar <- ggplot(editar,aes(x=2,y=-Freq, fill=categorias))+
 plot_editar <- annotate_figure(
   plot_editar,
   top = text_grob(
-"Figura 4: Editar fotografías digitales u otras imágenes gráficas",
+"Figura 2.10: Editar fotografías digitales u otras imágenes gráficas",
     size = 12, 
     face = "italic", 
     color = "black",
@@ -846,7 +858,7 @@ editar_curso <- ggarrange(
 plot_es_editar_curso <- annotate_figure(
   editar_curso,
   top = text_grob(
-    "Figura: Editar fotografías digitales u otras imágenes gráficas",
+    "Figura 2.11: Editar fotografías digitales u otras imágenes gráficas",
     size = 12, 
     face = "italic", 
     color = "black",
@@ -890,7 +902,7 @@ ggplot(frecuencias, aes(x = categoria, y = Porcentaje, fill = factor(p13_1_o2)))
     x = NULL,
     y = NULL, 
     fill = "Grado de acuerdo",
-    title = "Figura: Editar fotografías digitales u otras imágenes gráficas") +
+    title = "Figura 2.12: Editar fotografías digitales u otras imágenes gráficas") +
   theme_blank() +
   theme(
     axis.text.y = element_blank(),
@@ -908,7 +920,9 @@ ggplot(frecuencias, aes(x = categoria, y = Porcentaje, fill = factor(p13_1_o2)))
 
 ```
 
-Estudiantes con padres con estudios superiores consideran en mayor medida que saben como editar fotografías u otras imágenes gráficas (63%). Al diferenciar por género, las mujeres consideran en mayor medida que sabén como realizar dicha actividad (66%). Por último, estudiantes que cuentan con más de 25 libros en su hogar consideran saber cómo realizarlo (70%).
+Estudiantes con padres con estudios superiores consideran en mayor medida que saben como editar fotografías u otras imágenes gráficas (63%). Al diferenciar por género, las mujeres consideran en mayor medida que saben como realizar dicha actividad (66%). Por último, estudiantes que cuentan con más de 25 libros en su hogar consideran saber cómo realizarlo (70%).
+
+-   Escritura o edición de **texto**
 
 ```{r, echo=FALSE}
 
@@ -935,7 +949,7 @@ plot_escribir <- ggplot(escribir,aes(x=2,y=-Freq, fill=categorias))+
 plot_escribir <- annotate_figure(
   plot_escribir,
   top = text_grob(
-"Figura 5: Escribir o editar texto para un trabajo escolar",
+"Figura 2.13: Escribir o editar texto para un trabajo escolar",
     size = 12, 
     face = "italic", 
     color = "black",
@@ -947,7 +961,7 @@ plot_escribir
 
 Los estudiantes consideran en mayor medida que saben como escribir o editar texto para un trabajo escolar (82%).
 
-*Cruces con características sociodemográficas*
+*Cruces con características sociodemográficas de los/as estudiantes*
 
 ```{r dona-curso5, echo=FALSE}
 
@@ -1023,7 +1037,7 @@ escribir_curso <- ggarrange(
 plot_es_escribir_curso <- annotate_figure(
   escribir_curso,
   top = text_grob(
-    "Figura: Escribir o editar texto para un trabajo escolar",
+    "Figura 2.14: Escribir o editar texto para un trabajo escolar",
     size = 12, 
     face = "italic", 
     color = "black",
@@ -1066,7 +1080,7 @@ ggplot(frecuencias, aes(x = categoria, y = Porcentaje, fill = factor(p13_2_o2)))
     x = NULL,
     y = NULL, 
     fill = "Grado de acuerdo",
-    title = "Figura: Escribir o editar texto para un trabajo escolar") +
+    title = "Figura 2.15: Escribir o editar texto para un trabajo escolar") +
   theme_blank() +
   theme(
     axis.text.y = element_blank(),

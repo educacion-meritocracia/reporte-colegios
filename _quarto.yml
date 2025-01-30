@@ -21,7 +21,7 @@ book:
   chapters:
     - index.qmd
     - intro.qmd
-    - summary.qmd
+    - metodo.qmd
     - Meritocracia (2da parte).qmd
     - Ciudadanía.qmd
     - references.qmd
@@ -36,6 +36,13 @@ book:
 
 format:
   html:
+    toc: true
+    toc-location: right
+    toc-depth: 6
+    toc-expand: 6
+    toc-title: Contenidos
+    number-sections: true
+    number-depth: 6
     theme:
       - cosmo
       - edumer.scss
