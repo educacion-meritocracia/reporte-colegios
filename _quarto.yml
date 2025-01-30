@@ -24,6 +24,7 @@ book:
     - metodo.qmd
     - Meritocracia (2da parte).qmd
     - Ciudadanía.qmd
+    - experimento.qmd
     - references.qmd
   search:
     location: sidebar
@@ -47,7 +48,9 @@ format:
       - cosmo
       - edumer.scss
     code-link: true
-
+  pdf:
+    documentclass: scrreprt
+    
 editor: visual
 lang: es
-bibliography: references.bib
+bibliography: Educacion-meritocracia.bib

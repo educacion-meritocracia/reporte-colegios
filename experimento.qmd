@@ -17,147 +17,238 @@ db_long <- db_long %>% filter(ola==2)
 
 ```
 
-El experimento distribucional de encuesta (DSE) busca que los/as estudiantes distribuyan notas en el contexto escolar. Se presentan cuatro casos ficticios que corresponden a distintas combinaciones de esfuerzo y oportunidades. Así, los/as estudiantes cuentan con 10 décimas que deben distribuir entre esos cuatro perfiles de estudiantes. En esta sección se presentará la distribución de décimas realizadas para cada caso ficiticio. Luego, se presentará el panorama general de la distribución de décimas. En las figuras se repreentará con color rojo las décimas asignadas al caso que no permiten hacerlo aprobar y en color azul las que sí lo hacen. 
+El experimento distribucional de encuesta (DSE) [@gilgenDistributionalSurveyExperiment2020] busca que los/as estudiantes distribuyan notas en el contexto escolar. Se presentan cuatro casos ficticios que corresponden a distintas combinaciones de esfuerzo y oportunidades. Así, los/as estudiantes cuentan con 10 décimas que deben distribuir entre esos cuatro perfiles de estudiantes. En esta sección se presentará la distribución de décimas realizadas para cada caso ficiticio. Luego, se presentará el panorama general de la distribución de décimas. En las figuras se representará con color rojo las décimas asignadas al caso que no permiten hacerlo aprobar y en color azul las que sí lo hacen. 
 
 
 ## Caso 1: Estudiante se esfuerza y tiene casa pequeña
 
-En este primer caso, se presenta al **Estudiante A** (nota = 3.7), quien se esfuerza más que la mayoría y su casa es pequeña, por ende no tiene un espacio cómodo para estudiar.
+En este primer caso, se presenta al **Estudiante A** (nota = 3.7), quien se *esfuerza más* que la mayoría y su *casa es pequeña*, por ende no tiene un espacio cómodo para estudiar.
 
-```{r, echo=FALSE, warning=FALSE, message=FALSE}
 
-db_long$exp_t4_a <- set_label(x = db_long$exp_t4_a,label = "Estudiante A (nota = 3.7) Se esfuerza más que la mayoría - Su casa es pequeña, no tiene un espacio cómodo para estudiar")
+```{r, echo=FALSE}
+# preparar datos
+data_plot_a <- db_long %>%
+  count(exp_t4_a) %>%
+  mutate(
+    porcentaje = n / sum(n) * 100,
+    exp_t4_a = as.factor(exp_t4_a)
+  )
 
-#colores <- c("#EFFAFC", "#E3F5FA", "#D7F0F7", "#C6E4E9",
- #                              "#A8DADC", "#72A9D8", "#508ACF", "#3F6AB4",
-  #                             "#2C4A7E", "#1D3557")
-
-plot_ea <- db_long %>% select(exp_t4_a) %>% 
-  plot_stackfrq(wrap.labels = 75, coord.flip = T, 
-                geom.colors = c(
-      "#F08080", "#E74C3C", "#C0392B", 
-      "#B0C4DE", "#87CEEB", "#5DADE2", 
-      "#3498DB", "#2E86C1", "#2874A6", 
-      "#21618C", "#1B4F72"
-    ),
-                vjust=rep(c("bottom", "top"),5)) +
-   labs(
-    x = NULL, # Elimina el título del eje x
-    y = NULL, # Elimina el título del eje y
+# Gráfico apilado 
+plot_ea <- data_plot_a %>%
+  ggplot(aes(
+    x = "Estudiante A",  # Usar una categoría fija para stack
+    y = porcentaje, 
+    fill = exp_t4_a
+  )) +
+  geom_bar(stat = "identity", position = "fill", width = 0.4) +
+  geom_shadowtext(
+    aes(label = ifelse(porcentaje > 3, 
+                       scales::percent(porcentaje / 100, accuracy = 0.1), 
+                       "")),
+    position = position_fill(vjust = 0.5),
+    color = "white",        # Color del texto interno
+    bg.color = "grey30",    # Color del borde (sombra)
+    bg.r = 0.1,             # Radio de la sombra
+    size = 4                # Tamaño del texto
+  )  +
+  scale_fill_manual(values = c(
+    "#F08080", "#E74C3C", "#C0392B", 
+    "#B0C4DE", "#87CEEB", "#5DADE2", 
+    "#3498DB", "#2E86C1", "#2874A6", 
+    "#21618C", "#1B4F72"
+  )) +
+  labs(
+    x = NULL, 
+    y = NULL, 
     fill = "Décimas",
     title = "Figura 3.1: Décimas asignadas al estudiante A",
     caption = "Fuente: EDUMER"
   ) +
   theme_void() +
-theme(legend.position= "bottom",
-     plot.title = element_text(size=12, face = "italic"))
+  theme(
+    legend.position = "bottom",
+    plot.title = element_text(size = 12, face = "italic")
+  ) + 
+  coord_flip()
 
 plot_ea
 
 ```
 
+
+Los/as estudiantes tendieron a asignar décimas al estudiante A que le permiten aprobar la nota. Distribuyendo, en general, 3 décimas (45.7%) y 4 décimas (27.4%). 
+
 ## Caso 2: Estudiante no se esfuerza y tiene casa grande
 
-En este segundo caso, se presenta al **Estudiante B** (nota = 3.7), quien se esfuerza menos que la mayoría y su casa es grande, por lo que tiene un espacio cómodo para estudiar.
+En este segundo caso, se presenta al **Estudiante B** (nota = 3.7), quien se *esfuerza menos* que la mayoría y su *casa es grande*, por lo que tiene un espacio cómodo para estudiar.
 
-```{r, echo=FALSE, warning=FALSE, message=FALSE}
 
-db_long$exp_t4_b <- set_label(x = db_long$exp_t4_b,label = "Estudiante B (nota = 3.7) Se esfuerza menos que la mayoría - Su casa es grande, tiene un espacio cómodo para estudiar")
+```{r, echo=FALSE}
+# preparar datos
+data_plot <- db_long %>%
+  count(exp_t4_b) %>%
+  mutate(
+    porcentaje = n / sum(n) * 100,
+    exp_t4_b = as.factor(exp_t4_b)
+  )
 
-#colores <- c("#EFFAFC", "#E3F5FA", "#D7F0F7", "#C6E4E9",
- #                              "#A8DADC", "#72A9D8", "#508ACF", "#3F6AB4",
-  #                             "#2C4A7E", "#1D3557")
-
-plot_eb <- db_long %>% select(exp_t4_b) %>% 
-  plot_stackfrq(wrap.labels = 15 ,
-                 geom.colors = c(
-      "#F08080", "#E74C3C", "#C0392B", 
-      "#B0C4DE", "#87CEEB", "#5DADE2", 
-      "#3498DB", "#2E86C1", "#2874A6", 
-      "#21618C", "#1B4F72"
-    )) +
+# Gráfico apilado 
+plot_eb <- data_plot %>%
+  ggplot(aes(
+    x = "Estudiante B",  # Usar una categoría fija para stack
+    y = porcentaje, 
+    fill = exp_t4_b
+  )) +
+  geom_bar(stat = "identity", position = "fill", width = 0.4) +
+  geom_shadowtext(
+    aes(label = ifelse(porcentaje > 3, 
+                       scales::percent(porcentaje / 100, accuracy = 0.1), 
+                       "")),
+    position = position_fill(vjust = 0.5),
+    color = "white",        # Color del texto interno
+    bg.color = "grey30",    # Color del borde (sombra)
+    bg.r = 0.1,             # Radio de la sombra
+    size = 4                # Tamaño del texto
+  )  +
+  scale_fill_manual(values = c(
+    "#F08080", "#E74C3C", "#C0392B", 
+    "#B0C4DE", "#87CEEB", "#5DADE2", 
+    "#3498DB", "#2E86C1", "#2874A6", 
+    "#21618C", "#1B4F72"
+  )) +
   labs(
-    x = NULL, # Elimina el título del eje x
-    y = NULL, # Elimina el título del eje y
+    x = NULL, 
+    y = NULL, 
     fill = "Décimas",
     title = "Figura 3.2: Décimas asignadas al estudiante B",
-     caption = "Fuente: EDUMER"
+    caption = "Fuente: EDUMER"
   ) +
-  theme_void()+
-theme(legend.position= "bottom",
-      plot.title = element_text(size=12, face = "italic"))
+  theme_void() +
+  theme(
+    legend.position = "bottom",
+    plot.title = element_text(size = 12, face = "italic")
+  ) + 
+  coord_flip()
 
 plot_eb
+
 ```
+
+Los/as estudiantes tendieron a asignar décimas al estudiante B que **no** le permiten aprobar la nota. Distribuyendo, en general, 2 décimas (38.1%), 1 décima (30.1%) y 0 décimas (23.4%).
 
 ## Caso 3: Estudiante se esfuerza y tiene casa grande
 
-En este tercer caso, se presenta al **Estudiante C** (nota = 3.7), quien se esfuerza más que la mayoría y su casa es grande, por lo que tiene un espacio cómodo para estudiar.
+En este tercer caso, se presenta al **Estudiante C** (nota = 3.7), quien se *esfuerza más* que la mayoría y su *casa es grande*, por lo que tiene un espacio cómodo para estudiar.
 
-```{r, echo=FALSE, warning=FALSE, message=FALSE}
+```{r, echo=FALSE}
+# preparar datos
+data_plot_c <- db_long %>%
+  count(exp_t4_c) %>%
+  mutate(
+    porcentaje = n / sum(n) * 100,
+    exp_t4_c = as.factor(exp_t4_c)
+  )
 
-db_long$exp_t4_c <- set_label(x = db_long$exp_t4_c,label = "Estudiante C (nota = 3.7) Se esfuerza más que la mayoría - Su casa es grande, tiene un espacio cómodo para estudiar. Décimas a regalar:")
-
-#colores <- c("#EFFAFC", "#E3F5FA", "#D7F0F7", "#C6E4E9",
- #                              "#A8DADC", "#72A9D8", "#508ACF", "#3F6AB4",
-  #                             "#2C4A7E", "#1D3557")
-
-plot_ec <- db_long %>% select(exp_t4_c) %>% 
-  plot_stackfrq(wrap.labels = 15 ,
-                 geom.colors = c(
-      "#F08080", "#E74C3C", "#C0392B", 
-      "#B0C4DE", "#87CEEB", "#5DADE2", 
-      "#3498DB", "#2E86C1", "#2874A6", 
-      "#21618C", "#1B4F72"
-    )) +
+# Gráfico apilado 
+plot_ec <- data_plot_c %>%
+  ggplot(aes(
+    x = "Estudiante C",  # Usar una categoría fija para stack
+    y = porcentaje, 
+    fill = exp_t4_c
+  )) +
+  geom_bar(stat = "identity", position = "fill", width = 0.4) +
+  geom_shadowtext(
+    aes(label = ifelse(porcentaje > 3, 
+                       scales::percent(porcentaje / 100, accuracy = 0.1), 
+                       "")),
+    position = position_fill(vjust = 0.5),
+    color = "white",        # Color del texto interno
+    bg.color = "grey30",    # Color del borde (sombra)
+    bg.r = 0.1,             # Radio de la sombra
+    size = 4                # Tamaño del texto
+  )  +
+  scale_fill_manual(values = c(
+    "#F08080", "#E74C3C", "#C0392B", 
+    "#B0C4DE", "#87CEEB", "#5DADE2", 
+    "#3498DB", "#2E86C1", "#2874A6", 
+    "#21618C", "#1B4F72"
+  )) +
   labs(
-    x = NULL, # Elimina el título del eje x
-    y = NULL, # Elimina el título del eje y
+    x = NULL, 
+    y = NULL, 
     fill = "Décimas",
     title = "Figura 3.3: Décimas asignadas al estudiante C",
-     caption = "Fuente: EDUMER"
+    caption = "Fuente: EDUMER"
   ) +
-  theme_void()+
-theme(legend.position= "bottom",
-      plot.title = element_text(size=12, face = "italic"))
+  theme_void() +
+  theme(
+    legend.position = "bottom",
+    plot.title = element_text(size = 12, face = "italic")
+  ) + 
+  coord_flip()
 
 plot_ec
 ```
 
+
+Los/as estudiantes tendieron a asignar décimas al estudiante C que le permiten aprobar la nota. Distribuyendo, en general, 3 décimas (49.3%) y 4 décimas (14.4%). Sin embargo, también se observa que un 17.1% asignó 2 décimas, las cuales **no** permiten que el estudiane apruebe su nota.
+
 ## Caso 4: Estudiante no se esfuerza y tiene casa pequeña
 
-En este cuarto caso, se presenta al **Estudiante D** (nota = 3.7), quien se esfuerza menos que la mayoría y su casa es pequeña, por ende no tiene un espacio cómodo para estudiar.
+En este cuarto caso, se presenta al **Estudiante D** (nota = 3.7), quien se *esfuerza menos* que la mayoría y su *casa es pequeñ*a*, por ende no tiene un espacio cómodo para estudiar.
 
-```{r, echo=FALSE, warning=FALSE, message=FALSE}
 
-db_long$exp_t4_d <- set_label(x = db_long$exp_t4_d,label = "Estudiante D (nota = 3.7) Se esfuerza menos que la mayoría - Su casa es pequeña, no tiene un espacio cómodo para estudiar. Décimas a regalar:")
+```{r, echo=FALSE}
+# preparar datos
+data_plot_d <- db_long %>%
+  count(exp_t4_d) %>%
+  mutate(
+    porcentaje = n / sum(n) * 100,
+    exp_t4_d = as.factor(exp_t4_d)
+  )
 
-#colores <- c("#EFFAFC", "#E3F5FA", "#D7F0F7", "#C6E4E9",
-#                               "#A8DADC", "#72A9D8", "#508ACF", "#3F6AB4",
- #                              "#2C4A7E", "#1D3557")
-
-plot_ed <- db_long %>% select(exp_t4_d) %>% 
-  plot_stackfrq(wrap.labels = 15,
-                 geom.colors = c(
-      "#F08080", "#E74C3C", "#C0392B", 
-      "#B0C4DE", "#87CEEB", "#5DADE2", 
-      "#3498DB", "#2E86C1", "#2874A6", 
-      "#21618C", "#1B4F72"
-    ), #vjust=rep(c("bottom", "top"),7
-    ) +
+# Gráfico apilado 
+plot_ed <- data_plot_d %>%
+  ggplot(aes(
+    x = "Estudiante D",  # Usar una categoría fija para stack
+    y = porcentaje, 
+    fill = exp_t4_d
+  )) +
+  geom_bar(stat = "identity", position = "fill", width = 0.4) +
+  geom_shadowtext(
+    aes(label = ifelse(porcentaje > 3, 
+                       scales::percent(porcentaje / 100, accuracy = 0.1), 
+                       "")),
+    position = position_fill(vjust = 0.5),
+    color = "white",        # Color del texto interno
+    bg.color = "grey30",    # Color del borde (sombra)
+    bg.r = 0.1,             # Radio de la sombra
+    size = 4                # Tamaño del texto
+  )  +
+  scale_fill_manual(values = c(
+    "#F08080", "#E74C3C", "#C0392B", 
+    "#B0C4DE", "#87CEEB", "#5DADE2", 
+    "#3498DB", "#2E86C1", "#2874A6", 
+    "#21618C", "#1B4F72"
+  )) +
   labs(
-    x = NULL, # Elimina el título del eje x
-    y = NULL, # Elimina el título del eje y
+    x = NULL, 
+    y = NULL, 
     fill = "Décimas",
     title = "Figura 3.4: Décimas asignadas al estudiante D",
-     caption = "Fuente: EDUMER"
+    caption = "Fuente: EDUMER"
   ) +
-  theme_void()+
-theme(legend.position= "bottom",
-      plot.title = element_text(size=12, face = "italic"))
+  theme_void() +
+  theme(
+    legend.position = "bottom",
+    plot.title = element_text(size = 12, face = "italic")
+  ) + 
+  coord_flip()
 
 plot_ed
 ```
+Los/as estudiantes tendieron a asignar décimas al estudiante D que **no** le permiten aprobar la nota. Distribuyendo, en general, 2 décimas (38%), 1 décima (17.8.1%) y 0 décimas (13.1%). Sin embargo, también se observa que un 26.1% asignó 3 décimas, las cuales permiten que el estudiane apruebe su nota.
 
 ## Porcentaje de aprobación en los cuatro casos ficticios de estudiante
 ```{r, echo=FALSE}
@@ -193,3 +284,5 @@ db_long %>% select(exp_t4_d:exp_t4_a) %>%
 
 
 ```
+
+Los/as estudiantes tienden a aprobar al estudiante A en un 92.7% y al estudiante C en un 72.1%, lo cual indica la manifestación del principio meritocrático en la distribución de recompensas en edades tempranas. Junto a ello, se observa una proporcionalidad entre la asignación y el mérito en la distribución de las décimas, junto a un orden de priorización en las características que los estudiantes tienen en cuenta al momento de la asignación: primero se recompensa a los estudiantes más meritorios (estudiante A y estudiante C), posteriormente y ante la ausencia del mérito, se recompensa a quien tiene menos oportunidades (estudiante D en un 31.2% y estudiante B en un 8.3%, respectivamente). 
