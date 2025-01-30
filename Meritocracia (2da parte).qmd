@@ -9,7 +9,7 @@ pacman::p_load(dplyr, sjPlot, stargazer, kableExtra, texreg, haven, sjlabelled, 
 
 
 # Cargar base longitudinal
-load("../edumer-ola2/input/data/proc/edumer_students_long.RData")
+ load("../edumer-ola2/input/data/proc/edumer_students_long.RData")
 ```
 
 ```{r, preparacion, echo=FALSE, message=FALSE}
@@ -1048,6 +1048,9 @@ plot_pe <- pe %>%
 plot_pe
 ```
 
+En la figura anterior se muestra un aumento entre olas respecto a la respuesta “Muy de acuerdo” con un (39%) a diferencia de la primera ola con un (33%). Sin embargo, hubo una disminución en la categoría “De acuerdo, donde en la primera ola hubo un (43%) y en la segunda un (37%).
+
+
 *Cruces con características sociodemográficas de estudiantes en la **ola 2** del estudio*
 
 ```{r, dona-curso-4, echo=FALSE }
@@ -1257,6 +1260,8 @@ plot_pe <- pe %>%
 plot_pe
 ```
 
+En la figura anterior se muestra una disminución entre olas respecto a la respuesta “Muy de acuerdo” con un (16%) a diferencia de la primera ola con un (21%). También hubo un aumento en la categoría “Muy en desacuerdo”, donde en la primera ola hubo un (24%) y en la segunda un (29%).
+
 *Cruces con características sociodemográficas de estudiantes en la **ola 2** del estudio*
 
 ```{r, dona-curso-9, echo=FALSE }
@@ -1331,6 +1336,8 @@ plot_es_percep_curso <- annotate_figure(
 
 plot_es_percep_curso
 ```
+
+En los gráficos de dona se visualiza un porcentaje similar de respuesta en los estudiantes de etapa básica, donde ninguna supera el 30%. Por otra parte, los estudiantes de media tienen un mayor porcentaje de respuesta en la opción “De acuerdo” (38%) y “Desacuerdo” (35%).
 
 ```{r, sociodemo-9, echo=FALSE}
 
