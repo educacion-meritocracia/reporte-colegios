@@ -17,7 +17,7 @@ db_long <- db_long %>% filter(ola==2)
 
 ```
 
-El experimento distribucional de encuesta (DSE) [@gilgenDistributionalSurveyExperiment2020] busca que los/as estudiantes distribuyan notas en el contexto escolar. Se presentan cuatro casos ficticios que corresponden a distintas combinaciones de esfuerzo y oportunidades. Así, los/as estudiantes cuentan con 10 décimas que deben distribuir entre esos cuatro perfiles de estudiantes. En esta sección se presentará la distribución de décimas realizadas para cada caso ficiticio. Luego, se presentará el panorama general de la distribución de décimas. En las figuras se representará con color rojo las décimas asignadas al caso que no permiten hacerlo aprobar y en color azul las que sí lo hacen. 
+El experimento distribucional de encuesta (DSE) [@gilgen_distributional_2020] busca que los/as estudiantes distribuyan notas en el contexto escolar. Se presentan cuatro casos ficticios que corresponden a distintas combinaciones de esfuerzo y oportunidades. Así, los/as estudiantes cuentan con 10 décimas que deben distribuir entre esos cuatro perfiles de estudiantes. En esta sección se presentará la distribución de décimas realizadas para cada caso ficiticio. Luego, se presentará el panorama general de la distribución de décimas. En las figuras se representará con color rojo las décimas asignadas al caso que no permiten hacerlo aprobar y en color azul las que sí lo hacen. 
 
 
 ## Caso 1: Estudiante se esfuerza y tiene casa pequeña
