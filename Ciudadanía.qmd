@@ -2,6 +2,14 @@
 title: "Ciudadanía 2"
 ---
 
+Los aprendizajes atribuidos a la educación ciudadana en las escuelas responden a la necesidad de preparar a las nuevas generaciones para la vida en democracia, así como para sus exigencias morales y cognitivas (Cox & García, 2015). En esta línea, la Ley de Formación Ciudadana (Ley N° 20.911) establece que todos los establecimientos educacionales deben diseñar un Plan de Formación Ciudadana que brinde a los estudiantes las herramientas necesarias para asumir una vida responsable en una sociedad libre, promoviendo el desarrollo integral de la persona humana como base del sistema democrático, la justicia social y el progreso. Entre sus principales objetivos, la ley busca fomentar la comprensión y el análisis del concepto de ciudadanía y sus derechos y deberes asociados, además de incentivar la valoración de la diversidad social y cultural del país, la tolerancia y el pluralismo.
+
+Por otra parte, la autoeficacia digital se refiere a las capacidades percibidas por los estudiantes para utilizar eficazmente las Tecnologías de la Información y la Comunicación (TIC) (Hatlevik et al., 2018). Estudios indican que una alta autoeficacia en el uso de estos recursos está relacionada con un mejor desempeño académico, puesto que los estudiantes que confían en sus habilidades digitales tienden a emplear estrategias más efectivas para procesar información y resolver problemas (Padilla et al., 2022). 
+
+Según Hatlevik et al. (2018), el desarrollo de la autoeficacia digital está influenciado por factores como el nivel socioeconómico y el género de los estudiantes. Se ha observado que los hombres tienden a sobreestimar sus habilidades TIC, mientras que las mujeres, a pesar de obtener mejores resultados en alfabetización digital, suelen subestimarse en esta área. En el ámbito socioeconómico, los padres con menos recursos suelen tener un acceso limitado a la tecnología y una menor alfabetización digital, lo que dificulta su capacidad para apoyar el aprendizaje tecnológico de sus hijos. En este sentido, la exposición temprana y el uso frecuente de tecnología en el hogar se asocian con una mayor confianza en el uso de las TIC, destacando así la importancia del entorno familiar en el desarrollo de la autoeficacia digital.
+
+Este módulo se compone de tres grandes apartados: Autoeficacia política, Socialización política en la escuela y Autoeficacia digital. Cada uno incluye preguntas sobre actitudes, participación, comprensión y habilidades, con el propósito de medir la ciudadanía desde la percepción de los estudiantes tanto en el ámbito escolar como en el digital.
+
 ```{r, echo=FALSE}
 
 pacman::p_load(dplyr, sjPlot, stargazer, kableExtra, texreg, haven, sjlabelled, ggplot2, summarytools, ggtext, ggpubr, hrbrthemes, tidyr, stringr, sjmisc, ggalluvial, shadowtext)
@@ -99,7 +107,7 @@ ciud2 <- ciud2 %>% rename(libros_hogar = p19_o2,
 
 ```
 
-## Participación y comprensión política
+## Autoeficacia política 
 
 ```{r alluvial1, echo=FALSE}
 
@@ -163,7 +171,7 @@ plot_participar
 
 ```
 
-En la figura, se puede obsevrar que en la ola 2 los/as esudiantes contestaron estar levemente más en desacuerdo (44.3%) con que podrán participar en la política en la adultez.
+En la figura, se puede observar que en la ola 2 los/as estudiantes contestaron estar levemente más en desacuerdo (44.3%) con que podrán participar en la política en la adultez.
 
 *Cruces con características sociodemográficas de los estudiantes en la **ola 2** del estudio*
 
@@ -250,7 +258,7 @@ plot_es_participar_curso <- annotate_figure(
 plot_es_participar_curso
 ```
 
-Al comparar por el curso en que se encuentra el estudiante no se presentan diferencias importantes, sin embargo, estudiantes de básica poseen respuestas más radicales como "Muy de acuerdo" (14%) y "Muy en desacuerdo" (17%) que los estudiantes de media.
+Al comparar por el curso en el que se encuentra el estudiante, no se presentan diferencias importantes. Sin embargo, estudiantes de básica poseen respuestas más radicales como "Muy de acuerdo" (14%) y "Muy en desacuerdo" (17%) que los estudiantes de media.
 
 ```{r, sociodemo-participacion, echo=FALSE}
 
@@ -377,7 +385,7 @@ plot_comprender
 
 ```
 
-En la figura, se puede obsevrar que en la ola 2 los/as esudiantes contestaron estar levemente más en desacuerdo (42.6%) en que comprenden bien las problemáticas políticas del país.
+En la figura, se puede observar que en la ola 2 los/as esudiantes contestaron estar levemente más en desacuerdo (42.6%) en que comprenden bien las problemáticas políticas del país.
 
 *Cruces con variables sociodemográficas de los estudiantes en la **ola 2** del estudio*
 
@@ -464,7 +472,7 @@ plot_es_comprender_curso <- annotate_figure(
 plot_es_comprender_curso
 ```
 
-Al diferenciar por curso del estudiante, se puede observar que estudiantes de básica están más de acuerdo con que comprenden bien las problemáticas del país (61%). 
+Al diferenciar por curso del estudiante, se puede observar que estudiantes de básica están más de acuerdo con que comprenden bien las problemáticas del país (61%).
 
 ```{r sociodemo-comprender, echo=FALSE}
 frecuencias <- proc_datos_w2 %>%
@@ -515,9 +523,9 @@ ggplot(frecuencias, aes(x = categoria, y = Porcentaje, fill = factor(p11_2_o2)))
                     name = NULL)
 ```
 
-Estudiantes con padres que tienen estudios superiores considerna en mayor medida que comprenden bien las problemáticas políticas del país (62%). Al diferenciar por género, estudiantes varones están más de acuerdo con la afirmación (60%). Por último, estudiantes que cuentan con más de 25 libros en su hogar cosnideran estar más de acuerdo con la afirmación en un 68%. 
+Estudiantes con padres que tienen estudios superiores considerna en mayor medida que comprenden bien las problemáticas políticas del país (62%). Al diferenciar por género, estudiantes varones están más de acuerdo con la afirmación (60%). Por último, estudiantes que cuentan con más de 25 libros en su hogar cosnideran estar más de acuerdo con la afirmación en un 68%.
 
-## Percepción sobre la importancia de la Formación Ciudadana en su establecimiento
+## Socialización política en la escuela 
 
 ```{r alluvial3, echo=FALSE}
 
@@ -579,7 +587,7 @@ plot_formciud
 
 ```
 
-En la figura, se puede obsevrar que en la ola 2 los/as esudiantes consideran en mayor medida que que su escuela le netrega menor importnacia a la Formación Ciudadna (32.2%). 
+En la figura, se puede obsevrar que en la ola 2 los/as esudiantes consideran en mayor medida que que su escuela le netrega menor importnacia a la Formación Ciudadna (32.2%).
 
 *Cruces con características sociodemográficas de los estudiantes en la **ola 2** del estudio*
 
@@ -668,7 +676,7 @@ plot_es_formciud_curso
 
 ```
 
-Al comparar por el curso del estudiante, es posible observar que estudiantes de básica consideran que su escuela le entrega importancia a la Formación Ciudadana (60%). 
+Al comparar por el curso del estudiante, es posible observar que estudiantes de básica consideran que su escuela le entrega importancia a la Formación Ciudadana (60%).
 
 ```{r sociodemo-importancia, echo=FALSE}
 
@@ -721,9 +729,9 @@ ggplot(frecuencias, aes(x = categoria, y = Porcentaje, fill = factor(p12_o2))) +
 
 ```
 
-Estudiantes con padres con un nivel eduacional mpaximo alcanzado de enseñanza media o menos consideran que se le entrega mayor importancia a la Formación Ciudadana en su escula (67%). Al diferenciar por género, no se presentan diferencias. Por último, estudiantes que cuentan con mens de 25 libros en su hogar creen que su escuela le entrega mayor importancia a la Formación Ciudadana (64%). 
+Estudiantes con padres con un nivel eduacional mpaximo alcanzado de enseñanza media o menos consideran que se le entrega mayor importancia a la Formación Ciudadana en su escula (67%). Al diferenciar por género, no se presentan diferencias. Por último, estudiantes que cuentan con mens de 25 libros en su hogar creen que su escuela le entrega mayor importancia a la Formación Ciudadana (64%).
 
-## Grado de capacidad para realizar tareas utilizando Tecnologías de Información y Comunicaciones (TIC)
+## Autoeficacia digital 
 
 ```{r, echo=FALSE}
 
@@ -760,7 +768,7 @@ plot_editar <- annotate_figure(
 plot_editar
 ```
 
-Los estudiantes contestaron en mayor medida que saben como editar fotografías digitales u otras imágenes gráficas (60%). 
+Los estudiantes contestaron en mayor medida que saben como editar fotografías digitales u otras imágenes gráficas (60%).
 
 *Cruces con características sociodemográficas de los /as estudiantes*
 
@@ -847,7 +855,7 @@ plot_es_editar_curso <- annotate_figure(
 plot_es_editar_curso
 ```
 
-Al diferenciar por curso, se observa que estudiantes de básica consideran saber editar fotografías digitales u otras imágenes gráficas (65%) en mayor medida que sus pares que cursan enseñanza media (57%). 
+Al diferenciar por curso, se observa que estudiantes de básica consideran saber editar fotografías digitales u otras imágenes gráficas (65%) en mayor medida que sus pares que cursan enseñanza media (57%).
 
 ```{r sociodemo-editar, echo=FALSE}
 
@@ -937,7 +945,7 @@ plot_escribir
 
 ```
 
-Los estudiantes consideran en mayor medida que saben como escribir o editar texto para un trabajo escolar (82%). 
+Los estudiantes consideran en mayor medida que saben como escribir o editar texto para un trabajo escolar (82%).
 
 *Cruces con características sociodemográficas*
 
@@ -1024,7 +1032,7 @@ plot_es_escribir_curso <- annotate_figure(
 plot_es_escribir_curso
 ```
 
-Al diferenciar por curso, estudiantes de enseñanaza media se seintes más capaces de escribir o editar texto para un trabajo escolar (85%) que estudiantes de básica (79%). 
+Al diferenciar por curso, estudiantes de enseñanaza media se seintes más capaces de escribir o editar texto para un trabajo escolar (85%) que estudiantes de básica (79%).
 
 ```{r sociodemo-escribir, echo=FALSE}
 frecuencias <- proc_datos_w2 %>%
@@ -1076,6 +1084,4 @@ ggplot(frecuencias, aes(x = categoria, y = Porcentaje, fill = factor(p13_2_o2)))
 
 ```
 
-
 Estudiantes con padres con estudios superiores consideran en mayor medida que saben como escribir o editar un texto para un trabajo escolar (85%). Al diferenciar por género, las mujeres consideran en mayor medida que sabén como realizar dicha actividad (86%). Por último, estudiantes que cuentan con más de 25 libros en su hogar consideran saber cómo realizarlo (70%).
-
