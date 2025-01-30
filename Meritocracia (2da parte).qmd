@@ -200,6 +200,8 @@ plot_pe
 
 ```
 
+En primer lugar, se observa que el nivel de acuerdo con la afirmación disminuyó aproximadamente un 6% de la primera a la segunda ola. 
+
 *Cruces con características sociodemográficas de estudiantes en la **ola 2** del estudio*
 
 ```{r, dona-curso-1, echo=FALSE }
@@ -1121,6 +1123,8 @@ plot_es_percep_curso <- annotate_figure(
 plot_es_percep_curso
 ```
 
+En este gráfico se muestra que los estudiantes de media cuentan con un mayor porcentaje en la opción “Muy de acuerdo” (54%) a diferencia de los de básica que solo cuentan con un (23%). 
+
 ```{r, sociodemo-4, echo=FALSE}
 
 # Paso 1: Filtramos la bbdd por la ola 2
@@ -1190,6 +1194,8 @@ ggplot(frecuencias, aes(x = categoria, y = Porcentaje, fill = factor(p1_4))) +
                     name = NULL)
 
 ```
+
+En el primer gráfico de barras se muestra que los estudiantes con padres de un mayor nivel educacional tienen más porcentaje en la categoría “Muy de acuerdo” (46%) que los que tiene menor nivel educacional (36%). Por otra parte, la variable género presenta. Por parte de la variable género, se observa que los hombres son más propensos a responder “Muy de acuerdo” (41%) que las mujeres (37%). Respecto a la variable cantidad de libros en el hogar, no existe una mayor diferencia en las respuestas entre estudiantes que tengan más o menos libros.
 
 **Oportunidades** y logro individual en la sociedad chilena:
 
