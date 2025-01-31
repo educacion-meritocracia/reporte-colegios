@@ -9,7 +9,7 @@ pacman::p_load(dplyr, sjPlot, stargazer, kableExtra, texreg, haven, sjlabelled, 
 
 
 # Cargar base longitudinal
- load("../edumer-ola2/input/data/proc/edumer_students_long.RData")
+ load("input/data/original/edumer_students_long.RData")
 ```
 
 ```{r, preparacion, echo=FALSE, message=FALSE}
@@ -905,7 +905,7 @@ esfuerzo_curso <- ggarrange(
 plot_es_percep_curso <- annotate_figure(
   esfuerzo_curso,
   top = text_grob(
-    "Figura : En Chile, a quienes tienen padres ricos les va mucho \n mejor en la vida",
+    "Figura 1.11 : En Chile, a quienes tienen padres ricos les va mucho \n mejor en la vida",
     size = 12, 
     face = "italic", 
     color = "black",
@@ -967,7 +967,7 @@ ggplot(frecuencias, aes(x = categoria, y = Porcentaje, fill = factor(p1_3))) +
     x = NULL,
     y = NULL,
     fill = "Grado de acuerdo",
-    title ="Figura 1.11: En Chile, a quienes tienen padres ricos les va mucho \n mejor en la vida") +
+    title ="Figura 1.12: En Chile, a quienes tienen padres ricos les va mucho \n mejor en la vida") +
   theme_blank() +
   theme(
     axis.text.y = element_blank(),
@@ -1040,7 +1040,7 @@ plot_pe <- pe %>%
        x = "Ola",
        fill = "Grado de acuerdo",
     caption = "Fuente: EDUMER",
-    title = "Figura 1.12: En Chile, quienes tienen buenos contactos les va mejor \n en la vida") +
+    title = "Figura 1.13: En Chile, quienes tienen buenos contactos les va mejor \n en la vida") +
    theme_blank() +
   theme(legend.position = "right",
          plot.title = element_text(size = 12, face = "italic", color = "black"))
@@ -1048,8 +1048,7 @@ plot_pe <- pe %>%
 plot_pe
 ```
 
-En la figura anterior se muestra un aumento entre olas respecto a la respuesta “Muy de acuerdo” con un (39%) a diferencia de la primera ola con un (33%). Sin embargo, hubo una disminución en la categoría “De acuerdo, donde en la primera ola hubo un (43%) y en la segunda un (37%).
-
+En la figura anterior se muestra un aumento entre olas respecto a la respuesta “Muy de acuerdo” con un (39%) a diferencia de la primera ola con un (33%). Sin embargo, hubo una disminución en la categoría “De acuerdo", donde en la primera ola hubo un (43%) y en la segunda un (37%).
 
 *Cruces con características sociodemográficas de estudiantes en la **ola 2** del estudio*
 
@@ -1117,7 +1116,7 @@ esfuerzo_curso <- ggarrange(
 plot_es_percep_curso <- annotate_figure(
   esfuerzo_curso,
   top = text_grob(
-    "Figura 1.13: En Chile, quienes tienen buenos contactos les va mejor \n en la vida",
+    "Figura 1.14: En Chile, quienes tienen buenos contactos les va mejor \n en la vida",
     size = 12, 
     face = "italic", 
     color = "black",
@@ -1179,7 +1178,7 @@ ggplot(frecuencias, aes(x = categoria, y = Porcentaje, fill = factor(p1_4))) +
     x = NULL,
     y = NULL,
     fill = "Grado de acuerdo",
-    title = "Figura 1.14: En Chile, quienes tienen buenos contactos les va mejor en la vida") +
+    title = "Figura 1.15: En Chile, quienes tienen buenos contactos les va mejor en la vida") +
   theme_blank() +
   theme(
     axis.text.y = element_blank(),
@@ -1198,7 +1197,7 @@ ggplot(frecuencias, aes(x = categoria, y = Porcentaje, fill = factor(p1_4))) +
 
 ```
 
-En el primer gráfico de barras se muestra que los estudiantes con padres de un mayor nivel educacional tienen más porcentaje en la categoría “Muy de acuerdo” (46%) que los que tiene menor nivel educacional (36%). Por otra parte, la variable género presenta. Por parte de la variable género, se observa que los hombres son más propensos a responder “Muy de acuerdo” (41%) que las mujeres (37%). Respecto a la variable cantidad de libros en el hogar, no existe una mayor diferencia en las respuestas entre estudiantes que tengan más o menos libros.
+En el primer gráfico de barras se muestra que los estudiantes con padres de un mayor nivel educacional tienen más porcentaje en la categoría “Muy de acuerdo” (46%) que los que tienen padres con menor nivel educacional (36%). Por otra parte, la variable género presenta. Por parte de la variable género, se observa que los hombres son más propensos a responder “Muy de acuerdo” (41%) que las mujeres (37%). Respecto a la variable cantidad de libros en el hogar, no existe una mayor diferencia en las respuestas entre estudiantes que tengan más o menos libros.
 
 **Oportunidades** y logro individual en la sociedad chilena:
 
@@ -1252,7 +1251,7 @@ plot_pe <- pe %>%
        x = "Ola",
        fill = "Grado de acuerdo",
     caption = "Fuente: EDUMER",
-    title = "Figura 1.15: En Chile, todas las personas tienen las mismas \n oportunidades para salir adelante") +
+    title = "Figura 1.16: En Chile, todas las personas tienen las mismas \n oportunidades para salir adelante") +
    theme_blank() +
   theme(legend.position = "right",
          plot.title = element_text(size = 12, face = "italic", color = "black"))
@@ -1328,7 +1327,7 @@ esfuerzo_curso <- ggarrange(
 plot_es_percep_curso <- annotate_figure(
   esfuerzo_curso,
   top = text_grob(
-    "Figura 1.16: En Chile, todas las personas tienen las mismas \n oportunidades para salir adelante",
+    "Figura 1.17: En Chile, todas las personas tienen las mismas \n oportunidades para salir adelante",
     size = 12, 
     face = "italic", 
     color = "black",
@@ -1390,7 +1389,7 @@ ggplot(frecuencias, aes(x = categoria, y = Porcentaje, fill = factor(p1_9))) +
     x = NULL,
     y = NULL,
     fill = "Grado de acuerdo",
-    title = "Figura 1.17: En Chile, todas las personas tienen las mismas \n oportunidades para salir adelante") +
+    title = "Figura 1.18: En Chile, todas las personas tienen las mismas \n oportunidades para salir adelante") +
   theme_blank() +
   theme(
     axis.text.y = element_blank(),
@@ -1408,6 +1407,8 @@ ggplot(frecuencias, aes(x = categoria, y = Porcentaje, fill = factor(p1_9))) +
                     name = NULL)
 
 ```
+
+En el primer gráfico de barras se observa que los estudiantes que tienen padres con estudios superiores tienen una mayor tendencia a estar en desacuerdo con la afirmación, a diferencia de los estudiantes con padres con menor nivel educacional. En segundo lugar, en el cruce con la variable género, se observa una diferencia mayor en los porcentajes de la respuesta “Muy en desacuerdo”, donde las mujeres tienen (32%) y los hombres (27%). Respecto a la variable cantidad de libros en el hogar, se muestra un mayor porcentaje de “Muy en desacuerdo” por parte de los estudiantes con más libros (36%) que los con menos libros (28%).
 
 #### Preferencias
 
@@ -1465,13 +1466,15 @@ plot_pe <- pe %>%
        x = "Ola",
        fill = "Grado de acuerdo",
     caption = "Fuente: EDUMER",
-    title = "Figura 1.18: En Chile, Quienes más se esfuerzan deberían obtener mayores  \n recompensas que quienes se esfuerzan menos") +
+    title = "Figura 1.19: En Chile, Quienes más se esfuerzan deberían obtener mayores  \n recompensas que quienes se esfuerzan menos") +
    theme_blank() +
   theme(legend.position = "right",
          plot.title = element_text(size = 12, face = "italic", color = "black"))
 
 plot_pe
 ```
+
+En la figura anterior se muestra que la diferencia entre olas es muy baja, mostrando una tendencia a la respuesta “Muy de acuerdo” con un (54%) aproximadamente, en ambas olas.
 
 *Cruces con características sociodemográficas de estudiantes en la **ola 2** del estudio*
 
@@ -1481,9 +1484,9 @@ plot_pe
 # dona curso: Básica
 
 basica_esfuerzo <- db_students_w02 %>% dplyr::filter(nivel_estudiante_o2=="Básica") %>% 
-  dplyr::select(p1_4_o2) #se filtran valores para esa categoría del curso
+  dplyr::select(p1_5_o2) #se filtran valores para esa categoría del curso
 
-basica_esfuerzo = round(prop.table(table(categorias=basica_esfuerzo$p1_4_o2)),2) #se crean variables 'categoria' y 'Freq' del objeto
+basica_esfuerzo = round(prop.table(table(categorias=basica_esfuerzo$p1_5_o2)),2) #se crean variables 'categoria' y 'Freq' del objeto
 
 basica_esfuerzo = as.data.frame(basica_esfuerzo) #convertimos el objeto en data.frame
 
@@ -1539,7 +1542,7 @@ esfuerzo_curso <- ggarrange(
 plot_es_percep_curso <- annotate_figure(
   esfuerzo_curso,
   top = text_grob(
-   "Figura 1.19: Quienes más se esfuerzan deberían obtener mayores \n recompensas que quienes se esfuerzan menos",
+   "Figura 1.20: Quienes más se esfuerzan deberían obtener mayores \n recompensas que quienes se esfuerzan menos",
     size = 12, 
     face = "italic", 
     color = "black",
@@ -1547,6 +1550,8 @@ plot_es_percep_curso <- annotate_figure(
 
 plot_es_percep_curso
 ```
+
+En los gráficos de dona se muestra que los estudiantes de media y básica tienen porcentajes similares de respuestas. La mayor diferencia se encuentre en la opción “Muy de acuerdo”, donde los alumnos de media tienen un (54%) y los de básica (50%).
 
 ```{r, sociodemo-5, echo=FALSE}
 
@@ -1599,7 +1604,7 @@ ggplot(frecuencias, aes(x = categoria, y = Porcentaje, fill = factor(p1_5))) +
     x = NULL,
     y = NULL,
     fill = "Grado de acuerdo",
-    title = "Figura 1.20: En Chile, Quienes más se esfuerzan deberían obtener mayores \n recompensas que quienes se esfuerzan menos") +
+    title = "Figura 1.21: En Chile, Quienes más se esfuerzan deberían obtener mayores \n recompensas que quienes se esfuerzan menos") +
   theme_blank() +
   theme(
     axis.text.y = element_blank(),
@@ -1617,6 +1622,8 @@ ggplot(frecuencias, aes(x = categoria, y = Porcentaje, fill = factor(p1_5))) +
                     name = NULL)
 
 ```
+
+En el primer gráfico de barras se observa que la diferencia entre porcentajes de respuesta de los estudiantes que tienen padres con menor o mayor nivel educativo no varia más de 4% en ninguna categoría de respuesta. Por parte de la variable género se visualiza que los hombres tienen un mayor porcentaje de respuesta en la categoría “Muy de acuerdo” (59%) a diferencia de las mujeres que cuentan con un (50%). Asimismo, la variable cantidad de libros en el hogar, también presenta una diferencia en el porcentaje de la respuesta “Muy de acuerdo” donde los estudiantes con más libros tienen (58%) y lo con menos libros (53%). Se muestra en todos los gráficos un predominio de dicha categoría.
 
 **Talento** en la sociedad chilena:
 
@@ -1676,6 +1683,8 @@ plot_pe <- pe %>%
 
 plot_pe
 ```
+
+
 
 *Cruces con características sociodemográficas de estudiantes en la **ola 2** del estudio*
 
@@ -1922,7 +1931,7 @@ ggplot(frecuencias, aes(x = categoria, y = Porcentaje, fill = factor(p9_6))) +
     x = NULL,
     y = NULL,
     fill = "Grado de acuerdo",
-    title = "Figura 1.26: Está bien que las personas más inteligentes y/o talentosas ganen más dinero, \naun cuando requieran esforzarse menos para ello") +
+    title = "Figura 1.25: Está bien que las personas más inteligentes y/o talentosas ganen más dinero, \naun cuando requieran esforzarse menos para ello") +
   theme_blank() +
   theme(
     axis.text.y = element_blank(),
@@ -1996,7 +2005,7 @@ plot_pe <- pe %>%
        x = "Ola",
        fill = "Grado de acuerdo",
     caption = "Fuente: EDUMER",
-    title = "Figura 1.27: Está bien que quienes tienen padres ricos les vaya bien en la vida") +
+    title = "Figura 1.26: Está bien que quienes tienen padres ricos les vaya bien en la vida") +
    theme_blank() +
   theme(legend.position = "right",
          plot.title = element_text(size = 12, face = "italic", color = "black"))
@@ -2070,7 +2079,7 @@ esfuerzo_curso <- ggarrange(
 plot_es_percep_curso <- annotate_figure(
   esfuerzo_curso,
   top = text_grob(
-   "Figura 1.28: Está bien que quienes tienen padres ricos les vaya \n bien en la vida",
+   "Figura 1.27: Está bien que quienes tienen padres ricos les vaya \n bien en la vida",
     size = 12, 
     face = "italic", 
     color = "black",
@@ -2130,7 +2139,7 @@ ggplot(frecuencias, aes(x = categoria, y = Porcentaje, fill = factor(p1_7))) +
     x = NULL,
     y = NULL,
     fill = "Grado de acuerdo",
-    title = "Figura 1.29: Está bien que quienes tienen padres ricos les vaya \n bien en la vida") +
+    title = "Figura 1.28: Está bien que quienes tienen padres ricos les vaya \n bien en la vida") +
   theme_blank() +
   theme(
     axis.text.y = element_blank(),
@@ -2201,7 +2210,7 @@ plot_pe <- pe %>%
        x = "Ola",
        fill = "Grado de acuerdo",
     caption = "Fuente: EDUMER",
-    title = "Figura 1.30: Está bien que quienes tienen buenos contactos les \n vaya bien en la vida") +
+    title = "Figura 1.29: Está bien que quienes tienen buenos contactos les \n vaya bien en la vida") +
    theme_blank() +
   theme(legend.position = "right",
          plot.title = element_text(size = 12, face = "italic", color = "black"))
@@ -2275,7 +2284,7 @@ esfuerzo_curso <- ggarrange(
 plot_es_percep_curso <- annotate_figure(
   esfuerzo_curso,
   top = text_grob(
-    "Figura 1.31: Está bien que quienes tienen buenos contactos les \n vaya bien en la vida",
+    "Figura 1.30: Está bien que quienes tienen buenos contactos les \n vaya bien en la vida",
     size = 12, 
     face = "italic", 
     color = "black",
@@ -2335,7 +2344,7 @@ ggplot(frecuencias, aes(x = categoria, y = Porcentaje, fill = factor(p1_8))) +
     x = NULL,
     y = NULL,
     fill = "Grado de acuerdo",
-    title = "Figura 1.32: Está bien que quienes tienen buenos contactos les \n vaya bien en la vida") +
+    title = "Figura 1.31: Está bien que quienes tienen buenos contactos les \n vaya bien en la vida") +
   theme_blank() +
   theme(
     axis.text.y = element_blank(),
@@ -2417,7 +2426,7 @@ plot_pe <- pe %>%
        x = "Ola",
        fill = "Grado de acuerdo",
     caption = "Fuente: EDUMER",
-    title = "Figura 1.33: En esta escuela, quienes se esfuerzan obtienen buenas notas")+ 
+    title = "Figura 1.32: En esta escuela, quienes se esfuerzan obtienen buenas notas")+ 
   theme_blank() +
   theme(legend.position = "right",
         plot.title = element_text(size = 12, face = "italic", color = "black")) 
@@ -2490,7 +2499,7 @@ esfuerzo_curso <- ggarrange(
 plot_es_percep_curso <- annotate_figure(
   esfuerzo_curso,
   top = text_grob(
-    "Figura 1.34: En esta escuela, quienes se esfuerzan obtienen buenas notas",
+    "Figura 1.33: En esta escuela, quienes se esfuerzan obtienen buenas notas",
     size = 12, 
     face = "italic", 
     color = "black",
@@ -2550,7 +2559,7 @@ ggplot(frecuencias, aes(x = categoria, y = Porcentaje, fill = factor(p2_1))) +
     x = NULL,
     y = NULL,
     fill = "Grado de acuerdo",
-    title = "Figura 1.35: En esta escuela, quienes se esfuerzan obtienen buenas notas") +
+    title = "Figura 1.34: En esta escuela, quienes se esfuerzan obtienen buenas notas") +
   theme_blank() +
   theme(
     axis.text.y = element_blank(),
@@ -2622,7 +2631,7 @@ plot_pt <- pt %>%
        x = "Ola",
        fill = "Grado de acuerdo",
     caption = "Fuente: EDUMER",
-    title = "Figura 1.36: En esta escuela, quienes son inteligentes \nobtienen buenas notas") +
+    title = "Figura 1.35: En esta escuela, quienes son inteligentes \nobtienen buenas notas") +
   theme_blank() +
   theme(legend.position = "right",
          plot.title = element_text(size = 12, face = "italic", color = "black"))
@@ -2695,7 +2704,7 @@ esfuerzo_curso <- ggarrange(
 plot_es_percep_curso <- annotate_figure(
   esfuerzo_curso,
   top = text_grob(
-    "Figura 1.37:  En esta escuela, quienes son inteligentes \nobtienen buenas notas",
+    "Figura 1.36:  En esta escuela, quienes son inteligentes \nobtienen buenas notas",
     size = 12, 
     face = "italic", 
     color = "black",
@@ -2739,7 +2748,7 @@ ggplot(frecuencias, aes(x = categoria, y = Porcentaje, fill = factor(p2_2))) +
     x = NULL,
     y = NULL,
     fill = "Grado de acuerdo",
-    title = "Figura 1.38: En esta escuela, quienes son inteligentes obtienen buenas notas") +
+    title = "Figura 1.37: En esta escuela, quienes son inteligentes obtienen buenas notas") +
   theme_blank() +
   theme(
     axis.text.y = element_blank(),
@@ -2810,7 +2819,7 @@ plot_pm <- pm %>%
        x = "Ola",
        fill = "Grado de acuerdo",
     caption = "Fuente: EDUMER",
-    title = "Figura 1.39: En esta escuela, los/as estudiantes \nobtienen las notas que merecen") + 
+    title = "Figura 1.38: En esta escuela, los/as estudiantes \nobtienen las notas que merecen") + 
   theme_blank() +
   theme(legend.position = "right",
          plot.title = element_text(size = 12, face = "italic", color = "black"))
@@ -2883,7 +2892,7 @@ esfuerzo_curso <- ggarrange(
 plot_es_percep_curso <- annotate_figure(
   esfuerzo_curso,
   top = text_grob(
-    "Figura 1.40: En esta escuela, los/as estudiantes \nobtienen las notas que merecen",
+    "Figura 1.39: En esta escuela, los/as estudiantes \nobtienen las notas que merecen",
     size = 12, 
     face = "italic", 
     color = "black",
@@ -2926,7 +2935,7 @@ ggplot(frecuencias, aes(x = categoria, y = Porcentaje, fill = factor(p2_3))) +
     x = NULL,
     y = NULL,
     fill = "Grado de acuerdo",
-    title = "Figura 1.41: En esta escuela, los/as estudiantes obtienen las notas que merecen") +
+    title = "Figura 1.40: En esta escuela, los/as estudiantes obtienen las notas que merecen") +
   theme_blank() +
   theme(
     axis.text.y = element_blank(),
@@ -3007,7 +3016,7 @@ plot_ps <- ps %>%
        x = "Ola",
        fill = "Preferencia",
     caption = "Fuente: EDUMER",
-    title = "Figura 1.42: ¿Qué es más importante para obtener buenas notas, \nel esfuerzo o la inteligencia?") +
+    title = "Figura 1.41: ¿Qué es más importante para obtener buenas notas, \nel esfuerzo o la inteligencia?") +
    theme_blank() +
   theme(legend.position = "right",
          plot.title = element_text(size = 12, face = "italic", color = "black"))
@@ -3091,7 +3100,7 @@ esfuerzo_curso <- ggarrange(
 plot_es_percep_curso <- annotate_figure(
   esfuerzo_curso,
   top = text_grob(
-    "Figura 1.43: ¿Qué es más importante para obtener buenas notas, \nel esfuerzo o la inteligencia?",
+    "Figura 1.42: ¿Qué es más importante para obtener buenas notas, \nel esfuerzo o la inteligencia?",
     size = 12, 
     face = "italic", 
     color = "black",
@@ -3154,7 +3163,7 @@ ggplot(frecuencias, aes(x = categoria, y = Porcentaje, fill = factor(p3))) +
     x = NULL,
     y = NULL,
     fill = "Preferencia",
-    title = "Figura 1.44: ¿Qué es más importante para obtener buenas notas, \nel esfuerzo o la inteligencia?") +
+    title = "Figura 1.43: ¿Qué es más importante para obtener buenas notas, \nel esfuerzo o la inteligencia?") +
   theme_blank() +
   theme(
     axis.text.y = element_blank(),
@@ -3233,7 +3242,7 @@ plot_mn <- mn %>%
        x = "Ola",
        fill = "Sensación de merecimiento",
     caption = "Fuente: EDUMER",
-    title = "Figura 1.45: ¿Te parece que este promedio fue más o menos \nde lo que merecías?") +
+    title = "Figura 1.44: ¿Te parece que este promedio fue más o menos \nde lo que merecías?") +
    theme_blank() +
   theme(legend.position = "right",
          plot.title = element_text(size = 12, face = "italic", color = "black"))
@@ -3306,7 +3315,7 @@ esfuerzo_curso <- ggarrange(
 plot_es_percep_curso <- annotate_figure(
   esfuerzo_curso,
   top = text_grob(
-    "Figura 1.46:  ¿Te parece que este promedio fue más o menos \nde lo que merecías?",
+    "Figura 1.45:  ¿Te parece que este promedio fue más o menos \nde lo que merecías?",
     size = 12, 
     face = "italic", 
     color = "black",
@@ -3349,7 +3358,7 @@ ggplot(frecuencias, aes(x = categoria, y = Porcentaje, fill = factor(p5))) +
     x = NULL,
     y = NULL,
     fill = "Grado de acuerdo",
-    title = "Figura 1.47: ¿Te parece que este promedio fue más o menos de lo que merecías?") +
+    title = "Figura 1.46: ¿Te parece que este promedio fue más o menos de lo que merecías?") +
   theme_blank() +
   theme(
     axis.text.y = element_blank(),
@@ -3418,7 +3427,7 @@ plot_mne <- mne %>%
        x = "Ola",
        fill = "Sensación de merecimiento",
     caption = "Fuente: EDUMER",
-    title = "Figura 1.48: Tomando en cuenta el tiempo que le dedicas a tus estudios, \nlas notas que me saco son… ") +
+    title = "Figura 1.47: Tomando en cuenta el tiempo que le dedicas a tus estudios, \nlas notas que me saco son… ") +
    theme_blank() +
   theme(legend.position = "right",
          plot.title = element_text(size = 12, face = "italic", color = "black"))
@@ -3491,7 +3500,7 @@ esfuerzo_curso <- ggarrange(
 plot_es_percep_curso <- annotate_figure(
   esfuerzo_curso,
   top = text_grob(
-    "Figura 1.49:  Tomando en cuenta el tiempo que le dedicas a tus estudios, \nlas notas que me saco son… ",
+    "Figura 1.48:  Tomando en cuenta el tiempo que le dedicas a tus estudios, \nlas notas que me saco son… ",
     size = 12, 
     face = "italic", 
     color = "black",
@@ -3534,7 +3543,7 @@ ggplot(frecuencias, aes(x = categoria, y = Porcentaje, fill = factor(p7))) +
     x = NULL,
     y = NULL,
     fill = "Grado de acuerdo",
-    title = "Figura 1.50: Tomando en cuenta el tiempo que le dedicas a tus estudios, \nlas notas que me saco son…") +
+    title = "Figura 1.49: Tomando en cuenta el tiempo que le dedicas a tus estudios, \nlas notas que me saco son…") +
   theme_blank() +
   theme(
     axis.text.y = element_blank(),
