@@ -1623,7 +1623,7 @@ ggplot(frecuencias, aes(x = categoria, y = Porcentaje, fill = factor(p1_5))) +
 
 ```
 
-En el primer gráfico de barras se observa que la diferencia entre porcentajes de respuesta de los estudiantes que tienen padres con menor o mayor nivel educativo no varia más de 4% en ninguna categoría de respuesta. Por parte de la variable género se visualiza que los hombres tienen un mayor porcentaje de respuesta en la categoría “Muy de acuerdo” (59%) a diferencia de las mujeres que cuentan con un (50%). Asimismo, la variable cantidad de libros en el hogar, también presenta una diferencia en el porcentaje de la respuesta “Muy de acuerdo” donde los estudiantes con más libros tienen (58%) y lo con menos libros (53%). Se muestra en todos los gráficos un predominio de dicha categoría.
+En el primer gráfico de barras se observa que la diferencia entre porcentajes de respuesta de los estudiantes que tienen padres con menor o mayor nivel educativo no varía más de 4% en ninguna categoría de respuesta. Por parte de la variable género se visualiza que los hombres tienen un mayor porcentaje de respuesta en la categoría “Muy de acuerdo” (59%) a diferencia de las mujeres que cuentan con un (50%). Asimismo, la variable cantidad de libros en el hogar, también presenta una diferencia en el porcentaje de la respuesta “Muy de acuerdo” donde los estudiantes con más libros tienen (58%) y lo con menos libros (53%). Se muestra en todos los gráficos un predominio de dicha categoría.
 
 **Talento** en la sociedad chilena:
 
@@ -1900,8 +1900,80 @@ En el gráfico se observa que las respuestas entre olas no varían más de un 5%
 *Cruces con características sociodemográficas de estudiantes en la **ola 2** del estudio*
 
 ```{r, dona-curso-dm, echo=FALSE}
+# gráfico: esfuerzo y curso
+
+# dona curso: Básica
+
+basica_esfuerzo <- db_students_w02 %>% dplyr::filter(nivel_estudiante_o2=="Básica") %>% 
+  dplyr::select(p9_6_o2) #se filtran valores para esa categoría del curso
+
+basica_esfuerzo = round(prop.table(table(categorias=basica_esfuerzo$p9_6_o2)),2) #se crean variables 'categoria' y 'Freq' del objeto
+
+basica_esfuerzo = as.data.frame(basica_esfuerzo) #convertimos el objeto en data.frame
+
+basica_esfuerzo$categorias <- factor(basica_esfuerzo$categorias, levels = c(1, 2, 3, 4), labels = c("Muy en desacuerdo", "Desacuerdo", "De acuerdo", "Muy de acuerdo")) 
+
+plot_basica_esfuerzo<-ggplot(basica_esfuerzo,aes(x=2,y=-Freq, fill=categorias))+
+  geom_bar(stat = "identity", 
+           color="white")+
+  geom_text(aes(label = scales::percent(Freq)),
+            position=position_stack(vjust=0.5),color="black",size=4.5)+
+  coord_polar(theta = "y")+
+  scale_fill_brewer(palette = "Blues")+
+  theme_void()+
+  theme(legend.title = element_blank(),
+        plot.title = element_text(size=12, face="bold", hjust=0.5))+
+  xlim(0.5,2.5) +
+  labs(title="Estudiantes de básica") #graficamos
+
+
+# dona curso: Media
+
+# categoría media
+media_esfuerzo <- db_students_w02 %>% filter(nivel_estudiante_o2=="Media") %>% 
+  dplyr::select(p9_6_o2) 
+
+media_esfuerzo = round(prop.table(table(categorias=media_esfuerzo$p9_6_o2)),2)  
+
+media_esfuerzo = as.data.frame(media_esfuerzo)
+
+media_esfuerzo$categorias <- factor(media_esfuerzo$categorias, levels = c(1, 2, 3, 4), labels = c("Muy en desacuerdo", "Desacuerdo", "De acuerdo", "Muy de acuerdo")) 
+
+plot_media_esfuerzo<-ggplot(media_esfuerzo,aes(x=2,y=-Freq, fill=categorias))+
+  geom_bar(stat = "identity", 
+           color="white")+
+  geom_text(aes(label = scales::percent(Freq)),
+            position=position_stack(vjust=0.5),color="black",size=4.5)+
+  coord_polar(theta = "y")+
+  scale_fill_brewer(palette = "Blues")+
+  theme_void()+
+  theme(legend.title = element_blank(),
+        plot.title = element_text(size=12, face="bold", hjust=0.5))+
+  xlim(0.5,2.5) +
+  labs(title="Estudiantes de media") 
+
+esfuerzo_curso <- ggarrange(
+  plot_basica_esfuerzo, 
+  plot_media_esfuerzo,
+  common.legend = TRUE, 
+  ncol = 2, 
+  legend = "bottom")
+
+# Agregar una etiqueta global centrada
+plot_es_percep_curso <- annotate_figure(
+  esfuerzo_curso,
+  top = text_grob(
+    "Figura 1.26: En Chile, Quienes poseen más talento deberían obtener mayores \n recompensas que quienes poseen menos talento",
+    size = 12, 
+    face = "italic", 
+    color = "black",
+    hjust = 0.5))
+
+plot_es_percep_curso
 
 ```
+
+En este gráfico se muestra que los estudiantes de media cuentan con un mayor porcentaje en la opción “De acuerdo” (49%) a diferencia de los de básica que cuentan con un (42%). 
 
 ```{r, sociodemo-dm, echo=FALSE}
 # Calcular las frecuencias con la pregunta correspondiente
@@ -2098,7 +2170,7 @@ plot_es_percep_curso <- annotate_figure(
 plot_es_percep_curso
 ```
 
-En este gráfico se muestra que los estudiantes de básica cuentan con un mayor porcentaje en la opción “Desacuerdo” (42%) a diferencia de los de media que solo cuentan con un (31%).
+En estos gráficos se muestra que los estudiantes de básica cuentan con un mayor porcentaje en la opción “Desacuerdo” (42%) a diferencia de los de media que solo cuentan con un (31%).
 
 ```{r, sociodemo-7, echo=FALSE}
 
@@ -2170,7 +2242,7 @@ ggplot(frecuencias, aes(x = categoria, y = Porcentaje, fill = factor(p1_7))) +
 
 ```
 
-En el primer gráfico de barras se muestra que los estudiantes con padres de un mayor nivel educacional tienen más porcentaje en la categoría “Muy de acuerdo” (13%) que los que tienen padres con menor nivel educacional (6%). Por parte de la variable género se visualiza que las mujeres tienen un mayor porcentaje de respuesta en la categoría “Desacuerdo” (40%) a diferencia de los hombres que cuentan con un (33%). Por otra parte, la variable cantidad de libros en el hogar, presenta una diferencia en el porcentaje de la respuesta “De acuerdo” donde los estudiantes con más libros tienen (33%) y lo con menos libros (44%).
+En el primer gráfico de barras se muestra que los estudiantes con padres de un mayor nivel educacional tienen más porcentaje en la categoría “Muy de acuerdo” (13%) que los que tienen padres con menor nivel educacional (6%). En la variable género se visualiza que las mujeres tienen un mayor porcentaje de respuesta en la categoría “Desacuerdo” (40%) a diferencia de los hombres que cuentan con un (33%). Por otra parte, la variable cantidad de libros en el hogar, presenta una diferencia en el porcentaje de la respuesta “De acuerdo” donde los estudiantes con más libros tienen (33%) y lo con menos libros (44%).
 
 **Buenos contactos**
 
@@ -2381,7 +2453,7 @@ ggplot(frecuencias, aes(x = categoria, y = Porcentaje, fill = factor(p1_8))) +
 
 ```
 
-En el primer gráfico de barras se muestra que los estudiantes con padres de un mayor nivel educacional tienen más porcentaje en la categoría “Muy de acuerdo” (15%) que los que tienen padres con menor nivel educacional (8%). Por parte de la variable género se visualiza que los hombres tienen un mayor porcentaje de respuesta en la categoría “Desacuerdo” (49%) a diferencia de las mujeres que cuentan con un (42%). Asimismo, en la variable cantidad de libros en el hogar, presenta una diferencia en el porcentaje de la respuesta “Desacuerdo” donde los estudiantes con más libros tienen (34%) y lo con menos libros (48%).
+En el primer gráfico de barras se muestra que los estudiantes con padres de un mayor nivel educacional tienen más porcentaje en la categoría “Muy de acuerdo” (15%) que los que tienen padres con menor nivel educacional (8%). En la variable género se visualiza que los hombres tienen un mayor porcentaje de respuesta en la categoría “Desacuerdo” (49%) a diferencia de las mujeres que cuentan con un (42%). Asimismo, en la variable cantidad de libros en el hogar, presenta una diferencia en el porcentaje de la respuesta “Desacuerdo” donde los estudiantes con más libros tienen (34%) y lo con menos libros (48%).
 
 ## Meritocracia en la escuela
 
@@ -2452,6 +2524,8 @@ plot_pe <- pe %>%
         plot.title = element_text(size = 12, face = "italic", color = "black")) 
 plot_pe
 ```
+
+En el gráfico se observa que las respuestas entre olas no varían más de un 5% en ninguna respuesta. La respuesta más frecuente en ambas olas es la alternativa “De acuerdo”, donde la primera cuenta con un (48.9%) y la segunda (49.9%).
 
 *Cruces con características sociodemográficas de estudiantes en la **ola 2** del estudio*
 
@@ -2528,6 +2602,8 @@ plot_es_percep_curso <- annotate_figure(
 plot_es_percep_curso
 ```
 
+En este gráfico se muestra que los estudiantes de básica cuentan con un mayor porcentaje en la opción “Muy de acuerdo” (37%) a diferencia de los de media que cuentan con un (31%). 
+
 ```{r, sociodemo-pe-school, echo=FALSE}
 
 # Paso 1: Filtramos la bbdd por la ola 2
@@ -2598,6 +2674,8 @@ ggplot(frecuencias, aes(x = categoria, y = Porcentaje, fill = factor(p2_1))) +
 
 ```
 
+En el primer gráfico de barras se observa que la diferencia entre porcentajes de respuesta de los estudiantes que tienen padres con menor o mayor nivel educativo no varía más de 3% en ninguna categoría de respuesta. La variable género se visualiza que las mujeres tienen un mayor porcentaje de respuesta en la categoría “De acuerdo” (54%) a diferencia de los hombres que cuentan con un (46%). Asimismo, en la variable cantidad de libros en el hogar, presenta una diferencia en el porcentaje de la respuesta “De acuerdo” donde los estudiantes con más libros tienen (44%) y lo con menos libros (51%).
+
 **Talento** en la escuela:
 
 ```{r, alluvial-pt-school, echo=FALSE}
@@ -2657,6 +2735,8 @@ plot_pt <- pt %>%
          plot.title = element_text(size = 12, face = "italic", color = "black"))
 plot_pt
 ```
+
+En la figura se observa que la mayor diferencia de respuestas entre olas, están en las respuestas “De acuerdo”, donde la primera ola cuenta con un (51.2%) y la segunda con un (57.5%).
 
 *Cruces con características sociodemográficas de estudiantes en la **ola 2** del estudio*
 
@@ -2733,6 +2813,8 @@ plot_es_percep_curso <- annotate_figure(
 plot_es_percep_curso
 ```
 
+En estos gráficos se muestra que los estudiantes de básica cuentan con un mayor porcentaje en la opción “De acuerdo” (58%) a diferencia de los de media que solo cuentan con un (51%). 
+
 ```{r, sociodemo-pt-school, echo=FALSE}
 
 # Calcular las frecuencias con la pregunta correspondiente
@@ -2785,6 +2867,8 @@ ggplot(frecuencias, aes(x = categoria, y = Porcentaje, fill = factor(p2_2))) +
                                "3" = "De acuerdo", "4" = "Muy de acuerdo"),
                     name = NULL)
 ```
+
+En el primer gráfico de barras se observa que la diferencia entre porcentajes de respuesta de los estudiantes que tienen padres con menor o mayor nivel educativo no varía más de 3% en ninguna categoría de respuesta. En la variable género se visualiza que las mujeres tienen un mayor porcentaje de respuesta en la categoría “De acuerdo” (63%) a diferencia de los hombres que cuentan con un (53%). Respecto a la variable cantidad de libros en el hogar, no existe una mayor diferencia en las respuestas entre estudiantes que tengan más o menos libros, donde ninguna supera el 3%.
 
 Respecto al **mérito** en la escuela:
 
@@ -2845,6 +2929,8 @@ plot_pm <- pm %>%
          plot.title = element_text(size = 12, face = "italic", color = "black"))
 plot_pm
 ```
+
+En el gráfico se observa que las respuestas entre olas no varían más de un 3% en ninguna respuesta. La respuesta más frecuente en ambas olas es la alternativa “De acuerdo”, donde la primera cuenta con un (54.8%) y la segunda (55.5%).
 
 *Cruces con características sociodemográficas de estudiantes en la **ola 2** del estudio*
 
@@ -2921,6 +3007,8 @@ plot_es_percep_curso <- annotate_figure(
 plot_es_percep_curso
 ```
 
+En la figura se muestra que los estudiantes de básica cuentan con un mayor porcentaje en la opción “Muy de acuerdo” (24%) a diferencia de los de media que solo cuentan con un (18%). 
+
 ```{r, sociodemo-pm-school, echo=FALSE}
 # Calcular las frecuencias con la pregunta correspondiente
 frecuencias <- proc_datos_largo %>%
@@ -2972,6 +3060,8 @@ ggplot(frecuencias, aes(x = categoria, y = Porcentaje, fill = factor(p2_3))) +
                                "3" = "De acuerdo", "4" = "Muy de acuerdo"),
                     name = NULL)
 ```
+
+En el primer gráfico de barras se observa que la diferencia entre porcentajes de respuesta de los estudiantes que tienen padres con menor o mayor nivel educativo no varía más de 3% en ninguna categoría de respuesta. En la variable género se visualiza que los hombres tienen un mayor porcentaje de respuesta en la categoría “Muy de acuerdo” (23%) a diferencia de las mujeres que cuentan con un (18%). Respecto de la variable cantidad de libros en el hogar, se presenta una diferencia en el porcentaje de la respuesta “De acuerdo” donde los estudiantes con más libros tienen (50%) y lo con menos libros (56%).
 
 #### Preferencia
 
@@ -3042,6 +3132,8 @@ plot_ps <- ps %>%
          plot.title = element_text(size = 12, face = "italic", color = "black"))
 plot_ps
 ```
+
+En el gráfico se observa que las respuestas entre olas no varían más de un 3% en ninguna respuesta. La respuesta más frecuente en ambas olas es la alternativa “Ambos”, donde la primera cuenta con un (49.7%) y la segunda (51.5%).
 
 *Cruces con características sociodemográficas de estudiantes en la **ola 2** del estudio*
 
@@ -3129,6 +3221,8 @@ plot_es_percep_curso <- annotate_figure(
 plot_es_percep_curso
 ```
 
+En los gráficos de dona se visualiza un porcentaje similar de respuesta entre los estudiantes de etapa básica y media. En ambos se observa una tendencia a la respuesta “Ambos”, dónde básica tiene un (53%) y media (50%).
+
 ```{r, sociodemo-pref-school, echo=FALSE}
 
 db_w02$p3 <- car::recode(db_w02$p3, "1=1; 2=1; 3=1; 4=1; 5=2; 6=3; 7=3; 8=3; 9=3; 10=3")
@@ -3201,6 +3295,8 @@ ggplot(frecuencias, aes(x = categoria, y = Porcentaje, fill = factor(p3))) +
                                `3` = "Talento"))
 ```
 
+En el primer gráfico de barras se muestra que los estudiantes con padres de un mayor nivel educacional tienen más porcentaje en la categoría “Esfuerzo” (30%) que los que tienen padres con menor nivel educacional (24%). En la variable género se visualiza que los hombres tienen un mayor porcentaje de respuesta en la categoría “Talento” (25%) a diferencia de las mujeres que cuentan con un (20%). Además, ambos cuentan con el mismo porcentaje en la respuesta” Esfuerzo”. Respecto a la variable cantidad de libros en el hogar, no existe una mayor diferencia en las respuestas entre estudiantes que tengan más o menos libros, donde ninguna supera el 3%.
+
 ## Justicia en las notas
 
 En este apartado se observa la percepción de las/los estudiantes respecto a si la nota obtenida recompensa de manera justa su mérito individual. Posteriormente, se presenta de manera comparativa la nota que efectivamente estos recibieron y la preferencia que ellas/ellos tenían de la nota que debieron haber obtenido.
@@ -3268,6 +3364,8 @@ plot_mn <- mn %>%
          plot.title = element_text(size = 12, face = "italic", color = "black"))
 plot_mn
 ```
+
+En el gráfico se observa que las respuestas entre olas no varían más de un 2% en ninguna respuesta. La respuesta más frecuente en ambas olas es la alternativa “Lo que merezco”, donde la primera cuenta con un (77.8%) y la segunda (78.1%).
 
 *Cruces con características sociodemográficas de estudiantes en la **ola 2** del estudio*
 
@@ -3344,6 +3442,8 @@ plot_es_percep_curso <- annotate_figure(
 plot_es_percep_curso
 ```
 
+En los gráficos de dona se visualiza un porcentaje similar de respuesta entre los estudiantes de etapa básica y media. En ambos se observa una tendencia a la respuesta “Lo que merezco”, dónde básica tiene un (79%) y media (77%).
+
 ```{r, sociodemo-mn, echo=FALSE}
 # Calcular las frecuencias con la pregunta correspondiente
 frecuencias <- proc_datos_largo %>%
@@ -3395,6 +3495,8 @@ ggplot(frecuencias, aes(x = categoria, y = Porcentaje, fill = factor(p5))) +
                                "3" = "Más de lo que merezco"),
                     name = NULL)
 ```
+
+En el primer gráfico de barras se observa que la diferencia entre porcentajes de respuesta de los estudiantes que tienen padres con menor o mayor nivel educativo no varía más de 3% en ninguna categoría de respuesta.  En la variable género no se presentan diferencia que superen el 5% entre las respuestas de hombres y mujeres. Respecto a la variable cantidad de libros en el hogar, no existe una mayor diferencia en las respuestas entre estudiantes que tengan más o menos libros, donde ninguna supera el 4%.
 
 ```{r, alluvial-mne, echo=FALSE}
 # Gráfico alluvial 
@@ -3453,6 +3555,8 @@ plot_mne <- mne %>%
          plot.title = element_text(size = 12, face = "italic", color = "black"))
 plot_mne
 ```
+
+En el gráfico se observa que las respuestas entre olas no varían más de un 3% en ninguna respuesta. La respuesta más frecuente en ambas olas es la alternativa “Lo que merezco”, donde la primera cuenta con un (71.8%) y la segunda (73.3%).
 
 *Cruces con características sociodemográficas de estudiantes en la **ola 2** del estudio*
 
@@ -3529,6 +3633,8 @@ plot_es_percep_curso <- annotate_figure(
 plot_es_percep_curso
 ```
 
+En los gráficos de dona se visualiza un porcentaje similar de respuesta entre los estudiantes de etapa básica y media. En ambos se observa una tendencia a la respuesta “Lo que merezco”, dónde básica tiene un (74%) y media (72%).
+
 ```{r, sociodemo-mne, echo=FALSE}
 # Calcular las frecuencias con la pregunta correspondiente
 frecuencias <- proc_datos_largo %>%
@@ -3580,5 +3686,7 @@ ggplot(frecuencias, aes(x = categoria, y = Porcentaje, fill = factor(p7))) +
                                "3" = "Más de lo que merezco"),
                     name = NULL)
 ```
+
+En el primer gráfico de barras se observa que la diferencia entre porcentajes de respuesta de los estudiantes que tienen padres con menor o mayor nivel educativo no varía más de 3% en ninguna categoría de respuesta.  En la variable género no se presentan diferencia que superen el 5% entre las respuestas de hombres y mujeres. Respecto de la variable cantidad de libros en el hogar, se presenta una diferencia en el porcentaje de la respuesta “Lo que merezco” donde los estudiantes con más libros tienen (63%) y lo con menos libros (75%).
 
 -   Percepción de los **colegios**
